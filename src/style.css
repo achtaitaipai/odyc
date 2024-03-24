@@ -1,0 +1,85 @@
+body {
+	overscroll-behavior: none;
+}
+.odyc_wrapper,
+.odyc_wrapper * {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+.odyc_wrapper {
+	position: absolute;
+	left: calc(50% - var(--side-size) * 0.5);
+	top: calc(50% - var(--side-size) * 0.5);
+	width: var(--side-size);
+	height: var(--side-size);
+	display: grid;
+	outline: none;
+	margin-inline: auto;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+		'Liberation Mono', 'Courier New', monospace;
+	font-weight: bold;
+}
+
+.odyc_canvas {
+	margin: auto;
+	object-fit: contain;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+	outline: none;
+	&[data-orientation='horizontal'] {
+		width: 100%;
+	}
+	&[data-orientation='vertical'] {
+		height: 100%;
+	}
+}
+
+.odyc_dialog {
+	box-sizing: border-box;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 0.4rem;
+	left: 50%;
+	bottom: 1rem;
+	transform: translate(-50%, 0%);
+	width: 27ch;
+	height: 5rem;
+	overflow: hidden;
+	background: white;
+	border: solid 4px;
+	padding-inline: 0.4rem;
+	pointer-events: none;
+	font-size: clamp(0.875rem, 0.8315rem + 0.2174vi, 1rem);
+	& > p {
+		line-height: 1;
+		margin: 0;
+		white-space: nowrap;
+		padding: 0;
+	}
+}
+
+.odyc_messageBox {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	background: black;
+	color: white;
+	text-align: center;
+	padding: 1rem 2rem;
+}
+.odyc_messageBox > * {
+	font-size: clamp(2.1773rem, 1.8731rem + 1.5208vi, 3.0518rem);
+	margin-block: auto;
+}
+.odyc_messageBox > :first-child {
+	margin-block-start: auto;
+}
+.odyc_messageBox > :last-child:not(:first-child, :nth-child(2)) {
+	margin-block-end: 0;
+	text-align: right;
+	font-style: italic;
+}
