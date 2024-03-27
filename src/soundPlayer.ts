@@ -1,6 +1,5 @@
 //@ts-ignore
-import { Synth, ALL_PRESETS, Sound } from 'jfxr'
-import { Random } from './lib'
+import { Synth } from 'jfxr'
 
 export type SoundPlayerParams = {
 	volume: number
