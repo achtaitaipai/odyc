@@ -76,10 +76,7 @@ export const createActorsStore = <T extends Templates>(
 		if (template)
 			store.update((actors) => {
 				return [
-					...actors.filter((el) => {
-						el.position[0] !== x
-						el.position[1] !== y
-					}),
+					...actors.filter((el) => !compareVectors([x, y], el.position)),
 					createActorFromTemplate(x, y, symbol, template),
 				]
 			})
