@@ -75,7 +75,13 @@ export const createActorsStore = <T extends Templates>(
 		const template = templates[symbol]
 		if (template)
 			store.update((actors) => {
-				return [...actors, createActorFromTemplate(x, y, symbol, template)]
+				return [
+					...actors.filter((el) => {
+						el.position[0] !== x
+						el.position[1] !== y
+					}),
+					createActorFromTemplate(x, y, symbol, template),
+				]
 			})
 	}
 	const getCell = (...position: Position) => createActorProxy(position, store)
