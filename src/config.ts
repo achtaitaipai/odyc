@@ -27,8 +27,8 @@ export const defaultConfig: Config<{}> = {
 	],
 	screenWidth: 8,
 	screenHeight: 8,
-	tileWidth: 8,
-	tileHeight: 8,
+	cellWidth: 8,
+	cellHeight: 8,
 	background: 1,
 	volume: 0.5,
 	controls: {

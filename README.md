@@ -128,15 +128,15 @@ Each character in the string represents a pixel and its color. Different charact
 
 ### Size
 
-By default, sprites are represented as squares with dimensions of 8 by 8 pixels. However, you can easily customize the size of the sprites to fit your game's requirements using the tileWidth and tileHeight keys in the game configuration.
+By default, sprites are represented as squares with dimensions of 8 by 8 pixels. However, you can easily customize the size of the sprites to fit your game's requirements using the cellWidth and cellHeight keys in the game configuration.
 
 ```js
 import { createGame, createSound } from 'https://unpkg.com/odyc'
 
 createGame({
 	//...
-	tileWidth: 32,
-	tileHeight: 32,
+	cellWidth: 32,
+	cellHeight: 32,
 	//...
 })
 ```

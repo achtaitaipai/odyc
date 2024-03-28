@@ -8,8 +8,8 @@ export type Drawable = {
 }
 
 export type RendererParams = {
-	tileWidth: number
-	tileHeight: number
+	cellWidth: number
+	cellHeight: number
 	screenWidth: number
 	screenHeight: number
 	colors: string[]
@@ -19,8 +19,8 @@ export type RendererParams = {
 class Renderer {
 	screenWidth: number
 	screenHeight: number
-	tileWidth: number
-	tileHeight: number
+	cellWidth: number
+	cellHeight: number
 	colors: string[]
 	ctx: CanvasRenderingContext2D
 	background?: string | number
@@ -28,15 +28,15 @@ class Renderer {
 	constructor(options: RendererParams, wrapper: HTMLElement) {
 		this.screenWidth = options.screenWidth
 		this.screenHeight = options.screenHeight
-		this.tileWidth = options.tileWidth
-		this.tileHeight = options.tileHeight
+		this.cellWidth = options.cellWidth
+		this.cellHeight = options.cellHeight
 		this.colors = options.colors
 		this.background = options.background
 
 		const canvas = document.createElement('canvas')
 		canvas.classList.add('odyc_canvas')
-		canvas.width = this.tileWidth * options.screenWidth
-		canvas.height = this.tileHeight * options.screenHeight
+		canvas.width = this.cellWidth * options.screenWidth
+		canvas.height = this.cellHeight * options.screenHeight
 		const orientation = canvas.width < canvas.height ? 'vertical' : 'horizontal'
 		canvas.setAttribute('data-orientation', orientation)
 		const ctx = canvas.getContext('2d')
@@ -52,8 +52,8 @@ class Renderer {
 			if (item.sprite === undefined || item.sprite === null) continue
 			if (item.visible === false) continue
 			const [tileX, tileY] = item.position
-			const screenPosX = (tileX - cameraX) * this.tileWidth
-			const screenPosY = (tileY - cameraY) * this.tileHeight
+			const screenPosX = (tileX - cameraX) * this.cellWidth
+			const screenPosY = (tileY - cameraY) * this.cellHeight
 			this.drawTile(item.sprite, screenPosX, screenPosY)
 		}
 	}
@@ -63,17 +63,17 @@ class Renderer {
 		if (this.background === undefined) return
 		for (let y = 0; y < this.screenHeight; y++) {
 			for (let x = 0; x < this.screenWidth; x++) {
-				this.drawTile(this.background, x * this.tileWidth, y * this.tileHeight)
+				this.drawTile(this.background, x * this.cellWidth, y * this.cellHeight)
 			}
 		}
 	}
 
 	drawTile(tile: Tile, screenPosX: number, screenPosY: number) {
 		if (
-			screenPosX + this.tileWidth < 0 ||
-			screenPosY + this.tileHeight < 0 ||
-			screenPosX > this.screenWidth * this.tileWidth ||
-			screenPosY > this.screenHeight * this.tileHeight
+			screenPosX + this.cellWidth < 0 ||
+			screenPosY + this.cellHeight < 0 ||
+			screenPosX > this.screenWidth * this.cellWidth ||
+			screenPosY > this.screenHeight * this.cellHeight
 		)
 			return
 
@@ -84,14 +84,14 @@ class Renderer {
 			this.ctx.fillRect(
 				Math.floor(screenPosX),
 				Math.floor(screenPosY),
-				this.tileWidth,
-				this.tileHeight,
+				this.cellWidth,
+				this.cellHeight,
 			)
 			return
 		}
 		const grid = createGridFromString(tile)
-		for (let y = 0; y < this.tileHeight; y++) {
-			for (let x = 0; x < this.tileWidth; x++) {
+		for (let y = 0; y < this.cellHeight; y++) {
+			for (let x = 0; x < this.cellWidth; x++) {
 				const char = grid[y]?.charAt(x)
 				if (!char) continue
 				const index = +char
