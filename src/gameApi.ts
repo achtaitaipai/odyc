@@ -5,6 +5,7 @@ import { SoundPlayer } from './soundPlayer.js'
 import type { Ender } from './ender.js'
 import { createSound } from './index.js'
 import { FxKey } from './lib/jfxr.js'
+import { Position } from './types.js'
 export const initGameApi = <T extends Templates>(
 	gameState: GameState<T>,
 	dialog: Dialog,
@@ -18,17 +19,24 @@ export const initGameApi = <T extends Templates>(
 		setCell: gameState.actors.setCell,
 		setAll: gameState.actors.setAll,
 		removeAll: gameState.actors.removeAll,
-		getCollisionCount: gameState.counts.getCollision,
-		getEnterCount: gameState.counts.getEnter,
-		getLeaveCount: gameState.counts.getLeave,
 		openDialog: (text: string) => dialog.open(text),
 		playSound: (template: FxKey, seed?: number) =>
 			soundPlayer.play(createSound(template, seed)),
 		end: (message: string) => ender.play(message),
 		reset: () => {
-			gameState.player.reset()
+			gameState.player.restoreSavedState()
 			gameState.actors.reset()
-			gameState.counts._reset()
+		},
+		loadMap: (map: string, playerPosition?: Position) => {
+			gameState.player.playerProxy.position = playerPosition ?? [0, 0]
+			gameState.mapStore.store.set(map)
+			gameState.player.saveCurrentState()
+		},
+		get width() {
+			return gameState.mapStore.getDimensions()[0]
+		},
+		get height() {
+			return gameState.mapStore.getDimensions()[1]
 		},
 	}
 	return gameApi

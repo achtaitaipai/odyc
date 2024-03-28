@@ -23,7 +23,7 @@ export const createGame = <T extends Templates>(
 	const gameState = initGameState(config)
 	const soundPlayer = initSoundPlayer(config)
 	const wrapper = initWrapper(config)
-	const camera = initCamera(config, gameState.mapDimensions)
+	const camera = initCamera(config)
 	const renderer = initRenderer(config, wrapper)
 	const dialog = initDialog(wrapper)
 	const messageBox = initMessageBox(wrapper)
@@ -46,12 +46,18 @@ export const createGame = <T extends Templates>(
 	})
 
 	gameState.actors._store.subscribe((actors) => {
-		camera.update(gameState.player.playerProxy.position)
+		camera.update(
+			gameState.player.playerProxy.position,
+			gameState.mapStore.getDimensions(),
+		)
 		renderer.render([...actors, gameState.player.playerProxy], camera.position)
 	})
 
 	gameState.player.playerStore.subscribe((player) => {
-		camera.update(gameState.player.playerProxy.position)
+		camera.update(
+			gameState.player.playerProxy.position,
+			gameState.mapStore.getDimensions(),
+		)
 		renderer.render([...gameState.actors._store.get(), player], camera.position)
 	})
 

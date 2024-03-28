@@ -7,14 +7,14 @@ import {
 	Unwrap,
 } from '../types.js'
 import { createActorProxy } from './actorProxy.js'
+import { MapStore } from './map.js'
 import { GameStateParams, Template, Templates } from './types.js'
 
 export const createActorsStore = <T extends Templates>(
 	params: Omit<GameStateParams<T>, 'player'>,
+	mapStore: MapStore,
 ) => {
-	const { map } = params
 	const templates = params.templates
-	const mapGrid = createGridFromString(map)
 	const eventsListeners = new Map<
 		string | number | symbol,
 		TemplatesEventsListeners
@@ -29,10 +29,13 @@ export const createActorsStore = <T extends Templates>(
 		})
 	}
 
-	let actorsValues = createActors(mapGrid, templates)
+	let actorsValues: ActorState[] = []
 	const store = createStore(actorsValues)
 	store.subscribe((value) => {
 		actorsValues = value
+	})
+	mapStore.store.subscribe((map) => {
+		store.set(createActors(createGridFromString(map), templates))
 	})
 	const setAll = (
 		symbol: keyof T,
@@ -83,7 +86,10 @@ export const createActorsStore = <T extends Templates>(
 	}
 	const getCell = (...position: Position) => createActorProxy(position, store)
 
-	const reset = () => store.set(createActors(mapGrid, templates))
+	const reset = () =>
+		store.set(
+			createActors(createGridFromString(mapStore.store.get()), templates),
+		)
 	return {
 		getCell,
 		setCell,

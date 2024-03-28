@@ -18,8 +18,7 @@ export const initEnder = ({ gameState, messageBox, camera }: EnderParams) => {
 				await messageBox.open(message)
 			}
 			camera.reset()
-			gameState.counts._reset()
-			gameState.player.reset()
+			gameState.player.restoreSavedState()
 			gameState.actors.reset()
 		},
 	}

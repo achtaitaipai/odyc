@@ -1,3 +1,4 @@
+import { createGridFromString, getGridSize } from './lib/grid.js'
 import { Position } from './types.js'
 
 export type CameraParams = {
@@ -5,6 +6,7 @@ export type CameraParams = {
 	cameraHeight?: number
 	screenWidth: number
 	screenHeight: number
+	map: string
 }
 type Rect = {
 	left: number
@@ -17,13 +19,10 @@ export class Camera {
 	width?: number
 	height?: number
 	position: Position = [0, 0]
-	worldWidth: number
-	worldHeight: number
 	screenWidth: number
 	screenHeight: number
 
-	constructor(params: CameraParams, mapDimensions: Position) {
-		;[this.worldWidth, this.worldHeight] = mapDimensions
+	constructor(params: CameraParams) {
 		this.screenWidth = params.screenWidth
 		this.screenHeight = params.screenHeight
 		if (params.cameraWidth && params.cameraHeight) {
@@ -38,14 +37,14 @@ export class Camera {
 		}
 	}
 
-	update(target: Position) {
+	update(target: Position, mapDimensions: Position) {
 		const [targetX, targetY] = target
 		if (!this.rect || !this.screenWidth || !this.screenHeight) {
 			this.position[0] =
 				Math.floor(targetX / this.screenWidth) * this.screenWidth
 			this.position[1] =
 				Math.floor(targetY / this.screenHeight) * this.screenHeight
-			this.clamp()
+			this.clamp(mapDimensions)
 			return
 		}
 
@@ -60,24 +59,24 @@ export class Camera {
 			this.position[1] -= this.rect.top - targetScreenY
 		if (targetScreenY > this.rect.bottom)
 			this.position[1] += targetScreenY - this.rect.bottom
-		this.clamp()
+		this.clamp(mapDimensions)
 	}
 
 	reset() {
 		this.position = [0, 0]
 	}
 
-	clamp() {
+	clamp(mapDimensions: Position) {
+		const [worldWidth, worldHeight] = mapDimensions
 		this.position[0] = Math.max(
 			0,
-			Math.min(this.position[0], this.worldWidth - this.screenWidth),
+			Math.min(this.position[0], worldWidth - this.screenWidth),
 		)
 		this.position[1] = Math.max(
 			0,
-			Math.min(this.position[1], this.worldHeight - this.screenHeight),
+			Math.min(this.position[1], worldHeight - this.screenHeight),
 		)
 	}
 }
 
-export const initCamera = (params: CameraParams, mapDimensions: Position) =>
-	new Camera(params, mapDimensions)
+export const initCamera = (params: CameraParams) => new Camera(params)

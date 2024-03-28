@@ -6,8 +6,8 @@ export type PlayerParams = {
 	position?: Position
 }
 export const createPlayer = (params: PlayerParams) => {
-	const initialSprite = params.sprite ?? null
-	const initialPosition = params.position ?? [0, 0]
+	let savedSprite = params.sprite ?? null
+	let savedPosition = params.position ?? [0, 0]
 	let sprite = params.sprite ?? null
 	let position = params.position ?? [0, 0]
 	let store = createStore({ sprite, position })
@@ -15,11 +15,16 @@ export const createPlayer = (params: PlayerParams) => {
 		sprite = value.sprite ?? null
 		position = value.position
 	})
-	const reset = () => {
+	const restoreSavedState = () => {
 		store.set({
-			sprite: initialSprite,
-			position: initialPosition,
+			sprite: savedSprite,
+			position: savedPosition,
 		})
+	}
+	const saveCurrentState = () => {
+		const { sprite, position } = store.get()
+		savedSprite = sprite
+		savedPosition = position
 	}
 
 	const playerProxy = {
@@ -42,5 +47,10 @@ export const createPlayer = (params: PlayerParams) => {
 			})
 		},
 	}
-	return { playerProxy, playerStore: store, reset }
+	return {
+		playerProxy,
+		playerStore: store,
+		restoreSavedState,
+		saveCurrentState,
+	}
 }

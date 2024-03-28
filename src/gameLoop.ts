@@ -45,14 +45,12 @@ class GameLoop {
 			await this.gameState.actors._eventsListeners
 				.get(actorOnNextCell.symbol ?? '')
 				?.onCollide?.(actorOnNextCell)
-			this.gameState.counts._incrCollision(symbol, nextCell)
 		} else {
 			if (actorOnCurrentCell) {
 				const symbol = actorOnCurrentCell.symbol
 				this.gameState.actors._eventsListeners
 					.get(actorOnCurrentCell.symbol ?? '')
 					?.onLeave?.(actorOnCurrentCell)
-				this.gameState.counts._incrLeave(symbol, currentCell)
 			}
 			if (actorOnNextCell) {
 				const enterDialog = actorOnNextCell?.dialog
@@ -68,7 +66,6 @@ class GameLoop {
 						.get(actorOnNextCell.symbol ?? '')
 						?.onEnter?.(actorOnNextCell)
 				}
-				this.gameState.counts._incrEnter(symbol, nextCell)
 			}
 			//move the player if the position is not changed
 			if (
@@ -85,8 +82,8 @@ class GameLoop {
 		return (
 			x >= 0 &&
 			y >= 0 &&
-			x < this.gameState.mapDimensions[0] &&
-			y < this.gameState.mapDimensions[1]
+			x < this.gameState.mapStore.getDimensions()[0] &&
+			y < this.gameState.mapStore.getDimensions()[1]
 		)
 	}
 
