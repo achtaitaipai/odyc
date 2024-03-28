@@ -2,7 +2,7 @@ const TIMEBETWEENKEYS = 200
 const TIMEBETWEENTOUCH = 200
 const MINSWIPEDIST = 4
 
-export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
+export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION' | 'RESTART'
 
 export type InputsHandlerParams = {
 	controls: Record<Input, string | string[]>

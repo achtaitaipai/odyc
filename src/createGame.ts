@@ -41,7 +41,8 @@ export const createGame = <T extends Templates>(
 			if (input === 'ACTION') messageBox.close()
 		} else if (dialog.isOpen) {
 			if (input === 'ACTION') dialog.next()
-		} else if (input !== 'ACTION') gameLoop.update(input)
+		} else if (input === 'RESTART') ender.play()
+		else if (input !== 'ACTION') gameLoop.update(input)
 	})
 
 	gameState.actors._store.subscribe((actors) => {
