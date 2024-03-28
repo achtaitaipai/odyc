@@ -3,7 +3,6 @@ import { ALL_PRESETS, Sound } from 'jfxr'
 import { Random } from './random.js'
 
 const FxEnum = {
-	DEFAULT: 0,
 	RANDOM: 1,
 	PICKUP: 2,
 	LASER: 3,
