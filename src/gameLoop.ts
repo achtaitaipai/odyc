@@ -1,11 +1,14 @@
 import { Dialog } from './dialog.js'
-import { Ender } from './ender.js'
+import { SoundPlayer } from './soundPlayer.js'
 import { GameState } from './gameState/index.js'
-import { Templates } from './gameState/types.js'
 import { Input } from './inputs.js'
 import { addVectors, compareVectors } from './lib/vector.js'
-import { SoundPlayer } from './soundPlayer.js'
-import { ActorState, Position } from './types.js'
+import { MessageBox } from './messageBox.js'
+import { ActorState, GameEvent, Position } from './types.js'
+import { Camera } from './camera.js'
+import { Templates } from './gameState/types.js'
+import { ActorProxy } from './gameState/actorProxy.js'
+import { Ender } from './ender.js'
 
 export type GameLoopParams = {
 	soundPlayer: SoundPlayer
@@ -99,7 +102,6 @@ const directions: Record<Input, Position> = {
 	UP: [0, -1],
 	DOWN: [0, 1],
 	ACTION: [0, 0],
-	RESTART: [0, 0],
 }
 
 export const initGameLoop = (params: GameLoopParams) => new GameLoop(params)

@@ -37,7 +37,6 @@ export const defaultConfig: Config<{}> = {
 		UP: 'ArrowUp',
 		DOWN: 'ArrowDown',
 		ACTION: ['Enter', 'Space'],
-		RESTART: 'KeyR',
 	},
 	player: {
 		sprite: 0,
