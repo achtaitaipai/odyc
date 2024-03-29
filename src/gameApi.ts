@@ -24,10 +24,7 @@ export const initGameApi = <T extends Templates>(
 			soundPlayer.play(createSound(template, seed)),
 		end: (message?: string) => ender.play(message),
 		loadMap: (map: string, playerPosition?: Position) => {
-			gameState.player.playerStore.update((current) => ({
-				sprite: current.sprite,
-				position: playerPosition ?? current.position,
-			}))
+			if (playerPosition) gameState.player.playerStore.update
 			gameState.mapStore.store.set(map)
 			gameState.player.saveCurrentState()
 		},

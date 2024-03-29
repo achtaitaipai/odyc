@@ -50,6 +50,12 @@ class GameLoop {
 					.get(actorOnCurrentCell.symbol ?? '')
 					?.onLeave?.(actorOnCurrentCell)
 			}
+			//move the player if the position is not changed
+			if (
+				compareVectors(currentCell, this.gameState.player.playerProxy.position)
+			)
+				this.gameState.player.playerProxy.position = nextCell
+
 			if (actorOnNextCell) {
 				const enterDialog = actorOnNextCell?.dialog
 				if (enterDialog)
@@ -64,11 +70,6 @@ class GameLoop {
 						?.onEnter?.(actorOnNextCell)
 				}
 			}
-			//move the player if the position is not changed
-			if (
-				compareVectors(currentCell, this.gameState.player.playerProxy.position)
-			)
-				this.gameState.player.playerProxy.position = nextCell
 		}
 		if (endMessage) {
 			await this.ender.play(endMessage)
