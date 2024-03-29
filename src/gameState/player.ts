@@ -22,9 +22,8 @@ export const createPlayer = (params: PlayerParams) => {
 		})
 	}
 	const saveCurrentState = () => {
-		const { sprite, position } = store.get()
 		savedSprite = sprite
-		savedPosition = position
+		savedPosition = [...position]
 	}
 
 	const playerProxy = {

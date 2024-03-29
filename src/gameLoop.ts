@@ -41,20 +41,17 @@ class GameLoop {
 		if (actorOnNextCell.solid) {
 			const colliderDialog = actorOnNextCell.dialog
 			if (colliderDialog) await this.dialog.open(colliderDialog)
-			const symbol = actorOnNextCell.symbol
 			await this.gameState.actors._eventsListeners
 				.get(actorOnNextCell.symbol ?? '')
 				?.onCollide?.(actorOnNextCell)
 		} else {
 			if (actorOnCurrentCell) {
-				const symbol = actorOnCurrentCell.symbol
 				this.gameState.actors._eventsListeners
 					.get(actorOnCurrentCell.symbol ?? '')
 					?.onLeave?.(actorOnCurrentCell)
 			}
 			if (actorOnNextCell) {
 				const enterDialog = actorOnNextCell?.dialog
-				const symbol = actorOnNextCell.symbol
 				if (enterDialog)
 					this.dialog.open(enterDialog).then(() => {
 						this.gameState.actors._eventsListeners
