@@ -22,13 +22,9 @@ export const initGameApi = <T extends Templates>(
 		openDialog: (text: string) => dialog.open(text),
 		playSound: (template: FxKey, seed?: number) =>
 			soundPlayer.play(createSound(template, seed)),
-		end: (message: string) => ender.play(message),
-		reset: () => {
-			gameState.player.restoreSavedState()
-			gameState.actors.reset()
-		},
+		end: (message?: string) => ender.play(message),
 		loadMap: (map: string, playerPosition?: Position) => {
-			gameState.player.playerProxy.position = playerPosition ?? [0, 0]
+			if (playerPosition) gameState.player.playerProxy.position = playerPosition
 			gameState.mapStore.store.set(map)
 			gameState.player.saveCurrentState()
 		},
