@@ -37,6 +37,11 @@ export const createActorsStore = <T extends Templates>(
 	mapStore.store.subscribe((map) => {
 		store.set(createActors(createGridFromString(map), templates))
 	})
+	const getAll = (symbol: keyof T) => {
+		return actorsValues
+			.filter((el) => el.symbol === symbol)
+			.map((el) => createActorProxy(el.position, store))
+	}
 	const setAll = (
 		symbol: keyof T,
 		params: Unwrap<Partial<Omit<ActorState, 'symbol'>>>,
@@ -93,6 +98,7 @@ export const createActorsStore = <T extends Templates>(
 	return {
 		getCell,
 		setCell,
+		getAll,
 		setAll,
 		removeAll,
 		addToCell,

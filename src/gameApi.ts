@@ -17,6 +17,7 @@ export const initGameApi = <T extends Templates>(
 		getCell: gameState.actors.getCell,
 		addToCell: gameState.actors.addToCell,
 		setCell: gameState.actors.setCell,
+		getAll: gameState.actors.getAll,
 		setAll: gameState.actors.setAll,
 		removeAll: gameState.actors.removeAll,
 		openDialog: (text: string) => dialog.open(text),
