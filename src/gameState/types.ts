@@ -1,9 +1,11 @@
 import { ActorState, TemplateEventsListeners } from '../types.js'
 import { PlayerParams, createPlayer } from './player.js'
 
-export type Templates = Record<string | number | symbol, Template>
+export type Templates = { [key: string]: Template }
 
-export type Template = Partial<ActorState & TemplateEventsListeners>
+export type Template = Partial<
+	Omit<ActorState, 'position' | 'symbol'> & TemplateEventsListeners
+>
 
 export type Player = ReturnType<typeof createPlayer>
 

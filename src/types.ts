@@ -18,7 +18,7 @@ export type TemplateEventsListeners = {
 export type GameEvent = ActorProxy
 
 export type ActorState = {
-	symbol: string | number | symbol
+	symbol: string
 	sprite: Tile | null
 	sound: string | null
 	dialog: string | null

@@ -125,7 +125,7 @@ export const createActorFromTemplate = <T extends Templates>(
 	template: Template,
 ): ActorState => {
 	return {
-		symbol: symbol,
+		symbol: symbol as string,
 		sprite: template.sprite ?? null,
 		position: [x, y],
 		dialog: template.dialog ?? null,

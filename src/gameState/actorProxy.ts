@@ -79,7 +79,7 @@ export const createActorProxy = (
 			setActor('end', value)
 		},
 		get symbol() {
-			return getActor()?.symbol ?? ''
+			return getActor()?.symbol ?? null
 		},
 		remove,
 	}
