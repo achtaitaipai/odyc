@@ -10,7 +10,6 @@ import { initInputsHandler } from './inputs.js'
 import { initMessageBox } from './messageBox.js'
 import { initRenderer } from './renderer.js'
 import { initSoundPlayer } from './soundPlayer.js'
-import { initWrapper } from './wrapperElement.js'
 
 export const createGame = <T extends Templates>(
 	userConfig: Partial<Config<T>>,
@@ -22,11 +21,10 @@ export const createGame = <T extends Templates>(
 	)
 	const gameState = initGameState(config)
 	const soundPlayer = initSoundPlayer(config)
-	const wrapper = initWrapper(config)
 	const camera = initCamera(config)
-	const renderer = initRenderer(config, wrapper)
-	const dialog = initDialog(wrapper)
-	const messageBox = initMessageBox(wrapper)
+	const renderer = initRenderer(config)
+	const dialog = initDialog()
+	const messageBox = initMessageBox()
 	const ender = initEnder({ gameState, messageBox, camera })
 
 	const gameLoop = initGameLoop({
@@ -36,7 +34,7 @@ export const createGame = <T extends Templates>(
 		ender: ender,
 	})
 
-	initInputsHandler(config, wrapper, (input) => {
+	initInputsHandler(config, (input) => {
 		if (messageBox.isOpen) {
 			if (input === 'ACTION') messageBox.close()
 		} else if (dialog.isOpen) {

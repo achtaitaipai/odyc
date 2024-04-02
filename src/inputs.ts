@@ -10,7 +10,6 @@ export type InputsHandlerParams = {
 }
 
 class InputsHandler {
-	wrapper: HTMLElement
 	controls: [Input, string | string[]][]
 	lastKeysEvents: Map<string, number> = new Map()
 	onInput: (input: Input) => void
@@ -19,23 +18,18 @@ class InputsHandler {
 	oldTouchY?: number
 	isTouching = false
 
-	constructor(
-		params: InputsHandlerParams,
-		wrapper: HTMLElement,
-		onInput: (input: Input) => void,
-	) {
+	constructor(params: InputsHandlerParams, onInput: (input: Input) => void) {
 		this.controls = Object.entries(params.controls) as [
 			Input,
 			string | string[],
 		][]
 		this.onInput = onInput
-		this.wrapper = wrapper
-		if (params.autoFocus) this.wrapper.focus()
-		this.wrapper.addEventListener('keydown', this.handleKeydown)
-		this.wrapper.addEventListener('touchstart', this.handleTouch)
-		this.wrapper.addEventListener('touchend', this.handleTouchLeave)
-		this.wrapper.addEventListener('touchcancel', this.handleTouchLeave)
-		this.wrapper.addEventListener('touchmove', this.handleTouchMove)
+		if (params.autoFocus) document.body.focus()
+		document.body.addEventListener('keydown', this.handleKeydown)
+		document.body.addEventListener('touchstart', this.handleTouch)
+		document.body.addEventListener('touchend', this.handleTouchLeave)
+		document.body.addEventListener('touchcancel', this.handleTouchLeave)
+		document.body.addEventListener('touchmove', this.handleTouchMove)
 	}
 
 	handleTouch = (e: TouchEvent) => {
@@ -95,6 +89,5 @@ class InputsHandler {
 
 export const initInputsHandler = (
 	params: InputsHandlerParams,
-	wrapper: HTMLElement,
 	onInput: (input: Input) => void,
-) => new InputsHandler(params, wrapper, onInput)
+) => new InputsHandler(params, onInput)

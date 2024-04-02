@@ -17,6 +17,7 @@ export type RendererParams = {
 }
 
 class Renderer {
+	canvas: HTMLCanvasElement
 	screenWidth: number
 	screenHeight: number
 	cellWidth: number
@@ -25,7 +26,7 @@ class Renderer {
 	ctx: CanvasRenderingContext2D
 	background?: string | number
 
-	constructor(options: RendererParams, wrapper: HTMLElement) {
+	constructor(options: RendererParams) {
 		this.screenWidth = options.screenWidth
 		this.screenHeight = options.screenHeight
 		this.cellWidth = options.cellWidth
@@ -33,17 +34,39 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		const canvas = document.createElement('canvas')
-		canvas.classList.add('odyc_canvas')
-		canvas.width = this.cellWidth * options.screenWidth
-		canvas.height = this.cellHeight * options.screenHeight
-		const orientation = canvas.width < canvas.height ? 'vertical' : 'horizontal'
-		canvas.setAttribute('data-orientation', orientation)
-		const ctx = canvas.getContext('2d')
+		this.canvas = document.createElement('canvas')
+		this.canvas.width = this.cellWidth * options.screenWidth
+		this.canvas.height = this.cellHeight * options.screenHeight
+		this.canvas.style.setProperty('position', 'absolute')
+		this.canvas.style.setProperty('image-rendering', 'crisp-edges')
+		this.canvas.style.setProperty('image-rendering', 'pixelated')
+		const ctx = this.canvas.getContext('2d')
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
-		wrapper.append(canvas)
+		this._setSize()
+		document.body.append(this.canvas)
+		window.addEventListener('resize', this._setSize)
 	}
+	private _setSize = () => {
+		const orientation =
+			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
+		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9
+		let width =
+			orientation === 'horizontal'
+				? sideSize
+				: (sideSize / this.canvas.height) * this.canvas.width
+		let height =
+			orientation === 'vertical'
+				? sideSize
+				: (sideSize / this.canvas.width) * this.canvas.height
+		const left = (window.innerWidth - width) * 0.5
+		const top = (window.innerHeight - height) * 0.5
+		this.canvas.style.setProperty('width', `${width}px`)
+		this.canvas.style.setProperty('height', `${height}px`)
+		this.canvas.style.setProperty('left', `${left}px`)
+		this.canvas.style.setProperty('top', `${top}px`)
+	}
+
 	render(items: Drawable[], cameraPosition: Position) {
 		this.clear()
 		const [cameraX, cameraY] = cameraPosition
@@ -110,5 +133,4 @@ class Renderer {
 	}
 }
 
-export const initRenderer = (options: RendererParams, wrapper: HTMLElement) =>
-	new Renderer(options, wrapper)
+export const initRenderer = (options: RendererParams) => new Renderer(options)

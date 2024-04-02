@@ -2,7 +2,6 @@ import { CameraParams } from './camera.js'
 import { SoundPlayerParams } from './soundPlayer.js'
 import { InputsHandlerParams } from './inputs.js'
 import { RendererParams } from './renderer.js'
-import { WrapperParams } from './wrapperElement.js'
 import { GameStateParams, Templates } from './gameState/types.js'
 
 export type Config<T extends Templates> = WrapperParams &

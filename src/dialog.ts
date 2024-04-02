@@ -1,5 +1,6 @@
 export class Dialog {
-	wrapper: HTMLElement
+	wrapperElement: HTMLElement
+	boxElement: HTMLElement
 	lines: [HTMLElement, HTMLElement]
 	resolvePromise?: () => void
 	text?: string[]
@@ -12,19 +13,35 @@ export class Dialog {
 	timeBetweenChar = 50
 	charsByLine = 24
 
-	constructor(container: HTMLElement) {
-		this.wrapper = document.createElement('div')
+	constructor() {
+		this.wrapperElement = document.createElement('div')
+		this.boxElement = document.createElement('div')
 		this.lines = [document.createElement('p'), document.createElement('p')]
-		this.wrapper.style.setProperty('display', 'none')
-		this.wrapper.classList.add('odyc_dialog')
-		this.wrapper.append(...this.lines)
-		container.append(this.wrapper)
+		this.boxElement.style.setProperty('display', 'none')
+		this.boxElement.classList.add('odyc_dialog')
+		this.boxElement.append(...this.lines)
+		this.wrapperElement.append(this.boxElement)
+
+		this._resize()
+		document.body.append(this.wrapperElement)
+		window.addEventListener('resize', this._resize)
+	}
+	private _resize = () => {
+		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9
+		const left = (window.innerWidth - sideSize) * 0.5
+		const top = (window.innerHeight - sideSize) * 0.5
+		this.wrapperElement.style.setProperty('position', 'absolute')
+		this.wrapperElement.style.setProperty('box-sizing', 'border-box')
+		this.wrapperElement.style.setProperty('width', `${sideSize}px`)
+		this.wrapperElement.style.setProperty('height', `${sideSize}px`)
+		this.wrapperElement.style.setProperty('left', `${left}px`)
+		this.wrapperElement.style.setProperty('top', `${top}px`)
 	}
 
 	async open(text: string) {
 		this.text = this.chunkText(text, this.charsByLine)
 		this.isOpen = true
-		this.wrapper.style.removeProperty('display')
+		this.boxElement.style.removeProperty('display')
 
 		this.currentChunk = this.text.shift()?.split('')
 
@@ -69,7 +86,7 @@ export class Dialog {
 
 	close() {
 		this.isOpen = false
-		this.wrapper.style.setProperty('display', 'none')
+		this.boxElement.style.setProperty('display', 'none')
 		this.resolvePromise?.()
 		this.lines.forEach((l) => (l.textContent = ''))
 		this.lineCursor = 0
@@ -86,4 +103,4 @@ export class Dialog {
 	}
 }
 
-export const initDialog = (wrapper: HTMLElement) => new Dialog(wrapper)
+export const initDialog = () => new Dialog()
