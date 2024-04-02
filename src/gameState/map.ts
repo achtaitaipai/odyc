@@ -1,4 +1,4 @@
-import { createGridFromString, getGridSize } from '../lib/grid.js'
+import { createGridFromString, getGridSize } from '../lib/index.js'
 import { createStore } from '../lib/store.js'
 import { Position } from '../types.js'
 

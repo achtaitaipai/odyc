@@ -12,3 +12,11 @@ export const getGridSize = (grid: string[]): Position => {
 	const width = Math.max(...grid.map((row) => row.length))
 	return [width, height]
 }
+
+export const chunkText = (text: string, chunckLength: number) => {
+	const regex = new RegExp(
+		`(.{1,${chunckLength}})( +\|$\\n?)\|(.{1,${chunckLength}})`,
+		'gm',
+	)
+	return Array.from(text.match(regex) ?? [])
+}
