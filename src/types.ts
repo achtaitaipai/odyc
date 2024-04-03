@@ -1,6 +1,3 @@
-import { Dialog } from './dialog.js'
-import { SoundPlayer } from './soundPlayer.js'
-import { MessageBox } from './messageBox.js'
 import { ActorProxy } from './gameState/actorProxy.js'
 
 export type Tile = string | number
@@ -10,12 +7,10 @@ export type Position = [number, number]
 export type Sound = string
 
 export type TemplateEventsListeners = {
-	onCollide?: (e: GameEvent) => any
-	onEnter?: (e: GameEvent) => any
-	onLeave?: (e: GameEvent) => any
+	onCollide?: (target: ActorProxy) => any
+	onEnter?: (target: ActorProxy) => any
+	onLeave?: (target: ActorProxy) => any
 }
-
-export type GameEvent = ActorProxy
 
 export type ActorState = {
 	symbol: string

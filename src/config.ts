@@ -4,8 +4,7 @@ import { InputsHandlerParams } from './inputs.js'
 import { RendererParams } from './renderer.js'
 import { GameStateParams, Templates } from './gameState/types.js'
 
-export type Config<T extends Templates> = WrapperParams &
-	RendererParams &
+export type Config<T extends Templates> = RendererParams &
 	InputsHandlerParams &
 	SoundPlayerParams &
 	CameraParams &
