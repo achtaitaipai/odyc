@@ -51,7 +51,8 @@ export class MessageBox {
 
 	private _render(text: string) {
 		const lineLength = (this._sideSize - 2 * this._paddingX) / 8
-		const lines = chunkText(text, lineLength).flatMap((el) => el.split('\n'))
+		const lines = chunkText(text, lineLength)
+		console.log(lines)
 		this._ctx.fillStyle = this._backgroundColor
 		this._ctx.fillRect(
 			0,
