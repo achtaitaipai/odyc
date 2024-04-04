@@ -18,5 +18,5 @@ export const chunkText = (text: string, chunckLength: number) => {
 		`(.{1,${chunckLength}})( +\|$\\n?)\|(.{1,${chunckLength}})`,
 		'gm',
 	)
-	return text.split('\n').flatMap((el) => Array.from(el.match(regex) ?? []))
+	return text.split('\n')
 }
