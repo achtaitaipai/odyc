@@ -11,7 +11,7 @@ export class MessageBox {
 	private _backgroundColor = '#212529'
 	private _color = '#f8f9fa'
 	private _sideSize = 192
-	private _paddingX = 16
+	private _paddingX = 4
 	private _spaceBetweenLines = 2
 
 	constructor() {
@@ -52,7 +52,6 @@ export class MessageBox {
 	private _render(text: string) {
 		const lineLength = (this._sideSize - 2 * this._paddingX) / 8
 		const lines = chunkText(text, lineLength)
-		console.log(lines)
 		this._ctx.fillStyle = this._backgroundColor
 		this._ctx.fillRect(
 			0,
