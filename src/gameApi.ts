@@ -19,7 +19,6 @@ export const initGameApi = <T extends Templates>(
 		setCell: gameState.actors.setCell,
 		getAll: gameState.actors.getAll,
 		setAll: gameState.actors.setAll,
-		removeAll: gameState.actors.removeAll,
 		openDialog: (text: string) => dialog.open(text),
 		playSound: (template: FxKey, seed?: number) =>
 			soundPlayer.play(createSound(template, seed)),
