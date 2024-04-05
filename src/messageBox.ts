@@ -48,7 +48,6 @@ export class MessageBox {
 		this.isOpen = true
 		this._text = typeof text === 'string' ? [text] : [...text]
 		const currentText = this._text[this._cursor]
-		console.log(currentText)
 		if (!currentText) return
 		this._canvasElement.style.removeProperty('display')
 		this._render(currentText)
