@@ -6,11 +6,13 @@ import type { Ender } from './ender.js'
 import { createSound } from './index.js'
 import { FxKey } from './lib/jfxr.js'
 import { Position } from './types.js'
+import { MessageBox } from './messageBox.js'
 export const initGameApi = <T extends Templates>(
 	gameState: GameState<T>,
 	dialog: Dialog,
 	soundPlayer: SoundPlayer,
 	ender: Ender,
+	messageBox: MessageBox,
 ) => {
 	const gameApi = {
 		player: gameState.player.playerProxy,
@@ -20,6 +22,7 @@ export const initGameApi = <T extends Templates>(
 		getAll: gameState.actors.getAll,
 		setAll: gameState.actors.setAll,
 		openDialog: (text: string) => dialog.open(text),
+		openMessage: (text: string | string[]) => messageBox.open(text),
 		playSound: (template: FxKey, seed?: number) =>
 			soundPlayer.play(createSound(template, seed)),
 		end: (message?: string) => ender.play(message),

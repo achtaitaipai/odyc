@@ -8,7 +8,7 @@ export type Config<T extends Templates> = RendererParams &
 	InputsHandlerParams &
 	SoundPlayerParams &
 	CameraParams &
-	GameStateParams<T> & { title?: string }
+	GameStateParams<T> & { title?: string | string[] }
 
 export const defaultConfig: Config<{}> = {
 	colors: [

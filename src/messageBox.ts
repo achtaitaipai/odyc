@@ -7,11 +7,14 @@ export class MessageBox {
 	isOpen = false
 	private _resolePromise?: () => void
 
+	private _text: string[] = []
+	private _cursor = 0
+
 	//style
 	private _backgroundColor = '#212529'
 	private _color = '#f8f9fa'
 	private _sideSize = 192
-	private _paddingX = 4
+	private _paddingX = 8
 	private _spaceBetweenLines = 2
 
 	constructor() {
@@ -41,12 +44,22 @@ export class MessageBox {
 		this._canvasElement.style.setProperty('top', `${top}px`)
 	}
 
-	open(text?: string) {
+	open(text: string | string[]) {
 		this.isOpen = true
-		if (!text) return
+		this._text = typeof text === 'string' ? [text] : [...text]
+		const currentText = this._text[this._cursor]
+		console.log(currentText)
+		if (!currentText) return
 		this._canvasElement.style.removeProperty('display')
-		this._render(text)
+		this._render(currentText)
 		return new Promise<void>((res) => (this._resolePromise = () => res()))
+	}
+
+	next() {
+		this._cursor++
+		const currentText = this._text[this._cursor]
+		if (!currentText) this.close()
+		else this._render(currentText)
 	}
 
 	private _render(text: string) {
@@ -73,6 +86,7 @@ export class MessageBox {
 	}
 
 	close = () => {
+		this._cursor = 0
 		this.isOpen = false
 		this._canvasElement.style.setProperty('display', 'none')
 		this._resolePromise?.()

@@ -36,7 +36,7 @@ export const createGame = <T extends Templates>(
 
 	initInputsHandler(config, (input) => {
 		if (messageBox.isOpen) {
-			if (input === 'ACTION') messageBox.close()
+			if (input === 'ACTION') messageBox.next()
 		} else if (dialog.isOpen) {
 			if (input === 'ACTION') dialog.next()
 		} else if (input !== 'ACTION') gameLoop.update(input)
@@ -59,5 +59,5 @@ export const createGame = <T extends Templates>(
 	})
 
 	if (config.title) messageBox.open(config.title)
-	return initGameApi(gameState, dialog, soundPlayer, ender)
+	return initGameApi(gameState, dialog, soundPlayer, ender, messageBox)
 }

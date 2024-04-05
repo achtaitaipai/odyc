@@ -15,8 +15,8 @@ export const getGridSize = (grid: string[]): Position => {
 
 export const chunkText = (text: string, chunckLength: number) => {
 	const regex = new RegExp(
-		`(.{1,${chunckLength}})( +\|$\\n?)\|(.{1,${chunckLength}})`,
+		`(.{1,${chunckLength}})( +\|$\\n?)\|(.{1,${chunckLength}})|(\n)`,
 		'gm',
 	)
-	return text.split('\n')
+	return Array.from(text.match(regex) ?? [])
 }
