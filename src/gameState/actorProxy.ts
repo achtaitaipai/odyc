@@ -2,7 +2,7 @@ import { Store } from '../lib/store.js'
 import { compareVectors } from '../lib/vector.js'
 import { ActorState, Position } from '../types.js'
 
-export type ActorProxy = ReturnType<typeof createActorProxy>
+export type Actor = ReturnType<typeof createActorProxy>
 
 export const createActorProxy = (
 	position: Position,

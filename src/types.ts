@@ -1,4 +1,4 @@
-import { ActorProxy } from './gameState/actorProxy.js'
+import { Actor } from './gameState/actorProxy.js'
 
 export type Tile = string | number
 
@@ -7,9 +7,9 @@ export type Position = [number, number]
 export type Sound = string
 
 export type TemplateEventsListeners = {
-	onCollide?: (target: ActorProxy) => any
-	onEnter?: (target: ActorProxy) => any
-	onLeave?: (target: ActorProxy) => any
+	onCollide?: (target: Actor) => any
+	onEnter?: (target: Actor) => any
+	onLeave?: (target: Actor) => any
 }
 
 export type ActorState = {
