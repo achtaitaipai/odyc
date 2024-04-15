@@ -69,6 +69,12 @@ export class MessageBox {
 	}
 
 	private _render(text: string) {
+		this._ctx.clearRect(
+			0,
+			0,
+			this._canvasElement.width,
+			this._canvasElement.height,
+		)
 		const lineLength = (this._sideSize - 2 * this._paddingX) / 8
 		const lines = chunkText(text, lineLength)
 		this._ctx.fillStyle = this._backgroundColor
