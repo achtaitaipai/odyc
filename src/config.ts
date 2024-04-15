@@ -3,14 +3,22 @@ import { SoundPlayerParams } from './soundPlayer.js'
 import { InputsHandlerParams } from './inputs.js'
 import { RendererParams } from './renderer.js'
 import { GameStateParams, Templates } from './gameState/types.js'
+import { MessageBoxParams } from './messageBox.js'
+import { DialogParams } from './dialog.js'
 
 export type Config<T extends Templates> = RendererParams &
 	InputsHandlerParams &
 	SoundPlayerParams &
 	CameraParams &
+	MessageBoxParams &
+	DialogParams &
 	GameStateParams<T> & { title?: string | string[] }
 
 export const defaultConfig: Config<{}> = {
+	messageBackground: '#212529',
+	messageColor: '#f8f9fa',
+	dialogBackground: '#212529',
+	dialogColor: '#f8f9fa',
 	colors: [
 		'#212529', //black
 		'#f8f9fa', //white

@@ -1,5 +1,10 @@
-import { drawChar, drawText } from './lib/renderText.js'
+import { drawText } from './lib/renderText.js'
 import { chunkText } from './lib/string.js'
+
+export type DialogParams = {
+	dialogBackground: string
+	dialogColor: string
+}
 
 export class Dialog {
 	private _canvasElement: HTMLCanvasElement
@@ -17,8 +22,8 @@ export class Dialog {
 
 	//style
 	private _numberOfLines = 2
-	private _backgroundColor = '#212529'
-	private _color = '#f8f9fa'
+	private _backgroundColor: string
+	private _color: string
 	private _charsByLine = 20
 	private _spaceBetweenLines = 8
 	private _paddingY = 8
@@ -29,7 +34,9 @@ export class Dialog {
 	private _boxX: number
 	private _boxY: number
 
-	constructor() {
+	constructor(params: DialogParams) {
+		this._backgroundColor = params.dialogBackground
+		this._color = params.dialogColor
 		this._canvasElement = document.createElement('canvas')
 		this._canvasElement.style.setProperty('position', 'absolute')
 		this._canvasElement.style.setProperty('box-sizing', 'border-box')
@@ -152,4 +159,4 @@ export class Dialog {
 	}
 }
 
-export const initDialog = () => new Dialog()
+export const initDialog = (params: DialogParams) => new Dialog(params)

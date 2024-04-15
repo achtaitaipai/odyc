@@ -23,8 +23,8 @@ export const createGame = <T extends Templates>(
 	const soundPlayer = initSoundPlayer(config)
 	const camera = initCamera(config)
 	const renderer = initRenderer(config)
-	const dialog = initDialog()
-	const messageBox = initMessageBox()
+	const dialog = initDialog(config)
+	const messageBox = initMessageBox(config)
 	const ender = initEnder({ gameState, messageBox, camera })
 
 	const gameLoop = initGameLoop({

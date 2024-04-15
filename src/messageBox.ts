@@ -1,6 +1,11 @@
 import { drawText } from './lib/renderText.js'
 import { chunkText } from './lib/string.js'
 
+export type MessageBoxParams = {
+	messageBackground: string
+	messageColor: string
+}
+
 export class MessageBox {
 	private _canvasElement: HTMLCanvasElement
 	private _ctx: CanvasRenderingContext2D
@@ -11,13 +16,15 @@ export class MessageBox {
 	private _cursor = 0
 
 	//style
-	private _backgroundColor = '#212529'
-	private _color = '#f8f9fa'
+	private _backgroundColor: string
+	private _color: string
 	private _sideSize = 192
 	private _paddingX = 8
 	private _spaceBetweenLines = 2
 
-	constructor() {
+	constructor(params: MessageBoxParams) {
+		this._backgroundColor = params.messageBackground
+		this._color = params.messageColor
 		this._canvasElement = document.createElement('canvas')
 		this._canvasElement.style.setProperty('position', 'absolute')
 		this._canvasElement.style.setProperty('box-sizing', 'border-box')
@@ -92,4 +99,5 @@ export class MessageBox {
 	}
 }
 
-export const initMessageBox = () => new MessageBox()
+export const initMessageBox = (params: MessageBoxParams) =>
+	new MessageBox(params)
