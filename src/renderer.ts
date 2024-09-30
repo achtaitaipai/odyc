@@ -50,7 +50,7 @@ class Renderer {
 	#setSize = () => {
 		const orientation =
 			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9
+		const sideSize = Math.min(window.innerWidth, window.innerHeight)
 		let width =
 			orientation === 'horizontal'
 				? sideSize

@@ -122,7 +122,7 @@ export class Dialog {
 	}
 
 	#resize = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9
+		const sideSize = Math.min(window.innerWidth, window.innerHeight)
 		const left = (window.innerWidth - sideSize) * 0.5
 		const top = (window.innerHeight - sideSize) * 0.5
 		this.#canvasElement.style.setProperty('width', `${sideSize}px`)
