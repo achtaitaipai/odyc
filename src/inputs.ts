@@ -33,17 +33,20 @@ class InputsHandler {
 	}
 
 	handleTouch = (e: TouchEvent) => {
+		e.preventDefault()
 		if (!this.isTouching) this.onInput('ACTION')
 		this.isTouching = true
 		this.oldTouchX = e.changedTouches[0]?.clientX
 		this.oldTouchY = e.changedTouches[0]?.clientY
 	}
 
-	handleTouchLeave = () => {
+	handleTouchLeave = (e:TouchEvent) => {
+		e.preventDefault()
 		this.isTouching = false
 	}
 
 	handleTouchMove = (e: TouchEvent) => {
+		e.preventDefault()
 		const x = e.changedTouches[0]?.clientX
 		const y = e.changedTouches[0]?.clientY
 		if (
