@@ -24,12 +24,21 @@ class InputsHandler {
 			string | string[],
 		][]
 		this.onInput = onInput
-		if (params.autoFocus) document.body.focus()
-		document.body.addEventListener('keydown', this.handleKeydown)
-		document.body.addEventListener('touchstart', this.handleTouch)
-		document.body.addEventListener('touchend', this.handleTouchLeave)
-		document.body.addEventListener('touchcancel', this.handleTouchLeave)
-		document.body.addEventListener('touchmove', this.handleTouchMove)
+
+		const touchEventElement = document.createElement('div')
+		touchEventElement.style.setProperty('position','absolute')
+		touchEventElement.style.setProperty('left','0')
+		touchEventElement.style.setProperty('height','0')
+		touchEventElement.style.setProperty('width','100vw')
+		touchEventElement.style.setProperty('height','100vh')
+		touchEventElement.style.setProperty('overflow','hidden')
+		document.body.appendChild(touchEventElement)
+
+		document.addEventListener('keydown', this.handleKeydown)
+		touchEventElement.addEventListener('touchstart', this.handleTouch)
+		touchEventElement.addEventListener('touchend', this.handleTouchLeave)
+		touchEventElement.addEventListener('touchcancel', this.handleTouchLeave)
+		touchEventElement.addEventListener('touchmove', this.handleTouchMove)
 	}
 
 	handleTouch = (e: TouchEvent) => {
