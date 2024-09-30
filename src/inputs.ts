@@ -33,6 +33,7 @@ class InputsHandler {
 		touchEventElement.style.setProperty('height','100vh')
 		touchEventElement.style.setProperty('overflow','hidden')
 		document.body.appendChild(touchEventElement)
+		document.body.style.setProperty('margin','0')
 
 		document.addEventListener('keydown', this.handleKeydown)
 		touchEventElement.addEventListener('touchstart', this.handleTouch)
