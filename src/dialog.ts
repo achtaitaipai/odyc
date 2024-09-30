@@ -7,154 +7,154 @@ export type DialogParams = {
 }
 
 export class Dialog {
-	private _canvasElement: HTMLCanvasElement
-	private _ctx: CanvasRenderingContext2D
-	private _resolvePromise?: () => void
-	private _text?: string[]
-	private _lines: string[] = []
-	private _lineCursor = 0
-	private _currentChunk?: string[]
-	private _requestAnimationFrameId?: number
-	private _lastTime = 0
-	private _timeBetweenChar = 50
+	#canvasElement: HTMLCanvasElement
+	#ctx: CanvasRenderingContext2D
+	#resolvePromise?: () => void
+	#text?: string[]
+	#lines: string[] = []
+	#lineCursor = 0
+	#currentChunk?: string[]
+	#requestAnimationFrameId?: number
+	#lastTime = 0
+	#timeBetweenChar = 50
 
 	isOpen = false
 
 	//style
-	private _numberOfLines = 2
-	private _backgroundColor: string
-	private _color: string
-	private _charsByLine = 20
-	private _spaceBetweenLines = 8
-	private _paddingY = 8
-	private _paddingX = 8
+	#numberOfLines = 2
+	#backgroundColor: string
+	#color: string
+	#charsByLine = 20
+	#spaceBetweenLines = 8
+	#paddingY = 8
+	#paddingX = 8
 
-	private _boxHeight: number
-	private _boxWidth: number
-	private _boxX: number
-	private _boxY: number
+	#boxHeight: number
+	#boxWidth: number
+	#boxX: number
+	#boxY: number
 
 	constructor(params: DialogParams) {
-		this._backgroundColor = params.dialogBackground
-		this._color = params.dialogColor
-		this._canvasElement = document.createElement('canvas')
-		this._canvasElement.style.setProperty('position', 'absolute')
-		this._canvasElement.style.setProperty('box-sizing', 'border-box')
-		this._canvasElement.style.setProperty('display', 'none')
-		this._canvasElement.style.setProperty('image-rendering', 'crisp-edges')
-		this._canvasElement.style.setProperty('image-rendering', 'pixelated')
-		this._ctx = this._canvasElement.getContext('2d')!
-		this._canvasElement.width = 256
-		this._canvasElement.height = 256
+		this.#backgroundColor = params.dialogBackground
+		this.#color = params.dialogColor
+		this.#canvasElement = document.createElement('canvas')
+		this.#canvasElement.style.setProperty('position', 'absolute')
+		this.#canvasElement.style.setProperty('box-sizing', 'border-box')
+		this.#canvasElement.style.setProperty('display', 'none')
+		this.#canvasElement.style.setProperty('image-rendering', 'crisp-edges')
+		this.#canvasElement.style.setProperty('image-rendering', 'pixelated')
+		this.#ctx = this.#canvasElement.getContext('2d')!
+		this.#canvasElement.width = 256
+		this.#canvasElement.height = 256
 
-		this._resize()
-		document.body.append(this._canvasElement)
-		window.addEventListener('resize', this._resize)
+		this.#resize()
+		document.body.append(this.#canvasElement)
+		window.addEventListener('resize', this.#resize)
 
-		this._boxHeight =
-			this._numberOfLines * 8 +
-			this._paddingY * 2 +
-			this._spaceBetweenLines * (this._numberOfLines - 1)
-		this._boxY = this._canvasElement.height - this._boxHeight - 16
-		this._boxWidth = this._charsByLine * 8 + this._paddingX * 2
-		this._boxX = (this._canvasElement.width - this._boxWidth) * 0.5
+		this.#boxHeight =
+			this.#numberOfLines * 8 +
+			this.#paddingY * 2 +
+			this.#spaceBetweenLines * (this.#numberOfLines - 1)
+		this.#boxY = this.#canvasElement.height - this.#boxHeight - 16
+		this.#boxWidth = this.#charsByLine * 8 + this.#paddingX * 2
+		this.#boxX = (this.#canvasElement.width - this.#boxWidth) * 0.5
 	}
 
 	async open(text: string) {
-		this._canvasElement.style.setProperty('display', 'block')
-		this._text = chunkText(text, this._charsByLine)
-		this._currentChunk = this._text.shift()?.split('')
-		this._requestAnimationFrameId = requestAnimationFrame(this._update)
+		this.#canvasElement.style.setProperty('display', 'block')
+		this.#text = chunkText(text, this.#charsByLine)
+		this.#currentChunk = this.#text.shift()?.split('')
+		this.#requestAnimationFrameId = requestAnimationFrame(this.#update)
 		this.isOpen = true
-		this._lines = new Array(this._numberOfLines).fill('')
-		this._render()
+		this.#lines = new Array(this.#numberOfLines).fill('')
+		this.#render()
 
 		return new Promise<void>((res) => {
-			this._resolvePromise = () => res()
+			this.#resolvePromise = () => res()
 		})
 	}
 
 	next() {
 		if (!this.isOpen) return
-		if (this._currentChunk?.length === 0 || this._currentChunk === undefined) {
-			this._currentChunk = this._text?.shift()?.split('')
-			if (this._currentChunk === undefined) {
-				this._close()
+		if (this.#currentChunk?.length === 0 || this.#currentChunk === undefined) {
+			this.#currentChunk = this.#text?.shift()?.split('')
+			if (this.#currentChunk === undefined) {
+				this.#close()
 				return
 			}
-			this._lineCursor++
+			this.#lineCursor++
 
-			if (this._lineCursor >= this._numberOfLines) {
-				this._lineCursor = 0
-				this._lines = this._lines.map(() => '')
-				this._render()
+			if (this.#lineCursor >= this.#numberOfLines) {
+				this.#lineCursor = 0
+				this.#lines = this.#lines.map(() => '')
+				this.#render()
 			}
 		}
 	}
 
-	private _update = (now: number) => {
-		this._requestAnimationFrameId = requestAnimationFrame(this._update)
-		if (now - this._lastTime < this._timeBetweenChar) return
-		this._lastTime = now
+	#update = (now: number) => {
+		this.#requestAnimationFrameId = requestAnimationFrame(this.#update)
+		if (now - this.#lastTime < this.#timeBetweenChar) return
+		this.#lastTime = now
 		if (
-			this._currentChunk?.length === 0 &&
-			this._lineCursor < this._numberOfLines - 1
+			this.#currentChunk?.length === 0 &&
+			this.#lineCursor < this.#numberOfLines - 1
 		) {
-			this._lineCursor++
-			this._currentChunk = this._text?.shift()?.split('')
+			this.#lineCursor++
+			this.#currentChunk = this.#text?.shift()?.split('')
 		}
 
-		const newChar = this._currentChunk?.shift()
-		this._ctx.fillStyle = this._color
+		const newChar = this.#currentChunk?.shift()
+		this.#ctx.fillStyle = this.#color
 		if (newChar) {
-			this._lines[this._lineCursor] = this._lines[this._lineCursor] + newChar
-			this._render()
+			this.#lines[this.#lineCursor] = this.#lines[this.#lineCursor] + newChar
+			this.#render()
 		}
 	}
 
-	private _close() {
+	#close() {
 		this.isOpen = false
-		this._canvasElement.style.setProperty('display', 'none')
-		this._lineCursor = 0
-		this._resolvePromise?.()
-		this._requestAnimationFrameId &&
-			cancelAnimationFrame(this._requestAnimationFrameId)
+		this.#canvasElement.style.setProperty('display', 'none')
+		this.#lineCursor = 0
+		this.#resolvePromise?.()
+		this.#requestAnimationFrameId &&
+			cancelAnimationFrame(this.#requestAnimationFrameId)
 	}
 
-	private _resize = () => {
+	#resize = () => {
 		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9
 		const left = (window.innerWidth - sideSize) * 0.5
 		const top = (window.innerHeight - sideSize) * 0.5
-		this._canvasElement.style.setProperty('width', `${sideSize}px`)
-		this._canvasElement.style.setProperty('height', `${sideSize}px`)
-		this._canvasElement.style.setProperty('left', `${left}px`)
-		this._canvasElement.style.setProperty('top', `${top}px`)
+		this.#canvasElement.style.setProperty('width', `${sideSize}px`)
+		this.#canvasElement.style.setProperty('height', `${sideSize}px`)
+		this.#canvasElement.style.setProperty('left', `${left}px`)
+		this.#canvasElement.style.setProperty('top', `${top}px`)
 	}
 
-	private _render = () => {
-		this._ctx.clearRect(
+	#render = () => {
+		this.#ctx.clearRect(
 			0,
 			0,
-			this._canvasElement.width,
-			this._canvasElement.height,
+			this.#canvasElement.width,
+			this.#canvasElement.height,
 		)
-		this._ctx.fillStyle = this._backgroundColor
-		this._ctx.fillRect(this._boxX, this._boxY, this._boxWidth, this._boxHeight)
-		this._ctx.fillStyle = this._color
-		for (let x = 0; x < this._boxWidth; x++) {
-			this._ctx.fillRect(this._boxX + x, this._boxY, 1, 1)
-			this._ctx.fillRect(this._boxX + x, this._boxY + this._boxHeight - 1, 1, 1)
+		this.#ctx.fillStyle = this.#backgroundColor
+		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)
+		this.#ctx.fillStyle = this.#color
+		for (let x = 0; x < this.#boxWidth; x++) {
+			this.#ctx.fillRect(this.#boxX + x, this.#boxY, 1, 1)
+			this.#ctx.fillRect(this.#boxX + x, this.#boxY + this.#boxHeight - 1, 1, 1)
 		}
-		for (let y = 0; y < this._boxHeight; y++) {
-			this._ctx.fillRect(this._boxX, this._boxY + y, 1, 1)
-			this._ctx.fillRect(this._boxX + this._boxWidth - 1, this._boxY + y, 1, 1)
+		for (let y = 0; y < this.#boxHeight; y++) {
+			this.#ctx.fillRect(this.#boxX, this.#boxY + y, 1, 1)
+			this.#ctx.fillRect(this.#boxX + this.#boxWidth - 1, this.#boxY + y, 1, 1)
 		}
-		this._ctx.fillStyle = this._color
-		this._lines.forEach((line, i) => {
-			const x = this._boxX + this._paddingX
+		this.#ctx.fillStyle = this.#color
+		this.#lines.forEach((line, i) => {
+			const x = this.#boxX + this.#paddingX
 			const y =
-				this._boxY + this._paddingY + 8 * i + i * this._spaceBetweenLines
-			drawText(this._ctx, line, x, y)
+				this.#boxY + this.#paddingY + 8 * i + i * this.#spaceBetweenLines
+			drawText(this.#ctx, line, x, y)
 		})
 	}
 }

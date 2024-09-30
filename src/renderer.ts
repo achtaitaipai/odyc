@@ -43,11 +43,11 @@ class Renderer {
 		const ctx = this.canvas.getContext('2d')
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
-		this._setSize()
+		this.#setSize()
 		document.body.append(this.canvas)
-		window.addEventListener('resize', this._setSize)
+		window.addEventListener('resize', this.#setSize)
 	}
-	private _setSize = () => {
+	#setSize = () => {
 		const orientation =
 			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
 		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9

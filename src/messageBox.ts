@@ -7,101 +7,101 @@ export type MessageBoxParams = {
 }
 
 export class MessageBox {
-	private _canvasElement: HTMLCanvasElement
-	private _ctx: CanvasRenderingContext2D
+	#canvasElement: HTMLCanvasElement
+	#ctx: CanvasRenderingContext2D
 	isOpen = false
-	private _resolePromise?: () => void
+	#resolePromise?: () => void
 
-	private _text: string[] = []
-	private _cursor = 0
+	#text: string[] = []
+	#cursor = 0
 
 	//style
-	private _backgroundColor: string
-	private _color: string
-	private _sideSize = 192
-	private _paddingX = 8
-	private _spaceBetweenLines = 2
+	#backgroundColor: string
+	#color: string
+	#sideSize = 192
+	#paddingX = 8
+	#spaceBetweenLines = 2
 
 	constructor(params: MessageBoxParams) {
-		this._backgroundColor = params.messageBackground
-		this._color = params.messageColor
-		this._canvasElement = document.createElement('canvas')
-		this._canvasElement.style.setProperty('position', 'absolute')
-		this._canvasElement.style.setProperty('box-sizing', 'border-box')
-		this._canvasElement.style.setProperty('display', 'none')
-		this._canvasElement.style.setProperty('image-rendering', 'crisp-edges')
-		this._canvasElement.style.setProperty('image-rendering', 'pixelated')
-		this._ctx = this._canvasElement.getContext('2d')!
-		this._canvasElement.width = this._sideSize
-		this._canvasElement.height = this._sideSize
+		this.#backgroundColor = params.messageBackground
+		this.#color = params.messageColor
+		this.#canvasElement = document.createElement('canvas')
+		this.#canvasElement.style.setProperty('position', 'absolute')
+		this.#canvasElement.style.setProperty('box-sizing', 'border-box')
+		this.#canvasElement.style.setProperty('display', 'none')
+		this.#canvasElement.style.setProperty('image-rendering', 'crisp-edges')
+		this.#canvasElement.style.setProperty('image-rendering', 'pixelated')
+		this.#ctx = this.#canvasElement.getContext('2d')!
+		this.#canvasElement.width = this.#sideSize
+		this.#canvasElement.height = this.#sideSize
 
-		this._resize()
-		window.addEventListener('resize', this._resize)
+		this.#resize()
+		window.addEventListener('resize', this.#resize)
 
-		document.body.append(this._canvasElement)
+		document.body.append(this.#canvasElement)
 	}
 
-	private _resize = () => {
+	#resize = () => {
 		const sideSize = Math.min(window.innerWidth, window.innerHeight) * 0.9
 		const left = (window.innerWidth - sideSize) * 0.5
 		const top = (window.innerHeight - sideSize) * 0.5
-		this._canvasElement.style.setProperty('width', `${sideSize}px`)
-		this._canvasElement.style.setProperty('height', `${sideSize}px`)
-		this._canvasElement.style.setProperty('left', `${left}px`)
-		this._canvasElement.style.setProperty('top', `${top}px`)
+		this.#canvasElement.style.setProperty('width', `${sideSize}px`)
+		this.#canvasElement.style.setProperty('height', `${sideSize}px`)
+		this.#canvasElement.style.setProperty('left', `${left}px`)
+		this.#canvasElement.style.setProperty('top', `${top}px`)
 	}
 
 	open(text: string | string[]) {
 		this.isOpen = true
-		this._text = typeof text === 'string' ? [text] : [...text]
-		const currentText = this._text[this._cursor]
+		this.#text = typeof text === 'string' ? [text] : [...text]
+		const currentText = this.#text[this.#cursor]
 		if (!currentText) return
-		this._canvasElement.style.removeProperty('display')
-		this._render(currentText)
-		return new Promise<void>((res) => (this._resolePromise = () => res()))
+		this.#canvasElement.style.removeProperty('display')
+		this.#render(currentText)
+		return new Promise<void>((res) => (this.#resolePromise = () => res()))
 	}
 
 	next() {
-		this._cursor++
-		const currentText = this._text[this._cursor]
+		this.#cursor++
+		const currentText = this.#text[this.#cursor]
 		if (!currentText) this.close()
-		else this._render(currentText)
+		else this.#render(currentText)
 	}
 
-	private _render(text: string) {
-		this._ctx.clearRect(
+	#render(text: string) {
+		this.#ctx.clearRect(
 			0,
 			0,
-			this._canvasElement.width,
-			this._canvasElement.height,
+			this.#canvasElement.width,
+			this.#canvasElement.height,
 		)
-		const lineLength = (this._sideSize - 2 * this._paddingX) / 8
+		const lineLength = (this.#sideSize - 2 * this.#paddingX) / 8
 		const lines = chunkText(text, lineLength)
-		this._ctx.fillStyle = this._backgroundColor
-		this._ctx.fillRect(
+		this.#ctx.fillStyle = this.#backgroundColor
+		this.#ctx.fillRect(
 			0,
 			0,
-			this._canvasElement.width,
-			this._canvasElement.height,
+			this.#canvasElement.width,
+			this.#canvasElement.height,
 		)
-		this._ctx.fillStyle = this._color
+		this.#ctx.fillStyle = this.#color
 
 		const textHeight =
-			lines.length * 8 + (lines.length - 1) * this._spaceBetweenLines
-		const top = (this._canvasElement.height - textHeight) * 0.5
+			lines.length * 8 + (lines.length - 1) * this.#spaceBetweenLines
+		const top = (this.#canvasElement.height - textHeight) * 0.5
 		lines.forEach((line, i) => {
 			const lineWidth = line.length * 8
-			const posX = (this._canvasElement.width - lineWidth) * 0.5
-			const posY = top + i * 8 + i * this._spaceBetweenLines
-			drawText(this._ctx, line, posX, posY)
+			const posX = (this.#canvasElement.width - lineWidth) * 0.5
+			const posY = top + i * 8 + i * this.#spaceBetweenLines
+			drawText(this.#ctx, line, posX, posY)
 		})
 	}
 
 	close = () => {
-		this._cursor = 0
+		this.#cursor = 0
 		this.isOpen = false
-		this._canvasElement.style.setProperty('display', 'none')
-		this._resolePromise?.()
+		this.#canvasElement.style.setProperty('display', 'none')
+		this.#resolePromise?.()
 	}
 }
 
