@@ -41,3 +41,4 @@ export const initGameApi = <T extends Templates>(
 	}
 	return gameApi
 }
+

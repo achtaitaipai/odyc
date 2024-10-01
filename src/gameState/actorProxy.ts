@@ -1,10 +1,11 @@
 import { Store } from '../lib/store.js'
 import { compareVectors } from '../lib/vector.js'
 import { ActorState, Position } from '../types.js'
+import { Templates } from './types.js'
 
 export type Actor = ReturnType<typeof createActorProxy>
 
-export const createActorProxy = (
+export const createActorProxy = <T extends Templates>(
 	position: Position,
 	store: Store<ActorState[]>,
 ) => {
@@ -79,7 +80,7 @@ export const createActorProxy = (
 			setActor('end', value)
 		},
 		get symbol() {
-			return getActor()?.symbol ?? null
+			return (getActor()?.symbol as keyof T) ?? null
 		},
 		remove,
 	}

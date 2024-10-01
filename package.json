@@ -1,29 +1,29 @@
 {
-	"name": "odyc",
-	"version": "0.0.25",
-	"description": "",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"type": "module",
-	"files": [
-		"dist/index.js",
-		"dist/index.global.js",
-		"dist/index.d.ts"
-	],
-	"scripts": {
-		"dev": "tsup --watch",
-		"lint": "tsc",
-		"format": "prettier . --write",
-		"build": "tsup"
-	},
-	"license": "MIT",
-	"devDependencies": {
-		"autoprefixer": "^10.4.17",
-		"jfxr": "^0.13.0",
-		"postcss": "^8.4.35",
-		"postcss-preset-env": "^9.5.0",
-		"prettier": "^3.2.5",
-		"tsup": "^8.0.2",
-		"typescript": "^5.3.3"
-	}
+  "name": "odyc",
+  "version": "0.0.25",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist/index.js",
+    "dist/index.global.js",
+    "dist/index.d.ts"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "lint": "tsc",
+    "format": "prettier . --write",
+    "build": "tsup"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "jfxr": "^0.13.0",
+    "postcss": "^8.4.35",
+    "postcss-preset-env": "^9.5.0",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2",
+    "typescript": "^5.5.4"
+  }
 }
