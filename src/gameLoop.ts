@@ -1,26 +1,26 @@
 import { Dialog } from './dialog.js'
 import { Ender } from './ender.js'
 import { GameState } from './gameState/index.js'
-import { Templates } from './gameState/types.js'
+import { ActorState } from './gameState/types.js'
 import { Input } from './inputs.js'
 import { addVectors, compareVectors } from './lib/vector.js'
 import { SoundPlayer } from './soundPlayer.js'
-import { ActorState, Position } from './types.js'
+import { Position } from './types.js'
 
-export type GameLoopParams = {
+export type GameLoopParams<T extends string> = {
   soundPlayer: SoundPlayer
   dialog: Dialog
-  gameState: GameState
+  gameState: GameState<T>
   ender: Ender
 }
 
-class GameLoop {
-  gameState: GameState
+class GameLoop<T extends string> {
+  gameState: GameState<T>
   soundPlayer: SoundPlayer
   dialog: Dialog
   ender: Ender
 
-  constructor(params: GameLoopParams) {
+  constructor(params: GameLoopParams<T>) {
     this.gameState = params.gameState
     this.soundPlayer = params.soundPlayer
     this.dialog = params.dialog
@@ -85,7 +85,7 @@ class GameLoop {
     )
   }
 
-  getActorOnCell(actors: ActorState[], cellPosition: Position) {
+  getActorOnCell(actors: ActorState<T>[], cellPosition: Position) {
     return actors.find(
       ({ position }) =>
         position[0] === cellPosition[0] && position[1] === cellPosition[1],
@@ -101,4 +101,4 @@ const directions: Record<Input, Position> = {
   ACTION: [0, 0],
 }
 
-export const initGameLoop = (params: GameLoopParams) => new GameLoop(params)
+export const initGameLoop = <T extends string>(params: GameLoopParams<T>) => new GameLoop(params)

@@ -1,16 +1,35 @@
-import { ActorState, TemplateEventsListeners } from '../types.js'
+import { Tile } from '../types.js'
 import { PlayerParams, createPlayer } from './player.js'
 
-export type Templates = { [key: string]: Template }
+export type Templates<T extends string> = { [K in T]: Template<K> }
 
-export type Template = Partial<
-	Omit<ActorState, 'position' | 'symbol'> & TemplateEventsListeners
+export type Template<T extends string> = Partial<
+  Omit<ActorState<T>, 'position' | 'symbol'> & ActorEvents<T>
 >
 
 export type Player = ReturnType<typeof createPlayer>
 
-export type GameStateParams<T extends Templates> = {
-	player: PlayerParams
-	templates: T
-	map: string
+export type GameStateParams<T extends string> = {
+  player: PlayerParams
+  templates: Templates<T>
+  map: string
 }
+
+export type ActorEvents<T extends string> = {
+  onCollide?: (target: ActorProxy<T>) => any
+  onEnter?: (target: ActorProxy<T>) => any
+  onLeave?: (target: ActorProxy<T>) => any
+}
+
+export type ActorState<T extends string> = {
+  symbol: T
+  sprite: Tile | null
+  sound: string | null
+  dialog: string | null
+  solid: boolean
+  visible: boolean
+  end: string | null
+  position: [number, number]
+}
+
+export type ActorProxy<T extends string> = ActorState<T> & { remove: () => void }

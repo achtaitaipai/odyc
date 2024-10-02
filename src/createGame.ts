@@ -4,14 +4,13 @@ import { initDialog } from './dialog.js'
 import { initEnder } from './ender.js'
 import { initGameApi } from './gameApi.js'
 import { initGameLoop } from './gameLoop.js'
-import { GameState, initGameState } from './gameState/index.js'
-import { Templates } from './gameState/types.js'
+import { initGameState } from './gameState/index.js'
 import { initInputsHandler } from './inputs.js'
 import { initMessageBox } from './messageBox.js'
 import { initRenderer } from './renderer.js'
 import { initSoundPlayer } from './soundPlayer.js'
 
-export const createGame = <T extends Templates>(
+export const createGame = <T extends string>(
   userConfig: Partial<Config<T>>,
 ) => {
   const config: Config<T> = Object.assign(

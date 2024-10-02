@@ -3,9 +3,9 @@ import { Position, Tile } from '../types.js'
 import { createActorsStore } from './actors.js'
 import { createMapStore } from './map.js'
 import { createPlayer } from './player.js'
-import { GameStateParams, Templates } from './types.js'
+import { GameStateParams } from './types.js'
 
-export type GameState<T extends Templates> = {
+export type GameState<T extends string> = {
   mapStore: {
     store: Store<string>;
     getDimensions(): Position;
@@ -26,7 +26,7 @@ export type GameState<T extends Templates> = {
   actors: ReturnType<typeof createActorsStore<T>>
 }
 
-export const initGameState = <U extends Templates>(
+export const initGameState = <U extends string>(
   params: GameStateParams<U>,
 ): GameState<U> => {
   const mapStore = createMapStore(params.map)
