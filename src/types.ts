@@ -7,5 +7,5 @@ export type Position = [number, number]
 export type Sound = string
 
 export type Unwrap<T> = {
-  [K in keyof T]: T[K]
+	[K in keyof T]: T[K]
 } & {}

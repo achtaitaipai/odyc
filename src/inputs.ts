@@ -26,14 +26,14 @@ class InputsHandler {
 		this.onInput = onInput
 
 		const touchEventElement = document.createElement('div')
-		touchEventElement.style.setProperty('position','absolute')
-		touchEventElement.style.setProperty('left','0')
-		touchEventElement.style.setProperty('height','0')
-		touchEventElement.style.setProperty('width','100vw')
-		touchEventElement.style.setProperty('height','100vh')
-		touchEventElement.style.setProperty('overflow','hidden')
+		touchEventElement.style.setProperty('position', 'absolute')
+		touchEventElement.style.setProperty('left', '0')
+		touchEventElement.style.setProperty('height', '0')
+		touchEventElement.style.setProperty('width', '100vw')
+		touchEventElement.style.setProperty('height', '100vh')
+		touchEventElement.style.setProperty('overflow', 'hidden')
 		document.body.appendChild(touchEventElement)
-		document.body.style.setProperty('margin','0')
+		document.body.style.setProperty('margin', '0')
 
 		document.addEventListener('keydown', this.handleKeydown)
 		touchEventElement.addEventListener('touchstart', this.handleTouch)
@@ -50,7 +50,7 @@ class InputsHandler {
 		this.oldTouchY = e.changedTouches[0]?.clientY
 	}
 
-	handleTouchLeave = (e:TouchEvent) => {
+	handleTouchLeave = (e: TouchEvent) => {
 		e.preventDefault()
 		this.isTouching = false
 	}
