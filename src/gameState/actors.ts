@@ -84,7 +84,7 @@ export const createActorsStore = <T extends string>(
         ]
       })
   }
-  const getCell = (...position: Position) => createActorProxy<T>(position, store)
+  const getCell = (x: number, y: number) => createActorProxy<T>([x, y], store)
 
   const reset = () =>
     store.set(
