@@ -1,12 +1,10 @@
 import { Dialog } from './dialog.js'
 import { GameState } from './gameState/index.js'
-import { Templates } from './gameState/types.js'
-import { SoundPlayer } from './soundPlayer.js'
+import { createSound, SoundPlayer } from './sound.js'
 import type { Ender } from './ender.js'
-import { createSound } from './index.js'
-import { FxKey } from './lib/jfxr.js'
 import { Position } from './types.js'
 import { MessageBox } from './messageBox.js'
+import { Sound } from 'pfxr'
 export const initGameApi = <T extends string>(
 	gameState: GameState<T>,
 	dialog: Dialog,
@@ -23,8 +21,14 @@ export const initGameApi = <T extends string>(
 		setAll: gameState.actors.setAll,
 		openDialog: (text: string) => dialog.open(text),
 		openMessage: (text: string | string[]) => messageBox.open(text),
-		playSound: (template: FxKey, seed?: number) =>
-			soundPlayer.play(createSound(template, seed)),
+		playSound: (...args: Parameters<typeof createSound> | [Partial<Sound>]) => {
+			const [thing] = args
+			if (typeof thing === 'object') return soundPlayer.play(thing)
+			else
+				return soundPlayer.play(
+					createSound(...(args as Parameters<typeof createSound>)),
+				)
+		},
 		end: (message?: string) => ender.play(message),
 		loadMap: (map: string, playerPosition?: Position) => {
 			if (playerPosition)

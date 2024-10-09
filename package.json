@@ -19,11 +19,11 @@
 	"license": "MIT",
 	"devDependencies": {
 		"autoprefixer": "^10.4.17",
-		"jfxr": "^0.13.0",
 		"postcss": "^8.4.35",
 		"postcss-preset-env": "^9.5.0",
 		"prettier": "^3.2.5",
 		"tsup": "^8.0.2",
-		"typescript": "^5.5.4"
+		"typescript": "^5.5.4",
+		"pfxr": "^1.0.7"
 	}
 }

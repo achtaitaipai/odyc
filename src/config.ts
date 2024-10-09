@@ -1,5 +1,5 @@
 import { CameraParams } from './camera.js'
-import { SoundPlayerParams } from './soundPlayer.js'
+import { SoundPlayerParams } from './sound.js'
 import { InputsHandlerParams } from './inputs.js'
 import { RendererParams } from './renderer.js'
 import { GameStateParams } from './gameState/types.js'

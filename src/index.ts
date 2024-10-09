@@ -1,6 +1,6 @@
-import { createSound } from './lib'
 import { createGame } from './createGame.js'
 import type { Actor } from './gameState/actorProxy.js'
-
-export { createSound, createGame }
+import { createSound } from './sound.js'
+export { createSound }
+export { createGame }
 export type { Actor }

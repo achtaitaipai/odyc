@@ -8,7 +8,7 @@ import { initGameState } from './gameState/index.js'
 import { initInputsHandler } from './inputs.js'
 import { initMessageBox } from './messageBox.js'
 import { initRenderer } from './renderer.js'
-import { initSoundPlayer } from './soundPlayer.js'
+import { initSoundPlayer } from './sound.js'
 
 export const createGame = <T extends string>(
 	userConfig: Partial<Config<T>>,

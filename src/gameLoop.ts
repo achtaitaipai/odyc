@@ -4,7 +4,7 @@ import { GameState } from './gameState/index.js'
 import { ActorState } from './gameState/types.js'
 import { Input } from './inputs.js'
 import { addVectors, compareVectors } from './lib/vector.js'
-import { SoundPlayer } from './soundPlayer.js'
+import { SoundPlayer } from './sound.js'
 import { Position } from './types.js'
 
 export type GameLoopParams<T extends string> = {

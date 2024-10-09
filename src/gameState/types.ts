@@ -1,3 +1,4 @@
+import { type Sound } from 'pfxr'
 import { Tile } from '../types.js'
 import { PlayerParams, createPlayer } from './player.js'
 
@@ -24,7 +25,7 @@ export type ActorEvents<T extends string> = {
 export type ActorState<T extends string> = {
 	symbol: T
 	sprite: Tile | null
-	sound: string | null
+	sound: Partial<Sound> | null
 	dialog: string | null
 	solid: boolean
 	visible: boolean

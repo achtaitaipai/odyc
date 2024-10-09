@@ -20,3 +20,12 @@ export const chunkText = (text: string, chunckLength: number) => {
 	)
 	return Array.from(text.match(regex) ?? [])
 }
+
+export const isUrl = (str: string) => {
+	try {
+		new URL(str)
+		return true
+	} catch (_) {
+		return false
+	}
+}
