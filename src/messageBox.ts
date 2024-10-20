@@ -1,4 +1,4 @@
-import { drawText } from './lib/renderText.js'
+import { drawText } from './font'
 import { chunkText } from './lib/string.js'
 
 export type MessageBoxParams = {
