@@ -36,7 +36,8 @@ export const initSoundPlayer = (params: SoundPlayerParams) =>
 	new SoundPlayer(params)
 
 type CreateSoundParams =
-	| [keyof typeof SOUNDTEMPLATES, number | undefined]
+	| [keyof typeof SOUNDTEMPLATES]
+	| [keyof typeof SOUNDTEMPLATES, number]
 	| [`${'http' | 'https'}://${string}.${string}`]
 
 export const createSound = (...args: CreateSoundParams): Partial<Sound> => {
