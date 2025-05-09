@@ -5,9 +5,7 @@ import { initEnder } from './ender.js'
 import { initGameApi } from './gameApi.js'
 import { initGameLoop } from './gameLoop.js'
 import { initGameState } from './gameState/index.js'
-import { ActorState, Player } from './gameState/types.js'
 import { initInputsHandler } from './inputs.js'
-import { debounce } from './lib/index.js'
 import { initMessageBox } from './messageBox.js'
 import { initRenderer } from './renderer.js'
 import { initSoundPlayer } from './sound.js'
@@ -39,21 +37,20 @@ export const createGame = <T extends string>(
 		} else if (input !== 'ACTION') gameLoop.update(input)
 	})
 
-	const updateGame = debounce(
-		(player: Player['playerProxy'], actors: ActorState<T>[]) => {
-			console.log('up')
-			camera.update(player.position, gameState.mapStore.getDimensions())
-			renderer.render([...actors, player], camera.position)
-		},
-		60,
-	)
-
 	gameState.actors._store.subscribe((actors) => {
-		updateGame(gameState.player.playerProxy, actors)
+		camera.update(
+			gameState.player.playerProxy.position,
+			gameState.mapStore.getDimensions(),
+		)
+		renderer.render([...actors, gameState.player.playerProxy], camera.position)
 	})
 
 	gameState.player.playerStore.subscribe((player) => {
-		updateGame(player, gameState.actors._store.get())
+		camera.update(
+			gameState.player.playerProxy.position,
+			gameState.mapStore.getDimensions(),
+		)
+		renderer.render([...gameState.actors._store.get(), player], camera.position)
 	})
 
 	if (config.title) messageBox.open(config.title)
