@@ -1,5 +1,3 @@
-import { Actor } from './gameState/actorProxy.js'
-
 export type Tile = string | number
 
 export type Position = [number, number]
