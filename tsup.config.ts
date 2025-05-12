@@ -11,4 +11,7 @@ export default defineConfig({
 	format: ['esm', 'iife'], // Output format(s)
 	globalName: 'odyc',
 	injectStyle: true,
+	loader: {
+		'.glsl': 'text',
+	},
 })
