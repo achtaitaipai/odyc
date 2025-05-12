@@ -41,7 +41,6 @@ export const createGame = <T extends string>(
 
 	const updateGame = debounce(
 		(player: Player['playerProxy'], actors: ActorState<T>[]) => {
-			console.log('up')
 			camera.update(player.position, gameState.mapStore.getDimensions())
 			renderer.render([...actors, player], camera.position)
 		},
