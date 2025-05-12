@@ -19,13 +19,6 @@ type Filter = {
 }
 
 const filters = {
-	default: {
-		fragment: defaultFragment,
-		settings: {
-			color: [0, 0, 1, 1],
-			intensity: 0.6,
-		},
-	},
 	fractal: {
 		fragment: fractalShader,
 		settings: {
