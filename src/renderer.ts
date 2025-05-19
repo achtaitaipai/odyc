@@ -1,7 +1,5 @@
 import { createGridFromString } from './lib'
 import { Position, Tile } from './types.js'
-import { Filter } from './filter'
-import { FilterSettings } from './shaders//filterSettings'
 
 export type Drawable = {
 	sprite?: Tile | null
@@ -16,13 +14,11 @@ export type RendererParams = {
 	screenHeight: number
 	colors: string[]
 	background?: string | number
-	filter?: FilterSettings
 }
 
 class Renderer {
-	#canvas: HTMLCanvasElement
-	#filter?: Filter
-	#zoom = 1
+	canvas: HTMLCanvasElement
+	#zoom = 24
 	screenWidth: number
 	screenHeight: number
 	cellWidth: number
@@ -39,60 +35,39 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		if (options.filter) this.#zoom = 24
+		this.canvas = document.createElement('canvas')
+		this.canvas.width = this.cellWidth * options.screenWidth * this.#zoom
+		this.canvas.height = this.cellHeight * options.screenHeight * this.#zoom
 
-		this.#canvas = document.createElement('canvas')
-		this.#canvas.width = this.cellWidth * options.screenWidth * this.#zoom
-		this.#canvas.height = this.cellHeight * options.screenHeight * this.#zoom
-
-		if (options.filter) {
-			try {
-				this.#filter = new Filter(this.#canvas, options.filter)
-			} catch (e) {
-				console.warn(e)
-			}
-		}
-
-		this.#canvas.style.setProperty('position', 'absolute')
-		this.#canvas.style.setProperty('image-rendering', 'crisp-edges')
-		this.#canvas.style.setProperty('image-rendering', 'pixelated')
-		this.#filter?.canvas.style.setProperty('position', 'absolute')
-		this.#filter?.canvas.style.setProperty('image-rendering', 'crisp-edges')
-		this.#filter?.canvas.style.setProperty('image-rendering', 'pixelated')
-		const ctx = this.#canvas.getContext('2d')
+		this.canvas.style.setProperty('position', 'absolute')
+		this.canvas.style.setProperty('image-rendering', 'crisp-edges')
+		this.canvas.style.setProperty('image-rendering', 'pixelated')
+		const ctx = this.canvas.getContext('2d')
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
 		this.#setSize()
-		if (this.#filter) {
-			document.body.append(this.#filter.canvas)
-		} else document.body.append(this.#canvas)
+		document.body.append(this.canvas)
 
 		window.addEventListener('resize', this.#setSize)
 	}
 	#setSize = () => {
 		const orientation =
-			this.#canvas.width < this.#canvas.height ? 'vertical' : 'horizontal'
+			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
 		const sideSize = Math.min(window.innerWidth, window.innerHeight)
 		let width =
 			orientation === 'horizontal'
 				? sideSize
-				: (sideSize / this.#canvas.height) * this.#canvas.width
+				: (sideSize / this.canvas.height) * this.canvas.width
 		let height =
 			orientation === 'vertical'
 				? sideSize
-				: (sideSize / this.#canvas.width) * this.#canvas.height
+				: (sideSize / this.canvas.width) * this.canvas.height
 		const left = (window.innerWidth - width) * 0.5
 		const top = (window.innerHeight - height) * 0.5
-		this.#canvas.style.setProperty('width', `${width}px`)
-		this.#canvas.style.setProperty('height', `${height}px`)
-		this.#canvas.style.setProperty('left', `${left}px`)
-		this.#canvas.style.setProperty('top', `${top}px`)
-
-		this.#filter?.canvas.style.setProperty('width', `${width}px`)
-		this.#filter?.canvas.style.setProperty('height', `${height}px`)
-		this.#filter?.canvas.style.setProperty('left', `${left}px`)
-		this.#filter?.canvas.style.setProperty('top', `${top}px`)
-		this.#filter?.render()
+		this.canvas.style.setProperty('width', `${width}px`)
+		this.canvas.style.setProperty('height', `${height}px`)
+		this.canvas.style.setProperty('left', `${left}px`)
+		this.canvas.style.setProperty('top', `${top}px`)
 	}
 
 	render(items: Drawable[], cameraPosition: Position) {
@@ -107,7 +82,6 @@ class Renderer {
 			const screenPosY = (tileY - cameraY) * this.cellHeight
 			this.drawTile(item.sprite, screenPosX, screenPosY)
 		}
-		this.#filter?.render()
 	}
 
 	clear() {
@@ -123,7 +97,6 @@ class Renderer {
 			this.screenWidth * this.cellWidth * this.#zoom,
 			this.screenHeight * this.cellHeight * this.#zoom,
 		)
-		this.#filter?.render()
 	}
 
 	drawTile(tile: Tile, screenPosX: number, screenPosY: number) {

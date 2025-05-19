@@ -2,6 +2,7 @@ import { initCamera } from './camera.js'
 import { Config, defaultConfig } from './config.js'
 import { initDialog } from './dialog.js'
 import { initEnder } from './ender.js'
+import { initFilter } from './filter.js'
 import { initGameApi } from './gameApi.js'
 import { initGameLoop } from './gameLoop.js'
 import { initGameState } from './gameState/index.js'
@@ -22,6 +23,7 @@ export const createGame = <T extends string>(
 	const renderer = initRenderer(config)
 	const dialog = initDialog(config)
 	const messageBox = initMessageBox(config)
+	const gameFilter = initFilter(renderer.canvas, config.filter)
 	const ender = initEnder({ gameState, messageBox, camera })
 
 	const gameLoop = initGameLoop({
@@ -43,6 +45,7 @@ export const createGame = <T extends string>(
 		(player: Player['playerProxy'], actors: ActorState<T>[]) => {
 			camera.update(player.position, gameState.mapStore.getDimensions())
 			renderer.render([...actors, player], camera.position)
+			gameFilter?.render()
 		},
 		60,
 	)

@@ -5,14 +5,16 @@ import { RendererParams } from './renderer.js'
 import { GameStateParams } from './gameState/types.js'
 import { MessageBoxParams } from './messageBox.js'
 import { DialogParams } from './dialog.js'
+import { FilterParams } from './shaders/filterSettings.js'
 
 export type Config<T extends string> = RendererParams &
 	InputsHandlerParams &
 	SoundPlayerParams &
 	CameraParams &
 	MessageBoxParams &
-	DialogParams &
-	GameStateParams<T> & { title?: string | string[] }
+	DialogParams & { filter?: FilterParams } & GameStateParams<T> & {
+		title?: string | string[]
+	}
 
 export const defaultConfig: Config<string> = {
 	messageBackground: '#212529',

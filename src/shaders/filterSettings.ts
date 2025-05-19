@@ -58,13 +58,13 @@ type CustomFilterSettings = {
 	settings?: Uniforms
 }
 
-export type FilterSettings =
+export type FilterParams =
 	| {
 			[K in FilterKey]: FilterSettingsOf<K>
 	  }[FilterKey]
 	| CustomFilterSettings
 
-export const getFilterSettings = (settings: FilterSettings) => {
+export const getFilterSettings = (settings: FilterParams) => {
 	if ('name' in settings) {
 		const params = Object.assign(
 			{},

@@ -1,4 +1,4 @@
-import { FilterSettings, getFilterSettings } from './shaders/filterSettings'
+import { FilterParams, getFilterSettings } from './shaders/filterSettings'
 
 export class Filter {
 	canvas: HTMLCanvasElement
@@ -11,13 +11,19 @@ export class Filter {
 	#uniformCache = new Map<string, WebGLUniformLocation>()
 	#attributePositionLocation: GLint
 
-	constructor(target: HTMLCanvasElement, filter: FilterSettings) {
-		this.#settings = getFilterSettings(filter)
+	constructor(target: HTMLCanvasElement, options: FilterParams) {
+		this.#settings = getFilterSettings(options)
 
 		this.#textureSource = target
 		this.canvas = document.createElement('canvas')
 		this.canvas.width = this.#textureSource.width
 		this.canvas.height = this.#textureSource.height
+
+		this.canvas.style.setProperty('position', 'absolute')
+		this.canvas.style.setProperty('image-rendering', 'crisp-edges')
+		this.canvas.style.setProperty('image-rendering', 'pixelated')
+
+		window.addEventListener('resize', this.#setSize)
 
 		const gl = this.canvas.getContext('webgl')
 		if (!gl) throw new Error('WebGL not supported')
@@ -41,8 +47,33 @@ export class Filter {
 
 		this.#quad = this.#createQuad()
 		this.#texture = this.#createTexture()
+		this.#setSize()
+		// document.body.appendChild(this.canvas)
+		this.#textureSource.after(this.canvas)
+		this.#textureSource.remove()
 	}
 
+	#setSize = () => {
+		const orientation =
+			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
+		const sideSize = Math.min(window.innerWidth, window.innerHeight)
+		let width =
+			orientation === 'horizontal'
+				? sideSize
+				: (sideSize / this.canvas.height) * this.canvas.width
+		let height =
+			orientation === 'vertical'
+				? sideSize
+				: (sideSize / this.canvas.width) * this.canvas.height
+		const left = (window.innerWidth - width) * 0.5
+		const top = (window.innerHeight - height) * 0.5
+
+		this.canvas.style.setProperty('width', `${width}px`)
+		this.canvas.style.setProperty('height', `${height}px`)
+		this.canvas.style.setProperty('left', `${left}px`)
+		this.canvas.style.setProperty('top', `${top}px`)
+		this.render()
+	}
 	#compileShader(
 		type:
 			| (typeof WebGLRenderingContext)['FRAGMENT_SHADER']
@@ -190,4 +221,11 @@ export class Filter {
 		)
 		this.#gl.drawArrays(this.#gl.TRIANGLES, 0, 6)
 	}
+}
+export const initFilter = (
+	target: HTMLCanvasElement,
+	options?: FilterParams,
+) => {
+	if (!options) return null
+	return new Filter(target, options)
 }
