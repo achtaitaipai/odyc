@@ -10,7 +10,7 @@ export type SoundPlayerParams = {
 	volume: number
 }
 
-export type SoundTemplateKey = keyof typeof SOUNDTEMPLATES
+type SoundTemplateKey = keyof typeof SOUNDTEMPLATES
 
 export class SoundPlayer {
 	audioContext: AudioContext
@@ -38,8 +38,8 @@ export const initSoundPlayer = (params: SoundPlayerParams) =>
 	new SoundPlayer(params)
 
 type CreateSoundParams =
-	| [key: keyof typeof SOUNDTEMPLATES]
-	| [key: keyof typeof SOUNDTEMPLATES, seed: number]
+	| [key: SoundTemplateKey]
+	| [key: SoundTemplateKey, seed: number]
 	| [url: `${'http' | 'https'}://${string}.${string}`]
 
 export const createSound = (...args: CreateSoundParams): Partial<Sound> => {
