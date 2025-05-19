@@ -1,6 +1,5 @@
 import { Camera } from './camera.js'
 import { GameState } from './gameState/index.js'
-import { Templates } from './gameState/types.js'
 import { MessageBox } from './messageBox.js'
 
 type EnderParams<T extends string> = {
@@ -19,7 +18,7 @@ export const initEnder = <T extends string>({
 	return {
 		play: async (message?: string) => {
 			if (message) {
-				await messageBox.open(message)
+				messageBox.open(message)
 			}
 			camera.reset()
 			gameState.player.restoreSavedState()
