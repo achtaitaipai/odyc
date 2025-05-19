@@ -37,10 +37,13 @@ export class SoundPlayer {
 export const initSoundPlayer = (params: SoundPlayerParams) =>
 	new SoundPlayer(params)
 
-export const createSound = (
-	key: SoundTemplateKey | `${'http' | 'https'}://${string}.${string}`,
-	seed?: number,
-): Partial<Sound> => {
+type CreateSoundParams =
+	| [key: keyof typeof SOUNDTEMPLATES]
+	| [key: keyof typeof SOUNDTEMPLATES, seed: number]
+	| [url: `${'http' | 'https'}://${string}.${string}`]
+
+export const createSound = (...args: CreateSoundParams): Partial<Sound> => {
+	const [key, seed] = args
 	if (isUrl(key)) return createSoundFromUrl(new URL(key))
 	if (key in SOUNDTEMPLATES)
 		return createSoundFromTemplate(
