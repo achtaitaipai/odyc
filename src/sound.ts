@@ -10,6 +10,8 @@ export type SoundPlayerParams = {
 	volume: number
 }
 
+export type SoundTemplateKey = keyof typeof SOUNDTEMPLATES
+
 export class SoundPlayer {
 	audioContext: AudioContext
 	gainNode: GainNode
@@ -36,9 +38,7 @@ export const initSoundPlayer = (params: SoundPlayerParams) =>
 	new SoundPlayer(params)
 
 export const createSound = (
-	key:
-		| keyof typeof SOUNDTEMPLATES
-		| `${'http' | 'https'}://${string}.${string}`,
+	key: SoundTemplateKey | `${'http' | 'https'}://${string}.${string}`,
 	seed?: number,
 ): Partial<Sound> => {
 	if (isUrl(key)) return createSoundFromUrl(new URL(key))
