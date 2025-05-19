@@ -10,7 +10,7 @@ export type SoundPlayerParams = {
 	volume: number
 }
 
-type SoundTemplateKey = keyof typeof SOUNDTEMPLATES
+export type SoundTemplateKey = keyof typeof SOUNDTEMPLATES
 
 export class SoundPlayer {
 	audioContext: AudioContext
