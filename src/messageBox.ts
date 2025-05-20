@@ -31,10 +31,10 @@ export class MessageBox {
 		this.#canvas.style.setProperty('display', 'none')
 		this.#canvas.style.setProperty('image-rendering', 'crisp-edges')
 		this.#canvas.style.setProperty('image-rendering', 'pixelated')
-		this.#canvas.classList.add('odyc-message-canvas')
 		this.#ctx = this.#canvas.getContext('2d')!
 		this.#canvas.width = this.#sideSize
 		this.#canvas.height = this.#sideSize
+		this.#canvas.classList.add('odyc-message-canvas')
 
 		this.#resize()
 		window.addEventListener('resize', this.#resize)
