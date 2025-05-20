@@ -49,9 +49,8 @@ export class Filter {
 		this.#quad = this.#createQuad()
 		this.#texture = this.#createTexture()
 		this.#setSize()
-		// document.body.appendChild(this.canvas)
 		this.#textureSource.after(this.canvas)
-		this.#textureSource.remove()
+		this.#textureSource.style.setProperty('display', 'none')
 	}
 
 	#setSize = () => {
