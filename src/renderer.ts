@@ -42,6 +42,7 @@ class Renderer {
 		this.canvas.style.setProperty('position', 'absolute')
 		this.canvas.style.setProperty('image-rendering', 'crisp-edges')
 		this.canvas.style.setProperty('image-rendering', 'pixelated')
+		this.canvas.classList.add('odyc-renderer-canvas')
 		const ctx = this.canvas.getContext('2d')
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx

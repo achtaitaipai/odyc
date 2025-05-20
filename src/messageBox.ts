@@ -7,7 +7,7 @@ export type MessageBoxParams = {
 }
 
 export class MessageBox {
-	#canvasElement: HTMLCanvasElement
+	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	isOpen = false
 	#resolePromise?: () => void
@@ -25,30 +25,31 @@ export class MessageBox {
 	constructor(params: MessageBoxParams) {
 		this.#backgroundColor = params.messageBackground
 		this.#color = params.messageColor
-		this.#canvasElement = document.createElement('canvas')
-		this.#canvasElement.style.setProperty('position', 'absolute')
-		this.#canvasElement.style.setProperty('box-sizing', 'border-box')
-		this.#canvasElement.style.setProperty('display', 'none')
-		this.#canvasElement.style.setProperty('image-rendering', 'crisp-edges')
-		this.#canvasElement.style.setProperty('image-rendering', 'pixelated')
-		this.#ctx = this.#canvasElement.getContext('2d')!
-		this.#canvasElement.width = this.#sideSize
-		this.#canvasElement.height = this.#sideSize
+		this.#canvas = document.createElement('canvas')
+		this.#canvas.style.setProperty('position', 'absolute')
+		this.#canvas.style.setProperty('box-sizing', 'border-box')
+		this.#canvas.style.setProperty('display', 'none')
+		this.#canvas.style.setProperty('image-rendering', 'crisp-edges')
+		this.#canvas.style.setProperty('image-rendering', 'pixelated')
+		this.#canvas.classList.add('odyc-message-canvas')
+		this.#ctx = this.#canvas.getContext('2d')!
+		this.#canvas.width = this.#sideSize
+		this.#canvas.height = this.#sideSize
 
 		this.#resize()
 		window.addEventListener('resize', this.#resize)
 
-		document.body.append(this.#canvasElement)
+		document.body.append(this.#canvas)
 	}
 
 	#resize = () => {
 		const sideSize = Math.min(window.innerWidth, window.innerHeight)
 		const left = (window.innerWidth - sideSize) * 0.5
 		const top = (window.innerHeight - sideSize) * 0.5
-		this.#canvasElement.style.setProperty('width', `${sideSize}px`)
-		this.#canvasElement.style.setProperty('height', `${sideSize}px`)
-		this.#canvasElement.style.setProperty('left', `${left}px`)
-		this.#canvasElement.style.setProperty('top', `${top}px`)
+		this.#canvas.style.setProperty('width', `${sideSize}px`)
+		this.#canvas.style.setProperty('height', `${sideSize}px`)
+		this.#canvas.style.setProperty('left', `${left}px`)
+		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
 	open(text: string | string[]) {
@@ -56,7 +57,7 @@ export class MessageBox {
 		this.#text = typeof text === 'string' ? [text] : [...text]
 		const currentText = this.#text[this.#cursor]
 		if (!currentText) return
-		this.#canvasElement.style.removeProperty('display')
+		this.#canvas.style.removeProperty('display')
 		this.#render(currentText)
 		return new Promise<void>((res) => (this.#resolePromise = () => res()))
 	}
@@ -69,29 +70,19 @@ export class MessageBox {
 	}
 
 	#render(text: string) {
-		this.#ctx.clearRect(
-			0,
-			0,
-			this.#canvasElement.width,
-			this.#canvasElement.height,
-		)
+		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
 		const lineLength = (this.#sideSize - 2 * this.#paddingX) / 8
 		const lines = chunkText(text, lineLength)
 		this.#ctx.fillStyle = this.#backgroundColor
-		this.#ctx.fillRect(
-			0,
-			0,
-			this.#canvasElement.width,
-			this.#canvasElement.height,
-		)
+		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#color
 
 		const textHeight =
 			lines.length * 8 + (lines.length - 1) * this.#spaceBetweenLines
-		const top = (this.#canvasElement.height - textHeight) * 0.5
+		const top = (this.#canvas.height - textHeight) * 0.5
 		lines.forEach((line, i) => {
 			const lineWidth = line.length * 8
-			const posX = (this.#canvasElement.width - lineWidth) * 0.5
+			const posX = (this.#canvas.width - lineWidth) * 0.5
 			const posY = top + i * 8 + i * this.#spaceBetweenLines
 			drawText(this.#ctx, line, posX, posY)
 		})
@@ -100,7 +91,7 @@ export class MessageBox {
 	close = () => {
 		this.#cursor = 0
 		this.isOpen = false
-		this.#canvasElement.style.setProperty('display', 'none')
+		this.#canvas.style.setProperty('display', 'none')
 		this.#resolePromise?.()
 	}
 }

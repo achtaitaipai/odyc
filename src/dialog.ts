@@ -7,7 +7,7 @@ export type DialogParams = {
 }
 
 export class Dialog {
-	#canvasElement: HTMLCanvasElement
+	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: () => void
 	#text?: string[]
@@ -37,31 +37,32 @@ export class Dialog {
 	constructor(params: DialogParams) {
 		this.#backgroundColor = params.dialogBackground
 		this.#color = params.dialogColor
-		this.#canvasElement = document.createElement('canvas')
-		this.#canvasElement.style.setProperty('position', 'absolute')
-		this.#canvasElement.style.setProperty('box-sizing', 'border-box')
-		this.#canvasElement.style.setProperty('display', 'none')
-		this.#canvasElement.style.setProperty('image-rendering', 'crisp-edges')
-		this.#canvasElement.style.setProperty('image-rendering', 'pixelated')
-		this.#ctx = this.#canvasElement.getContext('2d')!
-		this.#canvasElement.width = 256
-		this.#canvasElement.height = 256
+		this.#canvas = document.createElement('canvas')
+		this.#canvas.style.setProperty('position', 'absolute')
+		this.#canvas.style.setProperty('box-sizing', 'border-box')
+		this.#canvas.style.setProperty('display', 'none')
+		this.#canvas.style.setProperty('image-rendering', 'crisp-edges')
+		this.#canvas.style.setProperty('image-rendering', 'pixelated')
+		this.#ctx = this.#canvas.getContext('2d')!
+		this.#canvas.width = 256
+		this.#canvas.height = 256
+		this.#canvas.classList.add('odyc-dialog-canvas')
 
 		this.#resize()
-		document.body.append(this.#canvasElement)
+		document.body.append(this.#canvas)
 		window.addEventListener('resize', this.#resize)
 
 		this.#boxHeight =
 			this.#numberOfLines * 8 +
 			this.#paddingY * 2 +
 			this.#spaceBetweenLines * (this.#numberOfLines - 1)
-		this.#boxY = this.#canvasElement.height - this.#boxHeight - 16
+		this.#boxY = this.#canvas.height - this.#boxHeight - 16
 		this.#boxWidth = this.#charsByLine * 8 + this.#paddingX * 2
-		this.#boxX = (this.#canvasElement.width - this.#boxWidth) * 0.5
+		this.#boxX = (this.#canvas.width - this.#boxWidth) * 0.5
 	}
 
 	async open(text: string) {
-		this.#canvasElement.style.setProperty('display', 'block')
+		this.#canvas.style.setProperty('display', 'block')
 		this.#text = chunkText(text, this.#charsByLine)
 		this.#currentChunk = this.#text.shift()?.split('')
 		this.#requestAnimationFrameId = requestAnimationFrame(this.#update)
@@ -114,7 +115,7 @@ export class Dialog {
 
 	#close() {
 		this.isOpen = false
-		this.#canvasElement.style.setProperty('display', 'none')
+		this.#canvas.style.setProperty('display', 'none')
 		this.#lineCursor = 0
 		this.#resolvePromise?.()
 		this.#requestAnimationFrameId &&
@@ -125,19 +126,14 @@ export class Dialog {
 		const sideSize = Math.min(window.innerWidth, window.innerHeight)
 		const left = (window.innerWidth - sideSize) * 0.5
 		const top = (window.innerHeight - sideSize) * 0.5
-		this.#canvasElement.style.setProperty('width', `${sideSize}px`)
-		this.#canvasElement.style.setProperty('height', `${sideSize}px`)
-		this.#canvasElement.style.setProperty('left', `${left}px`)
-		this.#canvasElement.style.setProperty('top', `${top}px`)
+		this.#canvas.style.setProperty('width', `${sideSize}px`)
+		this.#canvas.style.setProperty('height', `${sideSize}px`)
+		this.#canvas.style.setProperty('left', `${left}px`)
+		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
 	#render = () => {
-		this.#ctx.clearRect(
-			0,
-			0,
-			this.#canvasElement.width,
-			this.#canvasElement.height,
-		)
+		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)
 		this.#ctx.fillStyle = this.#color
