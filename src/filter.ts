@@ -26,7 +26,7 @@ export class Filter {
 
 		window.addEventListener('resize', this.#setSize)
 
-		const gl = this.canvas.getContext('webgl')
+		const gl = this.canvas.getContext('webgl', { preserveDrawingBuffer: true })
 		if (!gl) throw new Error('WebGL not supported')
 		this.#gl = gl
 
