@@ -1,6 +1,6 @@
 import { Dialog } from './dialog.js'
 import { GameState } from './gameState/index.js'
-import { createSound, SoundPlayer } from './sound.js'
+import { createSound, PlaySoundArgs, SoundPlayer } from './sound.js'
 import type { Ender } from './ender.js'
 import { Position } from './types.js'
 import { MessageBox } from './messageBox.js'
@@ -21,14 +21,7 @@ export const initGameApi = <T extends string>(
 		setAll: gameState.actors.setAll,
 		openDialog: (text: string) => dialog.open(text),
 		openMessage: (text: string | string[]) => messageBox.open(text),
-		playSound: (...args: Parameters<typeof createSound> | [Partial<Sound>]) => {
-			const [thing] = args
-			if (typeof thing === 'object') return soundPlayer.play(thing)
-			else
-				return soundPlayer.play(
-					createSound(...(args as Parameters<typeof createSound>)),
-				)
-		},
+		playSound: (...args: PlaySoundArgs) => soundPlayer.play(...args),
 		end: (message?: string) => ender.play(message),
 		loadMap: (map: string, playerPosition?: Position) => {
 			if (playerPosition)
