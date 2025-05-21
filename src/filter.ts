@@ -20,7 +20,6 @@ export class Filter {
 		this.canvas.height = this.#textureSource.height
 
 		this.canvas.style.setProperty('position', 'absolute')
-		this.canvas.style.setProperty('image-rendering', 'crisp-edges')
 		this.canvas.style.setProperty('image-rendering', 'pixelated')
 		this.canvas.classList.add('odyc-filter-canvas')
 

@@ -40,7 +40,6 @@ class Renderer {
 		this.canvas.height = this.cellHeight * options.screenHeight * this.#zoom
 
 		this.canvas.style.setProperty('position', 'absolute')
-		this.canvas.style.setProperty('image-rendering', 'crisp-edges')
 		this.canvas.style.setProperty('image-rendering', 'pixelated')
 		this.canvas.classList.add('odyc-renderer-canvas')
 		const ctx = this.canvas.getContext('2d')

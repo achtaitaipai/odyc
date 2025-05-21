@@ -29,7 +29,6 @@ export class MessageBox {
 		this.#canvas.style.setProperty('position', 'absolute')
 		this.#canvas.style.setProperty('box-sizing', 'border-box')
 		this.#canvas.style.setProperty('display', 'none')
-		this.#canvas.style.setProperty('image-rendering', 'crisp-edges')
 		this.#canvas.style.setProperty('image-rendering', 'pixelated')
 		this.#ctx = this.#canvas.getContext('2d')!
 		this.#canvas.width = this.#sideSize

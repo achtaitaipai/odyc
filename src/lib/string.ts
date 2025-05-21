@@ -18,7 +18,7 @@ export const chunkText = (text: string, chunckLength: number) => {
 		`(.{1,${chunckLength}})( +\|$\\n?)\|(.{1,${chunckLength}})|(\n)`,
 		'gm',
 	)
-	return Array.from(text.match(regex) ?? [])
+	return Array.from(text.match(regex) ?? []).map((l) => l.replace('\n', ''))
 }
 
 export const isUrl = (str: string) => {
