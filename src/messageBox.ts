@@ -72,6 +72,7 @@ export class MessageBox {
 		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
 		const lineLength = (this.#canvasSize - 2 * this.#paddingX) / 8
 		const lines = chunkText(text, lineLength)
+		console.log(lines.at(0)?.slice(0, -1))
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#color
@@ -80,9 +81,8 @@ export class MessageBox {
 			lines.length * 8 + (lines.length - 1) * this.#spaceBetweenLines
 		const top = (this.#canvas.height - textHeight) * 0.5
 		lines.forEach((line, i) => {
-			const lineWidth = line.length * 8
-			const posX =
-				(this.#canvas.width - lineWidth) * 0.5 + (lineLength % 2 === 0 ? 0 : 4)
+			const lineWidth = line.replace(/ $/, '').length * 8
+			const posX = (this.#canvas.width - lineWidth) * 0.5
 			const posY =
 				top +
 				i * 8 +
