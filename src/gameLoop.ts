@@ -4,7 +4,7 @@ import { GameState } from './gameState/index.js'
 import { ActorState } from './gameState/types.js'
 import { Input } from './inputs.js'
 import { addVectors, compareVectors } from './lib/vector.js'
-import { SoundPlayer } from './sound.js'
+import { PlaySoundArgs, SoundPlayer } from './sound.js'
 import { Position } from './types.js'
 
 export type GameLoopParams<T extends string> = {
@@ -34,7 +34,10 @@ class GameLoop<T extends string> {
 		const actorOnCurrentCell = this.gameState.actors.getCell(...currentCell)
 		const actorOnNextCell = this.gameState.actors.getCell(...nextCell)
 		const sound = actorOnNextCell.sound
-		if (sound) this.soundPlayer.play(sound)
+		if (sound) {
+			const soundParams: PlaySoundArgs = Array.isArray(sound) ? sound : [sound]
+			this.soundPlayer.play(...soundParams)
+		}
 
 		const endMessage = actorOnNextCell.end
 

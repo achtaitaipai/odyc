@@ -1,5 +1,5 @@
-import { type Sound } from 'pfxr'
-import { Tile } from '../types.js'
+import { PlaySoundArgs } from '../sound.js'
+import { Tile, UnTuplify } from '../types.js'
 import { PlayerParams, createPlayer } from './player.js'
 
 export type Templates<T extends string> = { [K in T]: Template<K> }
@@ -25,7 +25,7 @@ export type ActorEvents<T extends string> = {
 export type ActorState<T extends string> = {
 	symbol: T
 	sprite: Tile | null
-	sound: Partial<Sound> | null
+	sound: UnTuplify<PlaySoundArgs> | null
 	dialog: string | null
 	solid: boolean
 	visible: boolean

@@ -1,6 +1,6 @@
 import { compareVectors, createGridFromString } from '../lib/index.js'
 import { createStore } from '../lib/store.js'
-import { Position, Unwrap } from '../types.js'
+import { Unwrap } from '../types.js'
 import { createActorProxy } from './actorProxy.js'
 import { MapStore } from './map.js'
 import {
