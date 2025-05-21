@@ -30,7 +30,7 @@ export const chunkText = (
 					current = [word]
 				} else {
 					chunks.push(word.slice(0, maxLength))
-					current = [word.slice(maxLength + 1)]
+					current = [word.slice(maxLength)]
 				}
 			} else {
 				current.push(word)
