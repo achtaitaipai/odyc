@@ -5,7 +5,7 @@ import { RendererParams } from './renderer'
 export type DialogParams = {
 	dialogBackground: string | number
 	dialogColor: string | number
-	dialogStroke: string | number
+	dialogBorder: string | number
 	colors: RendererParams['colors']
 }
 
@@ -43,7 +43,7 @@ export class Dialog {
 	#configColors: RendererParams['colors']
 	#backgroundColor: string | number
 	#contentColor: string | number
-	#strokeColor: string | number
+	#borderColor: string | number
 
 	#boxHeight: number
 	#boxWidth: number
@@ -53,7 +53,7 @@ export class Dialog {
 	constructor(params: DialogParams) {
 		this.#backgroundColor = params.dialogBackground
 		this.#contentColor = params.dialogColor
-		this.#strokeColor = params.dialogStroke
+		this.#borderColor = params.dialogBorder
 		this.#configColors = params.colors
 
 		this.#canvas = document.createElement('canvas')
@@ -208,7 +208,7 @@ export class Dialog {
 
 				if (inOuter) {
 					this.#ctx.fillStyle = this.#getColor(
-						inInner ? this.#backgroundColor : this.#strokeColor,
+						inInner ? this.#backgroundColor : this.#borderColor,
 					)
 					this.#ctx.fillRect(px, py, step, step)
 				}

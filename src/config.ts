@@ -19,9 +19,9 @@ export type Config<T extends string> = RendererParams &
 export const defaultConfig: Config<string> = {
 	messageBackground: '#212529',
 	messageColor: '#f8f9fa',
-	dialogBackground: 1,
-	dialogColor: 0,
-	dialogStroke: 0,
+	dialogBackground: 0,
+	dialogColor: 1,
+	dialogBorder: 1,
 	colors: [
 		'#212529', //black
 		'#f8f9fa', //white
