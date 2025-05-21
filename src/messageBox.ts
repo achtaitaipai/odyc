@@ -18,8 +18,8 @@ export class MessageBox {
 	//style
 	#backgroundColor: string
 	#color: string
-	#sideSize = 192
-	#paddingX = 8
+	#canvasSize = 192
+	#paddingX = 2
 	#spaceBetweenLines = 2
 
 	constructor(params: MessageBoxParams) {
@@ -31,8 +31,8 @@ export class MessageBox {
 		this.#canvas.style.setProperty('display', 'none')
 		this.#canvas.style.setProperty('image-rendering', 'pixelated')
 		this.#ctx = this.#canvas.getContext('2d')!
-		this.#canvas.width = this.#sideSize
-		this.#canvas.height = this.#sideSize
+		this.#canvas.width = this.#canvasSize
+		this.#canvas.height = this.#canvasSize
 		this.#canvas.classList.add('odyc-message-canvas')
 
 		this.#resize()
@@ -70,7 +70,7 @@ export class MessageBox {
 
 	#render(text: string) {
 		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
-		const lineLength = (this.#sideSize - 2 * this.#paddingX) / 8
+		const lineLength = (this.#canvasSize - 2 * this.#paddingX) / 8
 		const lines = chunkText(text, lineLength)
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
@@ -81,8 +81,13 @@ export class MessageBox {
 		const top = (this.#canvas.height - textHeight) * 0.5
 		lines.forEach((line, i) => {
 			const lineWidth = line.length * 8
-			const posX = (this.#canvas.width - lineWidth) * 0.5
-			const posY = top + i * 8 + i * this.#spaceBetweenLines
+			const posX =
+				(this.#canvas.width - lineWidth) * 0.5 + (lineLength % 2 === 0 ? 0 : 4)
+			const posY =
+				top +
+				i * 8 +
+				i * this.#spaceBetweenLines +
+				(lines.length % 2 === 0 ? 0 : 0)
 			drawText(this.#ctx, line, posX, posY)
 		})
 	}
