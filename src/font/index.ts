@@ -16,7 +16,7 @@ export const drawText = (
 	}
 }
 
-const drawChar = (
+export const drawChar = (
 	ctx: CanvasRenderingContext2D,
 	char: string,
 	x: number,
