@@ -13,12 +13,33 @@ export const getGridSize = (grid: string[]): Position => {
 	return [width, height]
 }
 
-export const chunkText = (text: string, chunckLength: number) => {
-	const regex = new RegExp(
-		`(.{1,${chunckLength}})( +\|$\\n?)\|(.{1,${chunckLength}})|(\n)`,
-		'gm',
-	)
-	return Array.from(text.match(regex) ?? []).map((l) => l.replace('\n', ''))
+export const chunkText = (
+	text: string,
+	maxLength: number,
+	separator = '\n',
+) => {
+	const slices = text.split(separator)
+	const chunks: string[] = []
+	let current: string[] = []
+	slices.forEach((slice) => {
+		slice.split(' ').forEach((word) => {
+			const withWord = [...current, word].join(' ')
+			if (withWord.length >= maxLength) {
+				if (current.length > 0) {
+					chunks.push(current.join(' ') + ' ')
+					current = [word]
+				} else {
+					chunks.push(word.slice(0, maxLength))
+					current = [word.slice(maxLength + 1)]
+				}
+			} else {
+				current.push(word)
+			}
+		})
+		chunks.push(current.join(' ') + ' ')
+		current = []
+	})
+	return chunks
 }
 
 export const isUrl = (str: string) => {

@@ -261,7 +261,7 @@ export class Dialog {
 		const plainText = text.replace(/{\/?\d}/g, '')
 
 		// Map colors to characters line-by-line
-		return chunkText(plainText, MAX_CHARS_PER_LINE).map((line) =>
+		return chunkText(plainText, MAX_CHARS_PER_LINE, '|').map((line) =>
 			line.split('').map((char) => ({
 				char,
 				color: colorCodes.shift()!,
