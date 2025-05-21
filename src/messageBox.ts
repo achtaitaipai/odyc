@@ -81,7 +81,7 @@ export class MessageBox {
 			lines.length * 8 + (lines.length - 1) * this.#spaceBetweenLines
 		const top = (this.#canvas.height - textHeight) * 0.5
 		lines.forEach((line, i) => {
-			const lineWidth = line.replace(/ $/, '').length * 8
+			const lineWidth = line.replace(/\s+$/, '').length * 8
 			const posX = (this.#canvas.width - lineWidth) * 0.5
 			const posY =
 				top +
