@@ -1,4 +1,4 @@
-import { chunkText, drawChar, drawRect } from './lib'
+import { Char, chunkText, drawChar, drawRect, parseDialog } from './lib'
 import { RendererParams } from './renderer'
 
 export type DialogParams = {
@@ -19,8 +19,6 @@ const PADDING_Y = 12
 const CHAR_WIDTH = 8
 const BOX_RADIUS = 8
 const BOX_OUTLINE = 2
-
-type Char = { char: string; color: number | string; effect?: string }
 
 export class Dialog {
 	#canvas: HTMLCanvasElement
@@ -83,7 +81,7 @@ export class Dialog {
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
 
-		this.#remainingLines = this.#parseText(text)
+		this.#remainingLines = parseDialog(text, MAX_CHARS_PER_LINE)
 		this.#currentLineQueue = this.#remainingLines.shift()
 		this.#displayedLines = new Array(MAX_LINES).fill(null).map((_) => [])
 
@@ -190,82 +188,27 @@ export class Dialog {
 		let posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
 		let posX = x * CHAR_WIDTH + this.#boxX + PADDING_X
 		switch (char.effect) {
-			case 'wvy':
+			case 'waveY':
 				posY += Math.floor(Math.sin(now * 0.01 + x) * 3)
 				break
-			case 'wvx':
+			case 'waveX':
 				posX += Math.floor(Math.sin(now * 0.01 + x) * 2)
 				break
-			case 'shk':
+			case 'shake':
 				posX += Math.floor((Math.random() - 0.5) * 2)
 				posY += Math.floor((Math.random() - 0.5) * 2)
 				break
-			case 'shkx':
+			case 'shakeX':
 				posX += Math.floor((Math.random() - 0.5) * 2)
 				break
-			case 'shky':
+			case 'shakeY':
 				posY += Math.floor((Math.random() - 0.5) * 2)
 				break
 		}
-		this.#ctx.fillStyle = this.#getColor(char.color)
-		drawChar(this.#ctx, char.char, posX, posY)
-	}
-
-	#parseText(text: string) {
-		const colorByChar: (string | number)[] = []
-		const colorsQueue: number[] = []
-
-		const effectByChar: (string | undefined)[] = []
-		const effectsQueue: string[] = []
-
-		const tokens = text.match(/{\/?[a-z0-9]+}|./g)
-		if (!tokens) return []
-
-		for (let index = 0; index < tokens.length; index++) {
-			const token = tokens[index]
-
-			if (!token) continue
-			const isChar = token.length === 1
-
-			if (isChar) {
-				colorByChar.push(colorsQueue.at(-1) ?? this.#contentColor)
-				effectByChar.push(effectsQueue.at(-1))
-				continue
-			}
-			const isClosing = token.startsWith('{/')
-			const content = token.slice(isClosing ? 2 : 1, -1)
-			const isColorToken = /\d/.test(content)
-
-			if (isColorToken) {
-				if (isClosing) {
-					if (colorsQueue.at(-1) === +content) colorsQueue.pop()
-					continue
-				} else {
-					colorsQueue.push(+content)
-					continue
-				}
-			}
-
-			if (isClosing) {
-				if (effectsQueue.at(-1) === content) effectsQueue.pop()
-				continue
-			} else {
-				effectsQueue.push(content)
-				continue
-			}
-		}
-
-		// Strip tokens from text
-		const plainText = text.replace(/{\/?[a-z0-9]+}/g, '')
-
-		// Map colors to characters line-by-line
-		return chunkText(plainText, MAX_CHARS_PER_LINE, '|').map((line) =>
-			line.split('').map((char) => ({
-				char,
-				color: colorByChar.shift()!,
-				effect: effectByChar.shift()!,
-			})),
-		)
+		this.#ctx.fillStyle = char.color
+			? this.#getColor(char.color)
+			: this.#contentColor
+		drawChar(this.#ctx, char.value, posX, posY)
 	}
 
 	#getColor(color: string | number) {

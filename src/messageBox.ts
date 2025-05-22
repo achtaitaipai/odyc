@@ -71,7 +71,6 @@ export class MessageBox {
 		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
 		const lineLength = (this.#canvasSize - 2 * this.#paddingX) / 8
 		const lines = chunkText(text, lineLength)
-		console.log(lines.at(0)?.slice(0, -1))
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#color
