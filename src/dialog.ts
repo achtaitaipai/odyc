@@ -1,5 +1,4 @@
-import { drawChar } from './font'
-import { chunkText } from './lib'
+import { chunkText, drawChar, drawRect } from './lib'
 import { RendererParams } from './renderer'
 
 export type DialogParams = {
@@ -9,18 +8,19 @@ export type DialogParams = {
 	colors: RendererParams['colors']
 }
 
-const CANVAS_SIZE = 256
-const TYPING_INTERVAL_MS = 50
+const CANVAS_SIZE = 384
+const TYPING_INTERVAL_MS = 40
+const ANIMATION_INTERVAL_MS = 0
 const MAX_LINES = 2
-const MAX_CHARS_PER_LINE = 18
-const LINE_GAP = 6
-const PADDING_X = 20
-const PADDING_Y = 10
+const MAX_CHARS_PER_LINE = 28
+const LINE_GAP = 10
+const PADDING_X = 10
+const PADDING_Y = 12
 const CHAR_WIDTH = 8
 const BOX_RADIUS = 8
 const BOX_OUTLINE = 2
 
-type Line = { char: string; color: number | string }[]
+type Char = { char: string; color: number | string; effect?: string }
 
 export class Dialog {
 	#canvas: HTMLCanvasElement
@@ -28,22 +28,23 @@ export class Dialog {
 	#resolvePromise?: () => void
 
 	// All remaining lines to be displayed
-	#remainingLines?: Line[]
+	#remainingLines?: Char[][]
 	// Queue of characters currently being typed, line by line
-	#currentLineQueue?: Line
+	#currentLineQueue?: Char[]
 
 	// Lines currently visible on screen
-	#displayedLines: Line[] = []
+	#displayedLines: Char[][] = []
 	#lineCursor = 0
 	#animationId?: number
+	#lastCharTime = 0
 	#lastFrameTime = 0
 
 	isOpen = false
 
 	#configColors: RendererParams['colors']
-	#backgroundColor: string | number
-	#contentColor: string | number
-	#borderColor: string | number
+	#backgroundColor: string
+	#contentColor: string
+	#borderColor: string
 
 	#boxHeight: number
 	#boxWidth: number
@@ -51,10 +52,10 @@ export class Dialog {
 	#boxY: number
 
 	constructor(params: DialogParams) {
-		this.#backgroundColor = params.dialogBackground
-		this.#contentColor = params.dialogColor
-		this.#borderColor = params.dialogBorder
 		this.#configColors = params.colors
+		this.#backgroundColor = this.#getColor(params.dialogBackground)
+		this.#contentColor = this.#getColor(params.dialogColor)
+		this.#borderColor = this.#getColor(params.dialogBorder)
 
 		this.#canvas = document.createElement('canvas')
 		this.#canvas.style.setProperty('position', 'absolute')
@@ -73,8 +74,9 @@ export class Dialog {
 		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
 		this.#boxHeight =
 			MAX_LINES * CHAR_WIDTH + PADDING_Y * 2 + LINE_GAP * (MAX_LINES - 1)
-		this.#boxY = this.#canvas.height - this.#boxHeight - 8
 		this.#boxX = (this.#canvas.width - this.#boxWidth) * 0.5
+		this.#boxY =
+			this.#canvas.height - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)
 	}
 
 	async open(text: string) {
@@ -86,7 +88,6 @@ export class Dialog {
 		this.#displayedLines = new Array(MAX_LINES).fill(null).map((_) => [])
 
 		this.#animationId = requestAnimationFrame(this.#update)
-		this.#renderFrame()
 
 		return new Promise<void>((res) => {
 			this.#resolvePromise = () => res()
@@ -109,27 +110,27 @@ export class Dialog {
 		// Reset to a new dialog box (clear lines and restart cursor)
 		this.#lineCursor = 0
 		this.#displayedLines = this.#displayedLines.map(() => [])
-		this.#renderFrame()
 	}
 
 	#update = (now: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (now - this.#lastFrameTime < TYPING_INTERVAL_MS) return
+		if (now - this.#lastCharTime < ANIMATION_INTERVAL_MS) return
 		this.#lastFrameTime = now
-		if (
-			this.#currentLineQueue?.length === 0 &&
-			this.#lineCursor < MAX_LINES - 1
-		) {
-			this.#lineCursor++
-			this.#currentLineQueue = this.#remainingLines?.shift()
-		}
+		if (now - this.#lastCharTime > TYPING_INTERVAL_MS) {
+			this.#lastCharTime = now
+			if (
+				this.#currentLineQueue?.length === 0 &&
+				this.#lineCursor < MAX_LINES - 1
+			) {
+				this.#lineCursor++
+				this.#currentLineQueue = this.#remainingLines?.shift()
+			}
 
-		let newChar = this.#currentLineQueue?.shift()
+			let newChar = this.#currentLineQueue?.shift()
 
-		if (newChar) {
-			this.#displayedLines[this.#lineCursor]?.push(newChar)
-			this.#renderNewChar()
+			if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
 		}
+		this.#render(now)
 	}
 
 	#close() {
@@ -150,121 +151,119 @@ export class Dialog {
 		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
-	#renderFrame() {
+	#drawBox() {
 		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
+		this.#ctx.fillStyle = this.#borderColor
+		drawRect(
+			this.#ctx,
+			this.#boxX - BOX_OUTLINE,
+			this.#boxY - BOX_OUTLINE,
+			this.#boxWidth + BOX_OUTLINE * 2,
+			this.#boxHeight + BOX_OUTLINE * 2,
+			BOX_RADIUS,
+		)
+		this.#ctx.fillStyle = this.#backgroundColor
+		drawRect(
+			this.#ctx,
+			this.#boxX,
+			this.#boxY,
+			this.#boxWidth,
+			this.#boxHeight,
+			BOX_RADIUS,
+		)
+	}
 
-		const step = BOX_OUTLINE
-		const xEnd = this.#boxX + this.#boxWidth
-		const yEnd = this.#boxY + this.#boxHeight
-
-		for (let py = this.#boxY; py <= yEnd - step; py += step) {
-			for (let px = this.#boxX; px <= xEnd - step; px += step) {
-				const dx = px - this.#boxX + step / 2
-				const dy = py - this.#boxY + step / 2
-
-				const inLeft = dx < BOX_RADIUS
-				const inRight = dx >= this.#boxWidth - BOX_RADIUS
-				const inTop = dy < BOX_RADIUS
-				const inBottom = dy >= this.#boxHeight - BOX_RADIUS
-
-				let inOuter = true
-				let inInner = false
-
-				// coins
-				if (inLeft && inTop) {
-					const dist = Math.hypot(dx - BOX_RADIUS, dy - BOX_RADIUS)
-					inOuter = dist <= BOX_RADIUS
-					inInner = dist <= BOX_RADIUS - step
-				} else if (inRight && inTop) {
-					const dist = Math.hypot(
-						dx - (this.#boxWidth - BOX_RADIUS),
-						dy - BOX_RADIUS,
-					)
-					inOuter = dist <= BOX_RADIUS
-					inInner = dist <= BOX_RADIUS - step
-				} else if (inLeft && inBottom) {
-					const dist = Math.hypot(
-						dx - BOX_RADIUS,
-						dy - (this.#boxHeight - BOX_RADIUS),
-					)
-					inOuter = dist <= BOX_RADIUS
-					inInner = dist <= BOX_RADIUS - step
-				} else if (inRight && inBottom) {
-					const dist = Math.hypot(
-						dx - (this.#boxWidth - BOX_RADIUS),
-						dy - (this.#boxHeight - BOX_RADIUS),
-					)
-					inOuter = dist <= BOX_RADIUS
-					inInner = dist <= BOX_RADIUS - step
-				} else {
-					const edge =
-						dx < step ||
-						dx >= this.#boxWidth - step ||
-						dy < step ||
-						dy >= this.#boxHeight - step
-					inOuter = true
-					inInner = !edge
-				}
-
-				if (inOuter) {
-					this.#ctx.fillStyle = this.#getColor(
-						inInner ? this.#backgroundColor : this.#borderColor,
-					)
-					this.#ctx.fillRect(px, py, step, step)
-				}
+	#render = (now: number) => {
+		this.#drawBox()
+		for (let y = 0; y < this.#displayedLines.length; y++) {
+			const line = this.#displayedLines[y]
+			if (!line) continue
+			for (let x = 0; x < line.length; x++) {
+				const char = line[x]
+				if (!char) continue
+				this.#drawChar(now, x, y, char)
 			}
 		}
 	}
 
-	#renderNewChar = () => {
-		const currentLine = this.#displayedLines[this.#lineCursor]
-		if (!currentLine) return
-		const lastChar = currentLine.at(-1)
-		if (!lastChar) return
-		this.#ctx.fillStyle = this.#getColor(lastChar.color)
-		const posY =
-			this.#boxY +
-			PADDING_Y +
-			8 * this.#lineCursor +
-			this.#lineCursor * LINE_GAP
-		const posX = (currentLine.length - 1) * CHAR_WIDTH + this.#boxX + PADDING_Y
-		drawChar(this.#ctx, lastChar.char, posX, posY)
+	#drawChar(now: number, x: number, y: number, char: Char) {
+		let posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
+		let posX = x * CHAR_WIDTH + this.#boxX + PADDING_X
+		switch (char.effect) {
+			case 'wvy':
+				posY += Math.floor(Math.sin(now * 0.01 + x) * 3)
+				break
+			case 'wvx':
+				posX += Math.floor(Math.sin(now * 0.01 + x) * 2)
+				break
+			case 'shk':
+				posX += Math.floor((Math.random() - 0.5) * 2)
+				posY += Math.floor((Math.random() - 0.5) * 2)
+				break
+			case 'shkx':
+				posX += Math.floor((Math.random() - 0.5) * 2)
+				break
+			case 'shky':
+				posY += Math.floor((Math.random() - 0.5) * 2)
+				break
+		}
+		this.#ctx.fillStyle = this.#getColor(char.color)
+		drawChar(this.#ctx, char.char, posX, posY)
 	}
 
 	#parseText(text: string) {
-		const colorCodes: (string | number)[] = []
-		const activeColors: number[] = []
+		const colorByChar: (string | number)[] = []
+		const colorsQueue: number[] = []
 
-		const tokens = text.match(/{\/?\d}|./g)
+		const effectByChar: (string | undefined)[] = []
+		const effectsQueue: string[] = []
+
+		const tokens = text.match(/{\/?[a-z0-9]+}|./g)
 		if (!tokens) return []
 
-		for (const token of tokens) {
+		for (let index = 0; index < tokens.length; index++) {
+			const token = tokens[index]
+
 			if (!token) continue
+			const isChar = token.length === 1
 
-			const openMatch = token.match(/{(\d)}/)
-			const closeMatch = token.match(/{\/(\d)}/)
+			if (isChar) {
+				colorByChar.push(colorsQueue.at(-1) ?? this.#contentColor)
+				effectByChar.push(effectsQueue.at(-1))
+				continue
+			}
+			const isClosing = token.startsWith('{/')
+			const content = token.slice(isClosing ? 2 : 1, -1)
+			const isColorToken = /\d/.test(content)
 
-			if (openMatch && openMatch[1]) {
-				activeColors.push(+openMatch[1])
-			} else if (
-				closeMatch &&
-				closeMatch[1] &&
-				+closeMatch[1] === activeColors.at(-1)
-			) {
-				activeColors.pop()
+			if (isColorToken) {
+				if (isClosing) {
+					if (colorsQueue.at(-1) === +content) colorsQueue.pop()
+					continue
+				} else {
+					colorsQueue.push(+content)
+					continue
+				}
+			}
+
+			if (isClosing) {
+				if (effectsQueue.at(-1) === content) effectsQueue.pop()
+				continue
 			} else {
-				colorCodes.push(activeColors.at(-1) ?? this.#contentColor)
+				effectsQueue.push(content)
+				continue
 			}
 		}
 
-		// Strip color tokens from text
-		const plainText = text.replace(/{\/?\d}/g, '')
+		// Strip tokens from text
+		const plainText = text.replace(/{\/?[a-z0-9]+}/g, '')
 
 		// Map colors to characters line-by-line
 		return chunkText(plainText, MAX_CHARS_PER_LINE, '|').map((line) =>
 			line.split('').map((char) => ({
 				char,
-				color: colorCodes.shift()!,
+				color: colorByChar.shift()!,
+				effect: effectByChar.shift()!,
 			})),
 		)
 	}

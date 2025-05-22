@@ -1,5 +1,4 @@
-import { drawText } from './font'
-import { chunkText } from './lib/string.js'
+import { chunkText, drawText } from './lib'
 
 export type MessageBoxParams = {
 	messageBackground: string
