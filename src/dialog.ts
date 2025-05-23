@@ -94,20 +94,23 @@ export class Dialog {
 
 	next() {
 		// If there are still characters left to type in the current line, do nothing
-		if (this.#currentLineQueue && this.#currentLineQueue.length > 0) return
+		if (
+			(this.#currentLineQueue && this.#currentLineQueue.length > 0) ||
+			this.#lineCursor < MAX_LINES - 1
+		)
+			return
 
 		// Load the next line from the remaining lines queue
 		this.#currentLineQueue = this.#remainingLines?.shift()
 
-		// If there are no more lines to display, close the dialog
-		if (this.#currentLineQueue === undefined) {
-			this.#close()
-			return
-		}
-
 		// Reset to a new dialog box (clear lines and restart cursor)
 		this.#lineCursor = 0
 		this.#displayedLines = this.#displayedLines.map(() => [])
+
+		// If there are no more lines to display, close the dialog
+		if (this.#currentLineQueue === undefined) {
+			this.#close()
+		}
 	}
 
 	#update = (now: number) => {
