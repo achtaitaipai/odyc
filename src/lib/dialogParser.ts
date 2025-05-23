@@ -66,8 +66,6 @@ function tokenize(str: string): Token[] {
 	const matches = str.matchAll(regex)
 	const tokens: Token[] = []
 	for (const match of matches) {
-		console.log(match)
-
 		match.shift()
 		const index = match.findIndex((m) => m !== undefined)
 		const { type, process } = tokensPattern[index]!
