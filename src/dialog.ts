@@ -213,7 +213,6 @@ export class Dialog {
 				break
 			case 'blink':
 				if (Math.sin(now * 0.015) > 0) this.#ctx.fillStyle = 'transparent'
-				// this.#ctx.fillStyle = this.#contentColor
 				break
 		}
 		drawChar(this.#ctx, char.value, posX, posY)
