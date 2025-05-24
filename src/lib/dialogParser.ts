@@ -17,6 +17,7 @@ const effects = {
 	'%': 'shake',
 	'=': 'shakeX',
 	'^': 'shakeY',
+	'°': 'blink',
 } as const
 
 type EffectSymbol = keyof typeof effects

@@ -188,6 +188,10 @@ export class Dialog {
 	}
 
 	#drawChar(now: number, x: number, y: number, char: Char) {
+		this.#ctx.fillStyle = char.color
+			? this.#getColor(char.color)
+			: this.#contentColor
+
 		let posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
 		let posX = x * CHAR_WIDTH + this.#boxX + PADDING_X
 		switch (char.effect) {
@@ -207,10 +211,11 @@ export class Dialog {
 			case 'shakeY':
 				posY += Math.floor((Math.random() - 0.5) * 2)
 				break
+			case 'blink':
+				if (Math.sin(now * 0.015) > 0) this.#ctx.fillStyle = 'transparent'
+				// this.#ctx.fillStyle = this.#contentColor
+				break
 		}
-		this.#ctx.fillStyle = char.color
-			? this.#getColor(char.color)
-			: this.#contentColor
 		drawChar(this.#ctx, char.value, posX, posY)
 	}
 
