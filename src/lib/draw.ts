@@ -2,38 +2,6 @@ import { characters } from '../font'
 const FONT_HEIGHT = 8
 const FONT_WIDTH = 8
 
-export function drawRect(
-	ctx: CanvasRenderingContext2D,
-	pX: number,
-	pY: number,
-	width: number,
-	height: number,
-	radius = 0,
-) {
-	if (radius === 0) {
-		ctx.fillRect(pX, pY, width, height)
-	}
-	for (let y = 0; y < height; y++) {
-		for (let x = 0; x < width; x++) {
-			if (x < radius && y < radius) {
-				const distance = Math.hypot(y - radius, x - radius)
-				if (distance > radius) continue
-			} else if (x > width - radius && y < radius) {
-				const distance = Math.hypot(y - radius, x - (width - radius))
-				if (distance > radius) continue
-			} else if (x < radius && y > height - radius) {
-				const distance = Math.hypot(y - (height - radius), x - radius)
-				if (distance > radius) continue
-			} else if (x > width - radius && y > height - radius) {
-				const distance = Math.hypot(y - (height - radius), x - (width - radius))
-				if (distance > radius) continue
-			}
-
-			ctx.fillRect(x + pX, y + pY, 1, 1)
-		}
-	}
-}
-
 export function drawText(
 	ctx: CanvasRenderingContext2D,
 	text: string,

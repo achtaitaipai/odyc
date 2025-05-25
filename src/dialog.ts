@@ -1,4 +1,4 @@
-import { Char, drawChar, drawRect, parseDialog } from './lib'
+import { Char, TextRenderer } from './lib'
 import { RendererParams } from './renderer'
 
 export type DialogParams = {
@@ -14,10 +14,9 @@ const ANIMATION_INTERVAL_MS = 0
 const MAX_LINES = 2
 const MAX_CHARS_PER_LINE = 28
 const LINE_GAP = 10
-const PADDING_X = 10
+const PADDING_X = 1
 const PADDING_Y = 12
 const CHAR_WIDTH = 8
-const BOX_RADIUS = 8
 const BOX_OUTLINE = 2
 
 export class Dialog {
@@ -36,6 +35,8 @@ export class Dialog {
 	#animationId?: number
 	#lastCharTime = 0
 	#lastFrameTime = 0
+
+	#textRenderer: TextRenderer
 
 	isOpen = false
 
@@ -75,13 +76,18 @@ export class Dialog {
 		this.#boxX = (this.#canvas.width - this.#boxWidth) * 0.5
 		this.#boxY =
 			this.#canvas.height - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)
+
+		this.#textRenderer = new TextRenderer('|', params.colors)
 	}
 
 	async open(text: string) {
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
 
-		this.#remainingLines = parseDialog(text, MAX_CHARS_PER_LINE)
+		this.#remainingLines = this.#textRenderer.parseText(
+			text,
+			MAX_CHARS_PER_LINE,
+		)
 		this.#currentLineQueue = this.#remainingLines.shift()
 		this.#displayedLines = new Array(MAX_LINES).fill(null).map((_) => [])
 
@@ -113,12 +119,12 @@ export class Dialog {
 		}
 	}
 
-	#update = (now: number) => {
+	#update = (time: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (now - this.#lastCharTime < ANIMATION_INTERVAL_MS) return
-		this.#lastFrameTime = now
-		if (now - this.#lastCharTime > TYPING_INTERVAL_MS) {
-			this.#lastCharTime = now
+		if (time - this.#lastFrameTime < ANIMATION_INTERVAL_MS) return
+		this.#lastFrameTime = time
+		if (time - this.#lastCharTime > TYPING_INTERVAL_MS) {
+			this.#lastCharTime = time
 			if (
 				this.#currentLineQueue?.length === 0 &&
 				this.#lineCursor < MAX_LINES - 1
@@ -131,7 +137,7 @@ export class Dialog {
 
 			if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
 		}
-		this.#render(now)
+		this.#render(time)
 	}
 
 	#close() {
@@ -155,67 +161,26 @@ export class Dialog {
 	#drawBox() {
 		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#borderColor
-		drawRect(
-			this.#ctx,
+		this.#ctx.fillRect(
 			this.#boxX - BOX_OUTLINE,
 			this.#boxY - BOX_OUTLINE,
 			this.#boxWidth + BOX_OUTLINE * 2,
 			this.#boxHeight + BOX_OUTLINE * 2,
-			BOX_RADIUS,
 		)
 		this.#ctx.fillStyle = this.#backgroundColor
-		drawRect(
-			this.#ctx,
-			this.#boxX,
-			this.#boxY,
-			this.#boxWidth,
-			this.#boxHeight,
-			BOX_RADIUS,
-		)
+		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)
 	}
 
-	#render = (now: number) => {
+	#render = (time: number) => {
 		this.#drawBox()
+		const posX = CHAR_WIDTH + this.#boxX + PADDING_X
 		for (let y = 0; y < this.#displayedLines.length; y++) {
 			const line = this.#displayedLines[y]
 			if (!line) continue
-			for (let x = 0; x < line.length; x++) {
-				const char = line[x]
-				if (!char) continue
-				this.#drawChar(now, x, y, char)
-			}
+			const posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
+			this.#ctx.fillStyle = this.#contentColor
+			this.#textRenderer.draw(this.#ctx, line, posX, posY, time)
 		}
-	}
-
-	#drawChar(now: number, x: number, y: number, char: Char) {
-		this.#ctx.fillStyle = char.color
-			? this.#getColor(char.color)
-			: this.#contentColor
-
-		let posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
-		let posX = x * CHAR_WIDTH + this.#boxX + PADDING_X
-		switch (char.effect) {
-			case 'waveY':
-				posY += Math.floor(Math.sin(now * 0.01 + x) * 3)
-				break
-			case 'waveX':
-				posX += Math.floor(Math.sin(now * 0.01 + x) * 2)
-				break
-			case 'shake':
-				posX += Math.floor((Math.random() - 0.5) * 2)
-				posY += Math.floor((Math.random() - 0.5) * 2)
-				break
-			case 'shakeX':
-				posX += Math.floor((Math.random() - 0.5) * 2)
-				break
-			case 'shakeY':
-				posY += Math.floor((Math.random() - 0.5) * 2)
-				break
-			case 'blink':
-				if (Math.sin(now * 0.015) > 0) this.#ctx.fillStyle = 'transparent'
-				break
-		}
-		drawChar(this.#ctx, char.value, posX, posY)
 	}
 
 	#getColor(color: string | number) {
