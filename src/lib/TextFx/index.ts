@@ -36,14 +36,20 @@ export type Char = {
 	effect?: Effect
 }
 
-export class TextRenderer {
+export class TextFx {
 	#tokensPatterns: TokenPattern[]
 	#regExp: RegExp
 	#separatorChar: string
+	#defaultColor: string
 	#colors: RendererParams['colors']
 
-	constructor(separatorChar: string, colors: RendererParams['colors']) {
+	constructor(
+		separatorChar: string,
+		defaultColor: string,
+		colors: RendererParams['colors'],
+	) {
 		this.#separatorChar = separatorChar
+		this.#defaultColor = defaultColor
 		this.#colors = colors
 		this.#tokensPatterns = [
 			{
@@ -97,6 +103,7 @@ export class TextRenderer {
 			let posY = y
 			const charColor = char.color ? this.#colors[char.color] : null
 			if (charColor) ctx.fillStyle = charColor
+			else ctx.fillStyle = this.#defaultColor
 
 			switch (char.effect) {
 				case 'waveY':

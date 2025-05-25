@@ -1,4 +1,4 @@
-import { Char, TextRenderer } from './lib'
+import { Char, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 export type DialogParams = {
@@ -9,8 +9,7 @@ export type DialogParams = {
 }
 
 const CANVAS_SIZE = 384
-const TYPING_INTERVAL_MS = 40
-const ANIMATION_INTERVAL_MS = 0
+const ANIMATION_INTERVAL_MS = 30
 const MAX_LINES = 2
 const MAX_CHARS_PER_LINE = 28
 const LINE_GAP = 10
@@ -33,10 +32,9 @@ export class Dialog {
 	#displayedLines: Char[][] = []
 	#lineCursor = 0
 	#animationId?: number
-	#lastCharTime = 0
 	#lastFrameTime = 0
 
-	#textRenderer: TextRenderer
+	#textFx: TextFx
 
 	isOpen = false
 
@@ -77,17 +75,14 @@ export class Dialog {
 		this.#boxY =
 			this.#canvas.height - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)
 
-		this.#textRenderer = new TextRenderer('|', params.colors)
+		this.#textFx = new TextFx('|', this.#contentColor, params.colors)
 	}
 
 	async open(text: string) {
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
 
-		this.#remainingLines = this.#textRenderer.parseText(
-			text,
-			MAX_CHARS_PER_LINE,
-		)
+		this.#remainingLines = this.#textFx.parseText(text, MAX_CHARS_PER_LINE)
 		this.#currentLineQueue = this.#remainingLines.shift()
 		this.#displayedLines = new Array(MAX_LINES).fill(null).map((_) => [])
 
@@ -123,20 +118,17 @@ export class Dialog {
 		this.#animationId = requestAnimationFrame(this.#update)
 		if (time - this.#lastFrameTime < ANIMATION_INTERVAL_MS) return
 		this.#lastFrameTime = time
-		if (time - this.#lastCharTime > TYPING_INTERVAL_MS) {
-			this.#lastCharTime = time
-			if (
-				this.#currentLineQueue?.length === 0 &&
-				this.#lineCursor < MAX_LINES - 1
-			) {
-				this.#lineCursor++
-				this.#currentLineQueue = this.#remainingLines?.shift()
-			}
-
-			let newChar = this.#currentLineQueue?.shift()
-
-			if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
+		if (
+			this.#currentLineQueue?.length === 0 &&
+			this.#lineCursor < MAX_LINES - 1
+		) {
+			this.#lineCursor++
+			this.#currentLineQueue = this.#remainingLines?.shift()
 		}
+
+		let newChar = this.#currentLineQueue?.shift()
+
+		if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
 		this.#render(time)
 	}
 
@@ -178,8 +170,7 @@ export class Dialog {
 			const line = this.#displayedLines[y]
 			if (!line) continue
 			const posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
-			this.#ctx.fillStyle = this.#contentColor
-			this.#textRenderer.draw(this.#ctx, line, posX, posY, time)
+			this.#textFx.draw(this.#ctx, line, posX, posY, time)
 		}
 	}
 
