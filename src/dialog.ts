@@ -1,4 +1,4 @@
-import { Char, chunkText, drawChar, drawRect, parseDialog } from './lib'
+import { Char, drawChar, drawRect, parseDialog } from './lib'
 import { RendererParams } from './renderer'
 
 export type DialogParams = {
