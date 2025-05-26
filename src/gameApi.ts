@@ -20,7 +20,7 @@ export const initGameApi = <T extends string>(
 		getAll: gameState.actors.getAll,
 		setAll: gameState.actors.setAll,
 		openDialog: (text: string) => dialog.open(text),
-		openMessage: (text: string | string[]) => messageBox.open(text),
+		openMessage: (...args: string[]) => messageBox.open(args),
 		playSound: (...args: PlaySoundArgs) => soundPlayer.play(...args),
 		end: (message?: string) => ender.play(message),
 		loadMap: (map: string, playerPosition?: Position) => {
