@@ -1,10 +1,9 @@
 import { Dialog } from './dialog.js'
-import { GameState } from './gameState/index.js'
-import { createSound, PlaySoundArgs, SoundPlayer } from './sound.js'
 import type { Ender } from './ender.js'
-import { Position } from './types.js'
+import { GameState } from './gameState/index.js'
 import { MessageBox } from './messageBox.js'
-import { Sound } from 'pfxr'
+import { PlaySoundArgs, SoundPlayer } from './sound.js'
+import { Position } from './types.js'
 export const initGameApi = <T extends string>(
 	gameState: GameState<T>,
 	dialog: Dialog,
