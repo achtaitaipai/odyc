@@ -21,7 +21,7 @@ export const initGameApi = <T extends string>(
 		openDialog: (text: string) => dialog.open(text),
 		openMessage: (...args: string[]) => messageBox.open(args),
 		playSound: (...args: PlaySoundArgs) => soundPlayer.play(...args),
-		end: (message?: string) => ender.play(message),
+		end: (...messages: string[]) => ender.play(...messages),
 		loadMap: (map: string, playerPosition?: Position) => {
 			if (playerPosition)
 				gameState.player.playerProxy.position = [...playerPosition]

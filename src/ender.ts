@@ -16,9 +16,9 @@ export const initEnder = <T extends string>({
 	camera,
 }: EnderParams<T>) => {
 	return {
-		play: async (message?: string) => {
-			if (message) {
-				messageBox.open(message)
+		play: async (...messages: string[]) => {
+			if (messages.length) {
+				messageBox.open(messages)
 			}
 			camera.reset()
 			gameState.player.restoreSavedState()
