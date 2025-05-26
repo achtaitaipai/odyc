@@ -13,7 +13,7 @@ const ANIMATION_INTERVAL_MS = 30
 const MAX_LINES = 2
 const MAX_CHARS_PER_LINE = 28
 const LINE_GAP = 10
-const PADDING_X = 1
+const PADDING_X = 8
 const PADDING_Y = 12
 const CHAR_WIDTH = 8
 const BOX_OUTLINE = 2
@@ -150,6 +150,17 @@ export class Dialog {
 		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
+	#render = (time: number) => {
+		this.#drawBox()
+		const posX = this.#boxX + PADDING_X
+		for (let y = 0; y < this.#displayedLines.length; y++) {
+			const line = this.#displayedLines[y]
+			if (!line) continue
+			const posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
+			this.#textFx.draw(this.#ctx, line, posX, posY, time)
+		}
+	}
+
 	#drawBox() {
 		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#borderColor
@@ -161,17 +172,6 @@ export class Dialog {
 		)
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)
-	}
-
-	#render = (time: number) => {
-		this.#drawBox()
-		const posX = CHAR_WIDTH + this.#boxX + PADDING_X
-		for (let y = 0; y < this.#displayedLines.length; y++) {
-			const line = this.#displayedLines[y]
-			if (!line) continue
-			const posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
-			this.#textFx.draw(this.#ctx, line, posX, posY, time)
-		}
 	}
 
 	#getColor(color: string | number) {
