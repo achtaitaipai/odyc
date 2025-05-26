@@ -84,7 +84,9 @@ export class TextFx {
 
 	parseText(text: string, maxLength: number) {
 		const tokens = this.#tokenize(text)
+
 		const chars = this.#tokensToChars(tokens)
+
 		const lines = this.#breakLines(chars, maxLength)
 		return lines
 	}
@@ -182,7 +184,7 @@ export class TextFx {
 	#breakLines(chars: Char[], maxLength: number): Char[][] {
 		const result: Char[][] = []
 
-		while (chars.length > 0) {
+		loop: while (chars.length > 0) {
 			const separatorIndex = chars.findIndex(
 				(el, i) => el.value === this.#separatorChar && i < maxLength,
 			)
@@ -190,22 +192,21 @@ export class TextFx {
 				result.push(chars.splice(0, separatorIndex))
 				chars.splice(0, 1)
 				continue
-			}
-
-			if (chars.length <= maxLength) {
+			} else if (chars.length <= maxLength) {
 				result.push(chars)
 				chars = []
 				continue
 			}
 
-			for (let c = maxLength; c--; c >= 0) {
+			for (let c = maxLength; c >= 0; c--) {
 				const char = chars[c]
 				if (char?.value === ' ') {
 					result.push(chars.splice(0, c))
 					chars.splice(0, 1)
-					break
+					continue loop
 				}
 			}
+			result.push(chars.splice(0, maxLength))
 		}
 
 		if (chars.length > 0) result.push(chars)
