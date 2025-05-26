@@ -16,6 +16,7 @@ export class MessageBox {
 	#texts: string[] = []
 	#displayedLines: Char[][] = []
 	#maxCharsPerLine: number
+	#maxLines: number
 	#cursor = 0
 
 	#animationId?: number
@@ -28,14 +29,19 @@ export class MessageBox {
 	#backgroundColor: string
 	#contentColor: string
 	#canvasSize = 192
-	#paddingX = 2
+	#paddingX = 1
 	#spaceBetweenLines = 2
 
 	constructor(params: MessageBoxParams) {
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.messageBackground)
 		this.#contentColor = this.#getColor(params.messageColor)
-		this.#maxCharsPerLine = (this.#canvasSize - 2 * this.#paddingX) / 8
+		this.#maxCharsPerLine = Math.floor(
+			(this.#canvasSize - 2 * this.#paddingX) / 8,
+		)
+		this.#maxLines = Math.floor(
+			this.#canvasSize / (8 + this.#spaceBetweenLines),
+		)
 
 		this.#canvas = document.createElement('canvas')
 		this.#canvas.style.setProperty('position', 'absolute')
@@ -104,20 +110,18 @@ export class MessageBox {
 		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
 		this.#ctx.fillStyle = this.#contentColor
 
-		const textHeight =
-			this.#displayedLines.length * 8 +
-			(this.#displayedLines.length - 1) * this.#spaceBetweenLines
+		const lineCount = Math.min(this.#displayedLines.length, this.#maxLines)
+
+		const textHeight = lineCount * 8 + (lineCount - 1) * this.#spaceBetweenLines
 		const top = (this.#canvas.height - textHeight) * 0.5
-		this.#displayedLines.forEach((line, i) => {
+		for (let i = 0; i < lineCount; i++) {
+			const line = this.#displayedLines[i]
+			if (!line) continue
 			const lineWidth = line.length * 8
 			const posX = (this.#canvas.width - lineWidth) * 0.5
-			const posY =
-				top +
-				i * 8 +
-				i * this.#spaceBetweenLines +
-				(this.#displayedLines.length % 2 === 0 ? 0 : 0)
+			const posY = top + i * 8 + i * this.#spaceBetweenLines
 			this.#textFx.draw(this.#ctx, line, posX, posY, time)
-		})
+		}
 	}
 
 	close = () => {
