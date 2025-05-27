@@ -76,6 +76,7 @@ class GameLoop<T extends string> {
 		}
 		if (endMessage) {
 			if (typeof endMessage === 'string') await this.ender.play(endMessage)
+			else if (typeof endMessage === 'boolean' && endMessage) this.ender.play()
 			else await this.ender.play(...endMessage)
 		}
 	}

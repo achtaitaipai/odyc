@@ -29,7 +29,7 @@ export type ActorState<T extends string> = {
 	dialog: string | null
 	solid: boolean
 	visible: boolean
-	end: string | string[] | null
+	end: boolean | string | string[] | null
 	position: [number, number]
 }
 
