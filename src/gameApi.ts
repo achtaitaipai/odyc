@@ -33,9 +33,7 @@ export const initGameApi = <T extends string>(
 		updateFilter: (uniforms: Uniforms) => {
 			gameState.uniformsStore.update((current) => {
 				for (const [key, value] of Object.entries(uniforms)) {
-					if (key in current) {
-						current[key] = Array.isArray(value) ? [...value] : value
-					}
+					current[key] = Array.isArray(value) ? [...value] : value
 				}
 				return current
 			})
