@@ -4,7 +4,7 @@ import fractalShader from './fractal.frag.glsl'
 import crtShader from './crt.frag.glsl'
 import neonShader from './neon.frag.glsl'
 
-type Uniforms = Record<
+export type Uniforms = Record<
 	string,
 	| number
 	| [number, number]

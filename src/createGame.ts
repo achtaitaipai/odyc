@@ -11,6 +11,7 @@ import { initInputsHandler } from './inputs.js'
 import { debounce } from './lib'
 import { initMessageBox } from './messageBox.js'
 import { initRenderer } from './renderer.js'
+import { Uniforms } from './shaders/filterSettings.js'
 import { initSoundPlayer } from './sound.js'
 
 export const createGame = <T extends string>(
@@ -42,7 +43,12 @@ export const createGame = <T extends string>(
 	})
 
 	const updateGame = debounce(
-		(player: Player['playerProxy'], actors: ActorState<T>[]) => {
+		(
+			player: Player['playerProxy'],
+			actors: ActorState<T>[],
+			uniforms: Uniforms,
+		) => {
+			gameFilter?.setUniforms(uniforms)
 			camera.update(player.position, gameState.mapStore.getDimensions())
 			renderer.render([...actors, player], camera.position)
 			gameFilter?.render()
@@ -51,11 +57,27 @@ export const createGame = <T extends string>(
 	)
 
 	gameState.actors._store.subscribe((actors) => {
-		updateGame(gameState.player.playerProxy, actors)
+		updateGame(
+			gameState.player.playerProxy,
+			actors,
+			gameState.uniformsStore?.get(),
+		)
 	})
 
 	gameState.player.playerStore.subscribe((player) => {
-		updateGame(player, gameState.actors._store.get())
+		updateGame(
+			player,
+			gameState.actors._store.get(),
+			gameState.uniformsStore?.get(),
+		)
+	})
+
+	gameState.uniformsStore.subscribe((uniforms) => {
+		updateGame(
+			gameState.player.playerProxy,
+			gameState.actors._store.get(),
+			uniforms,
+		)
 	})
 
 	if (config.title) messageBox.open(config.title)

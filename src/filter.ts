@@ -1,8 +1,13 @@
-import { FilterParams, getFilterSettings } from './shaders/filterSettings'
+import {
+	FilterParams,
+	getFilterSettings,
+	Uniforms,
+} from './shaders/filterSettings'
 
 export class Filter {
 	canvas: HTMLCanvasElement
 	#settings: ReturnType<typeof getFilterSettings>
+	#uniforms: Uniforms = {}
 	#textureSource: HTMLCanvasElement
 	#gl: WebGLRenderingContext
 	#program: WebGLProgram
@@ -13,6 +18,15 @@ export class Filter {
 
 	constructor(target: HTMLCanvasElement, options: FilterParams) {
 		this.#settings = getFilterSettings(options)
+
+		if (this.#settings.settings)
+			for (const key in this.#settings.settings) {
+				const value =
+					this.#settings.settings?.[key as keyof FilterParams['settings']]
+				this.#uniforms[key] = Array.isArray(value)
+					? ([...value] as typeof value)
+					: value
+			}
 
 		this.#textureSource = target
 		this.canvas = document.createElement('canvas')
@@ -50,6 +64,36 @@ export class Filter {
 		this.#setSize()
 		this.#textureSource.after(this.canvas)
 		this.#textureSource.style.setProperty('display', 'none')
+	}
+
+	render() {
+		this.#setUniform('size', [this.canvas.width, this.canvas.height])
+		if (this.#uniforms) {
+			Object.entries(this.#uniforms).forEach(([key, value]) => {
+				this.#setUniform(key, value)
+			})
+		}
+		this.#gl.viewport(0, 0, this.canvas.width, this.canvas.height)
+		this.#gl.clearColor(0, 0, 0, 1)
+		this.#gl.clear(this.#gl.COLOR_BUFFER_BIT)
+		this.#updateTexture()
+		this.#gl.bindBuffer(this.#gl.ARRAY_BUFFER, this.#quad)
+		this.#gl.enableVertexAttribArray(this.#attributePositionLocation)
+		this.#gl.vertexAttribPointer(
+			this.#attributePositionLocation,
+			2,
+			this.#gl.FLOAT,
+			false,
+			0,
+			0,
+		)
+		this.#gl.drawArrays(this.#gl.TRIANGLES, 0, 6)
+	}
+
+	setUniforms(settings: Uniforms) {
+		for (const [name, values] of Object.entries(settings)) {
+			this.#uniforms[name] = Array.isArray(values) ? [...values] : values
+		}
 	}
 
 	#setSize = () => {
@@ -195,30 +239,6 @@ export class Filter {
 				this.#gl.uniform4f(loc, values[0]!, values[1]!, values[2]!, values[3]!)
 				break
 		}
-	}
-
-	render() {
-		this.#setUniform('size', [this.canvas.width, this.canvas.height])
-		if (this.#settings.settings) {
-			Object.entries(this.#settings.settings).forEach(([key, value]) => {
-				this.#setUniform(key, value)
-			})
-		}
-		this.#gl.viewport(0, 0, this.canvas.width, this.canvas.height)
-		this.#gl.clearColor(0, 0, 0, 1)
-		this.#gl.clear(this.#gl.COLOR_BUFFER_BIT)
-		this.#updateTexture()
-		this.#gl.bindBuffer(this.#gl.ARRAY_BUFFER, this.#quad)
-		this.#gl.enableVertexAttribArray(this.#attributePositionLocation)
-		this.#gl.vertexAttribPointer(
-			this.#attributePositionLocation,
-			2,
-			this.#gl.FLOAT,
-			false,
-			0,
-			0,
-		)
-		this.#gl.drawArrays(this.#gl.TRIANGLES, 0, 6)
 	}
 }
 export const initFilter = (

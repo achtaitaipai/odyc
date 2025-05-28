@@ -1,3 +1,4 @@
+import { FilterParams } from '../shaders/filterSettings.js'
 import { PlaySoundArgs } from '../sound.js'
 import { Tile, UnTuplify } from '../types.js'
 import { PlayerParams, createPlayer } from './player.js'
@@ -14,6 +15,7 @@ export type GameStateParams<T extends string> = {
 	player: PlayerParams
 	templates: Templates<T>
 	map: string
+	filter?: FilterParams
 }
 
 export type ActorEvents<T extends string> = {
