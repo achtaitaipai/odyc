@@ -15,7 +15,7 @@ import { Uniforms } from './shaders/filterSettings.js'
 import { initSoundPlayer } from './sound.js'
 
 export const createGame = <T extends string>(
-	userConfig: Partial<Config<T>>,
+	userConfig?: Partial<Config<T>>,
 ) => {
 	const config: Config<T> = Object.assign({}, defaultConfig, userConfig)
 	const gameState = initGameState(config)
