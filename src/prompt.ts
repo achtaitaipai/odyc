@@ -68,6 +68,7 @@ export class Prompt {
 
 	async open(...options: string[]) {
 		if (!options.length) return -1
+		this.#index = 0
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
 		this.#options = options
