@@ -1,6 +1,6 @@
 {
 	"name": "odyc",
-	"version": "0.0.71",
+	"version": "0.0.72",
 	"description": "",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
