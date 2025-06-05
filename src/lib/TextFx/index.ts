@@ -10,8 +10,7 @@ const EFFECTS = {
 	'°': 'blink',
 } as const
 
-const FONT_WIDTH = 8
-const FONT_HEIGHT = 8
+const FONT_SIZE = 8
 
 type TokenType = 'char' | 'color' | 'effect' | 'separator'
 
@@ -101,7 +100,7 @@ export class TextFx {
 		for (let charIndex = 0; charIndex < text.length; charIndex++) {
 			const char = text[charIndex]
 			if (char === undefined) continue
-			let posX = x + charIndex * FONT_WIDTH
+			let posX = x + charIndex * FONT_SIZE
 			let posY = y
 			const charColor = char.color ? this.#colors[char.color] : null
 			if (charColor) ctx.fillStyle = charColor
@@ -128,7 +127,7 @@ export class TextFx {
 					if (Math.sin(time * 0.015) > 0) ctx.fillStyle = 'transparent'
 					break
 			}
-			this.#drawChar(ctx, char.value, posX, posY)
+			TextFx.#drawChar(ctx, char.value, posX, posY)
 		}
 	}
 
@@ -217,14 +216,19 @@ export class TextFx {
 		return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 	}
 
-	#drawChar(ctx: CanvasRenderingContext2D, char: string, x: number, y: number) {
+	static #drawChar(
+		ctx: CanvasRenderingContext2D,
+		char: string,
+		x: number,
+		y: number,
+	) {
 		const charCode = char.charCodeAt(0)
 		const charTemplate = this.#getCharTemplate(charCode)
 		if (!charTemplate) return
-		for (let cy = 0; cy < FONT_HEIGHT; cy++) {
+		for (let cy = 0; cy < FONT_SIZE; cy++) {
 			const row = charTemplate[cy]
 			if (row === undefined) continue
-			for (let cx = 0; cx < FONT_WIDTH; cx++) {
+			for (let cx = 0; cx < FONT_SIZE; cx++) {
 				if (row & (1 << cx)) {
 					ctx.fillRect(x + cx, y + cy, 1, 1)
 				}
@@ -232,7 +236,19 @@ export class TextFx {
 		}
 	}
 
-	#getCharTemplate(code: number) {
+	static text(
+		ctx: CanvasRenderingContext2D,
+		text: string,
+		x: number,
+		y: number,
+	) {
+		for (let index = 0; index < text.length; index++) {
+			const char = text.charAt(index)
+			TextFx.#drawChar(ctx, char, x + index * FONT_SIZE, y)
+		}
+	}
+
+	static #getCharTemplate(code: number) {
 		const charSet = characters.find(
 			(el) => code >= el.start && code < el.start + el.characters.length,
 		)

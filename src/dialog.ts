@@ -15,7 +15,7 @@ const MAX_CHARS_PER_LINE = 28
 const LINE_GAP = 10
 const PADDING_X = 8
 const PADDING_Y = 12
-const CHAR_WIDTH = 8
+const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
 export class Dialog {
@@ -70,7 +70,7 @@ export class Dialog {
 
 		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
 		this.#boxHeight =
-			MAX_LINES * CHAR_WIDTH + PADDING_Y * 2 + LINE_GAP * (MAX_LINES - 1)
+			MAX_LINES * FONT_SIZE + PADDING_Y * 2 + LINE_GAP * (MAX_LINES - 1)
 		this.#boxX = (this.#canvas.width - this.#boxWidth) * 0.5
 		this.#boxY =
 			this.#canvas.height - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)

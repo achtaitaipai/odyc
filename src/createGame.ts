@@ -10,6 +10,7 @@ import { ActorState, Player } from './gameState/types.js'
 import { initInputsHandler } from './inputs.js'
 import { debounce } from './lib'
 import { initMessageBox } from './messageBox.js'
+import { initPrompt } from './prompt.js'
 import { initRenderer } from './renderer.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { initSoundPlayer } from './sound.js'
@@ -23,6 +24,7 @@ export const createGame = <T extends string>(
 	const camera = initCamera(config)
 	const renderer = initRenderer(config)
 	const dialog = initDialog(config)
+	const prompt = initPrompt(config)
 	const messageBox = initMessageBox(config)
 	const gameFilter = initFilter(renderer.canvas, config.filter)
 	const ender = initEnder({ gameState, messageBox, camera })
@@ -35,7 +37,9 @@ export const createGame = <T extends string>(
 	})
 
 	initInputsHandler(config, (input) => {
-		if (messageBox.isOpen) {
+		if (prompt.isOpen) {
+			prompt.input(input)
+		} else if (messageBox.isOpen) {
 			if (input === 'ACTION') messageBox.next()
 		} else if (dialog.isOpen) {
 			if (input === 'ACTION') dialog.next()
@@ -81,5 +85,12 @@ export const createGame = <T extends string>(
 	})
 
 	if (config.title) messageBox.open(config.title)
-	return initGameApi<T>(gameState, dialog, soundPlayer, ender, messageBox)
+	return initGameApi<T>(
+		gameState,
+		dialog,
+		prompt,
+		soundPlayer,
+		ender,
+		messageBox,
+	)
 }
