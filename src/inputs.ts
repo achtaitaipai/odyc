@@ -1,6 +1,6 @@
 const TIMEBETWEENKEYS = 200
 const TIMEBETWEENTOUCH = 200
-const MINSWIPEDIST = 4
+const MINSWIPEDIST = 30
 
 export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
 
