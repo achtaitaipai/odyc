@@ -13,10 +13,11 @@ class InputsHandler {
 	controls: [Input, string | string[]][]
 	lastKeysEvents: Map<string, number> = new Map()
 	onInput: (input: Input) => void
-	lastTouchEvent = 0
+	lastPointerEvent = 0
 	oldTouchX?: number
 	oldTouchY?: number
 	isTouching = false
+	isSliding = false
 
 	constructor(params: InputsHandlerParams, onInput: (input: Input) => void) {
 		this.controls = Object.entries(params.controls) as [
@@ -32,33 +33,41 @@ class InputsHandler {
 		touchEventElement.style.setProperty('width', '100vw')
 		touchEventElement.style.setProperty('height', '100vh')
 		touchEventElement.style.setProperty('overflow', 'hidden')
+		touchEventElement.style.setProperty('touch-action', 'none')
 		document.body.appendChild(touchEventElement)
 		document.body.style.setProperty('margin', '0')
 
 		document.addEventListener('keydown', this.handleKeydown)
-		touchEventElement.addEventListener('touchstart', this.handleTouch)
-		touchEventElement.addEventListener('touchend', this.handleTouchLeave)
-		touchEventElement.addEventListener('touchcancel', this.handleTouchLeave)
-		touchEventElement.addEventListener('touchmove', this.handleTouchMove)
+		touchEventElement.addEventListener('pointerdown', this.handleTouch)
+		touchEventElement.addEventListener('pointerup', this.handleTouchUp)
+		touchEventElement.addEventListener('pointerleave', this.handleTouchLeave)
+		touchEventElement.addEventListener('pointermove', this.handleTouchMove)
 	}
 
-	handleTouch = (e: TouchEvent) => {
+	handleTouch = (e: PointerEvent) => {
 		e.preventDefault()
-		if (!this.isTouching) this.onInput('ACTION')
 		this.isTouching = true
-		this.oldTouchX = e.changedTouches[0]?.clientX
-		this.oldTouchY = e.changedTouches[0]?.clientY
+		this.oldTouchX = e.clientX
+		this.oldTouchY = e.clientY
 	}
 
-	handleTouchLeave = (e: TouchEvent) => {
+	handleTouchUp = (e: PointerEvent) => {
+		e.preventDefault()
+		if (!this.isSliding) this.onInput('ACTION')
+		this.isTouching = false
+		this.isSliding = false
+	}
+
+	handleTouchLeave = (e: PointerEvent) => {
 		e.preventDefault()
 		this.isTouching = false
+		this.isSliding = false
 	}
 
-	handleTouchMove = (e: TouchEvent) => {
+	handleTouchMove = (e: PointerEvent) => {
 		e.preventDefault()
-		const x = e.changedTouches[0]?.clientX
-		const y = e.changedTouches[0]?.clientY
+		const x = e.clientX
+		const y = e.clientY
 		if (
 			x === undefined ||
 			y === undefined ||
@@ -71,12 +80,13 @@ class InputsHandler {
 		const now = e.timeStamp
 
 		if (Math.abs(diffX) < MINSWIPEDIST && Math.abs(diffY) < MINSWIPEDIST) return
-		if (now - this.lastTouchEvent < TIMEBETWEENTOUCH) return
+		if (now - this.lastPointerEvent < TIMEBETWEENTOUCH) return
 
-		this.lastTouchEvent = now
+		this.lastPointerEvent = now
 		this.oldTouchX = x
 		this.oldTouchY = y
 
+		this.isSliding = true
 		if (Math.abs(diffY) > Math.abs(diffX)) {
 			const direction = Math.sign(diffY)
 			this.onInput(direction < 0 ? 'UP' : 'DOWN')
