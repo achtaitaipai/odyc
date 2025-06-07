@@ -18,7 +18,7 @@ export const createActorsStore = <T extends string>(
 	const templates = params.templates
 	const eventsListeners = new Map<string | number | symbol, ActorEvents<T>>()
 	for (const key in templates) {
-		const template = templates[key] as Template<T>
+		const template = getTemplateParams(templates, key as T)
 		if (!template) continue
 		eventsListeners.set(key, {
 			onCollide: template.onCollide,
@@ -75,7 +75,7 @@ export const createActorsStore = <T extends string>(
 		})
 	}
 	const addToCell = (x: number, y: number, symbol: T) => {
-		const template = templates[symbol]
+		const template = getTemplateParams(templates, symbol)
 		if (template)
 			store.update((actors) => {
 				return [
@@ -113,7 +113,7 @@ const createActors = <T extends string>(
 		for (let x = 0; x < row.length; x++) {
 			const actorSymbol = row[x] as T | undefined
 			if (!actorSymbol) continue
-			const template = templates[actorSymbol]
+			const template = getTemplateParams(templates, actorSymbol)
 			if (!template) continue
 			actors.push(createActorFromTemplate(x, y, actorSymbol, template))
 		}
@@ -137,4 +137,13 @@ export const createActorFromTemplate = <T extends string>(
 		solid: template.solid !== false,
 		visible: template.visible !== false,
 	}
+}
+
+const getTemplateParams = <T extends string>(
+	templates: Templates<T>,
+	symbol: T,
+): Template<T> | undefined => {
+	const templateSrc = templates[symbol]
+	if (!templateSrc) return
+	return typeof templateSrc === 'function' ? templateSrc() : templateSrc
 }

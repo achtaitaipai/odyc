@@ -3,7 +3,9 @@ import { PlaySoundArgs } from '../sound.js'
 import { Tile, UnTuplify } from '../types.js'
 import { PlayerParams, createPlayer } from './player.js'
 
-export type Templates<T extends string> = { [K in T]: Template<K> }
+export type Templates<T extends string> = {
+	[K in T]: (() => Template<K>) | Template<K>
+}
 
 export type Template<T extends string> = Partial<
 	Omit<ActorState<T>, 'position' | 'symbol'> & ActorEvents<T>
