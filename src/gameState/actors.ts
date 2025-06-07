@@ -3,30 +3,13 @@ import { createStore } from '../lib/store.js'
 import { Unwrap } from '../types.js'
 import { createActorProxy } from './actorProxy.js'
 import { MapStore } from './map.js'
-import {
-	ActorEvents,
-	ActorState,
-	GameStateParams,
-	Template,
-	Templates,
-} from './types.js'
+import { ActorState, GameStateParams, Template, Templates } from './types.js'
 
 export const createActorsStore = <T extends string>(
 	params: Omit<GameStateParams<T>, 'player'>,
 	mapStore: MapStore,
 ) => {
 	const templates = params.templates
-	const eventsListeners = new Map<string | number | symbol, ActorEvents<T>>()
-	for (const key in templates) {
-		const template = getTemplateParams(templates, key as T)
-		if (!template) continue
-		eventsListeners.set(key, {
-			onCollide: template.onCollide,
-			onEnter: template.onEnter,
-			onLeave: template.onLeave,
-		})
-	}
-
 	let actorsValues: ActorState<T>[] = []
 	const store = createStore(actorsValues)
 	store.subscribe((value) => {
@@ -98,7 +81,6 @@ export const createActorsStore = <T extends string>(
 		addToCell,
 		reset,
 		_store: store,
-		_eventsListeners: eventsListeners,
 	}
 }
 
@@ -136,6 +118,9 @@ export const createActorFromTemplate = <T extends string>(
 		sound: template.sound ?? null,
 		solid: template.solid !== false,
 		visible: template.visible !== false,
+		onCollide: template.onCollide,
+		onEnter: template.onEnter,
+		onLeave: template.onLeave,
 	}
 }
 

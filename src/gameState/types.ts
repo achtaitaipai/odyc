@@ -35,6 +35,9 @@ export type ActorState<T extends string> = {
 	visible: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
+	onCollide?: (target: ActorProxy<T>) => any
+	onEnter?: (target: ActorProxy<T>) => any
+	onLeave?: (target: ActorProxy<T>) => any
 }
 
 export type ActorProxy<T extends string> = ActorState<T> & {

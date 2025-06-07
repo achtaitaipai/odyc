@@ -82,6 +82,15 @@ export const createActorProxy = <T extends string>(
 		get symbol() {
 			return (getActor()?.symbol as T) ?? null
 		},
+		get onCollide() {
+			return getActor()?.onCollide
+		},
+		get onEnter() {
+			return getActor()?.onEnter
+		},
+		get onLeave() {
+			return getActor()?.onLeave
+		},
 		remove,
 	}
 }
