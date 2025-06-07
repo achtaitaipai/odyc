@@ -1,7 +1,6 @@
 import { DialogParams } from './dialog'
 import { Input } from './inputs'
 import { TextFx } from './lib'
-import { modulo } from './lib/math'
 import { RendererParams } from './renderer'
 
 const CANVAS_SIZE = 384
@@ -86,16 +85,16 @@ export class Prompt {
 		let x = this.#index - y * OPTIONS_BY_LINE
 		switch (input) {
 			case 'LEFT':
-				x = modulo(x - 1, OPTIONS_BY_LINE)
+				x = Math.max(0, x - 1)
 				break
 			case 'UP':
-				y = modulo(y - 1, height)
+				y = Math.max(0, y - 1)
 				break
 			case 'RIGHT':
-				x = modulo(x + 1, OPTIONS_BY_LINE)
+				x = Math.min(x + 1, OPTIONS_BY_LINE - 1)
 				break
 			case 'DOWN':
-				y = modulo(y + 1, height)
+				y = Math.min(y + 1, height - 1)
 				break
 			case 'ACTION':
 				this.#close()
