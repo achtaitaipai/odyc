@@ -63,6 +63,7 @@ class InputsHandler {
 	}
 
 	handleTouchMove = (e: PointerEvent) => {
+		if (!this.isTouching) return
 		const x = e.clientX
 		const y = e.clientY
 		if (
