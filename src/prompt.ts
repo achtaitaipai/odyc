@@ -12,6 +12,10 @@ const PADDING_Y = 12
 const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
+export interface MenuOption {
+	[label: string]: MenuOption | null | Function
+}
+
 export class Prompt {
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
@@ -63,6 +67,18 @@ export class Prompt {
 			width,
 			height,
 		}
+	}
+
+	async openMenu(options: MenuOption): Promise<void> {
+		const labels = Object.keys(options)
+		const choice = labels[await this.open(...labels)]
+		if (!choice || !(choice in options)) return
+
+		const result = options[choice]
+		if (!result) return
+
+		if (typeof result === 'function') return result()
+		return await this.openMenu(result)
 	}
 
 	async open(...options: string[]) {

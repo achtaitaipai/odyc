@@ -3,7 +3,7 @@ import type { Ender } from './ender.js'
 import { Filter } from './filter.js'
 import { GameState } from './gameState/index.js'
 import { MessageBox } from './messageBox.js'
-import { Prompt } from './prompt.js'
+import { MenuOption, Prompt } from './prompt.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
 import { Position } from './types.js'
@@ -24,6 +24,7 @@ export const initGameApi = <T extends string>(
 		setAll: gameState.actors.setAll,
 		openDialog: (text: string) => dialog.open(text),
 		prompt: (...options: string[]) => prompt.open(...options),
+		openMenu: (options: MenuOption) => prompt.openMenu(options),
 		openMessage: (...args: string[]) => messageBox.open(args),
 		playSound: (...args: PlaySoundArgs) => soundPlayer.play(...args),
 		end: (...messages: string[]) => ender.play(...messages),
