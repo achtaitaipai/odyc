@@ -51,21 +51,18 @@ class InputsHandler {
 		this.oldTouchY = e.clientY
 	}
 
-	handleTouchUp = (e: PointerEvent) => {
-		e.preventDefault()
+	handleTouchUp = () => {
 		if (!this.isSliding) this.onInput('ACTION')
 		this.isTouching = false
 		this.isSliding = false
 	}
 
-	handleTouchLeave = (e: PointerEvent) => {
-		e.preventDefault()
+	handleTouchLeave = () => {
 		this.isTouching = false
 		this.isSliding = false
 	}
 
 	handleTouchMove = (e: PointerEvent) => {
-		e.preventDefault()
 		const x = e.clientX
 		const y = e.clientY
 		if (
