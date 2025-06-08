@@ -45,7 +45,6 @@ class InputsHandler {
 	}
 
 	handleTouch = (e: PointerEvent) => {
-		e.preventDefault()
 		this.isTouching = true
 		this.oldTouchX = e.clientX
 		this.oldTouchY = e.clientY
