@@ -1,7 +1,5 @@
 // https://github.com/dhepper/font8x8
 
-import { cyrillic } from './cyrillic'
-
 //U+0000 - U+007F
 export const basicLatin = [
 	[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], // U+0000 (nul)
@@ -438,5 +436,4 @@ export const characters = [
 	{ start: 0x0390, characters: greek },
 	{ start: 0x03040, characters: hiragana },
 	{ start: 0x02580, characters: blocks },
-	{ start: 0x0400, characters: cyrillic },
 ]
