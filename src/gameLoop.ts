@@ -44,9 +44,15 @@ class GameLoop<T extends string> {
 		if (actorOnNextCell.solid) {
 			const colliderDialog = actorOnNextCell.dialog
 			if (colliderDialog) await this.dialog.open(colliderDialog)
-			await actorOnNextCell.onCollide?.(actorOnNextCell)
+			await this.gameState.actors.getEvent(
+				...nextCell,
+				'onCollide',
+			)?.(actorOnNextCell)
 		} else {
-			actorOnCurrentCell?.onLeave?.(actorOnCurrentCell)
+			this.gameState.actors.getEvent(
+				...currentCell,
+				'onLeave',
+			)?.(actorOnCurrentCell)
 			//move the player if the position is not changed
 			if (
 				compareVectors(currentCell, this.gameState.player.playerProxy.position)
@@ -57,10 +63,16 @@ class GameLoop<T extends string> {
 				const enterDialog = actorOnNextCell?.dialog
 				if (enterDialog)
 					this.dialog.open(enterDialog).then(() => {
-						actorOnNextCell.onEnter?.(actorOnNextCell)
+						this.gameState.actors.getEvent(
+							...nextCell,
+							'onEnter',
+						)?.(actorOnNextCell)
 					})
 				else {
-					actorOnNextCell.onEnter?.(actorOnNextCell)
+					this.gameState.actors.getEvent(
+						...nextCell,
+						'onEnter',
+					)?.(actorOnNextCell)
 				}
 			}
 		}

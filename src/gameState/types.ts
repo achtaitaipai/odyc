@@ -8,7 +8,7 @@ export type Templates<T extends string = string> = {
 }
 
 export type Template<T extends string = string> = Partial<
-	Omit<ActorState<T>, 'position' | 'symbol' | 'onScreen'> & ActorEvents<T>
+	Omit<ActorState<T>, 'position' | 'symbol' | 'onScreen'>
 >
 
 export type Player = ReturnType<typeof createPlayer>
@@ -18,14 +18,6 @@ export type GameStateParams<T extends string> = {
 	templates: Templates<T>
 	map: string
 	filter?: FilterParams
-}
-
-export type ActorEvents<T extends string> = {
-	onCollide?: (target: ActorProxy<T>) => any
-	onEnter?: (target: ActorProxy<T>) => any
-	onLeave?: (target: ActorProxy<T>) => any
-	onScreenEnter?: (target: ActorProxy<T>) => any
-	onScreenLeave?: (target: ActorProxy<T>) => any
 }
 
 export type ActorState<T extends string> = {
@@ -38,8 +30,21 @@ export type ActorState<T extends string> = {
 	onScreen: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
-} & ActorEvents<T>
+	onCollide?: (target: ActorProxy<T>) => any
+	onEnter?: (target: ActorProxy<T>) => any
+	onLeave?: (target: ActorProxy<T>) => any
+	onScreenEnter?: (target: ActorProxy<T>) => any
+	onScreenLeave?: (target: ActorProxy<T>) => any
+}
 
-export type ActorProxy<T extends string> = Omit<ActorState<T>, 'onScreen'> & {
+export type ActorProxy<T extends string> = Omit<
+	ActorState<T>,
+	| 'onScreen'
+	| 'onCollide'
+	| 'onEnter'
+	| 'onLeave'
+	| 'onScreenEnter'
+	| 'onScreenLeave'
+> & {
 	remove: () => void
 }

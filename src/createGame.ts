@@ -58,8 +58,8 @@ export const createGame = <T extends string>(
 
 				if (onScreen !== el.onScreen) {
 					const target = gameState.actors.getCell(...el.position)
-					if (onScreen) target.onScreenEnter?.(target)
-					else target.onScreenLeave?.(target)
+					if (onScreen) el.onScreenEnter?.(target)
+					else el.onScreenLeave?.(target)
 				}
 				el.onScreen = onScreen
 				return el

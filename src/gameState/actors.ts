@@ -73,12 +73,26 @@ export const createActorsStore = <T extends string>(
 		store.set(
 			createActors(createGridFromString(mapStore.store.get()), templates),
 		)
+	const getEvent = (
+		x: number,
+		y: number,
+		event:
+			| 'onCollide'
+			| 'onEnter'
+			| 'onLeave'
+			| 'onScreenLeave'
+			| 'onScreenEnter',
+	) =>
+		store.get().find((el) => el.position[0] === x && el.position[1] === y)?.[
+			event
+		]
 	return {
 		getCell,
 		setCell,
 		getAll,
 		setAll,
 		addToCell,
+		getEvent,
 		reset,
 		_store: store,
 	}
