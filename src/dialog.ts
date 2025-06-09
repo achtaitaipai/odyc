@@ -79,6 +79,7 @@ export class Dialog {
 	}
 
 	async open(text: string) {
+		if (text.length <= 0) return
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
 
