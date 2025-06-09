@@ -1,11 +1,11 @@
 import { CameraParams } from './camera.js'
-import { SoundPlayerParams } from './sound.js'
-import { InputsHandlerParams } from './inputs.js'
-import { RendererParams } from './renderer.js'
-import { GameStateParams } from './gameState/types.js'
-import { MessageBoxParams } from './messageBox.js'
 import { DialogParams } from './dialog.js'
+import { GameStateParams } from './gameState/types.js'
+import { InputsHandlerParams } from './inputs.js'
+import { MessageBoxParams } from './messageBox.js'
+import { RendererParams } from './renderer.js'
 import { FilterParams } from './shaders/filterSettings.js'
+import { SoundPlayerParams } from './sound.js'
 
 export type Config<T extends string> = RendererParams &
 	InputsHandlerParams &
@@ -14,9 +14,12 @@ export type Config<T extends string> = RendererParams &
 	MessageBoxParams &
 	DialogParams & { filter?: FilterParams } & GameStateParams<T> & {
 		title?: string | string[]
+	} & {
+		container: HTMLElement
 	}
 
 export const defaultConfig: Config<string> = {
+	container: document.body,
 	player: {
 		sprite: 0,
 	},

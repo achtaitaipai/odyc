@@ -17,6 +17,7 @@ export interface MenuOption {
 }
 
 export class Prompt {
+	#container: HTMLElement
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: (index: number) => void
@@ -30,7 +31,8 @@ export class Prompt {
 	#contentColor: string
 	#borderColor: string
 
-	constructor(params: DialogParams) {
+	constructor(params: DialogParams, container: HTMLElement) {
+		this.#container = container
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.dialogBackground)
 		this.#contentColor = this.#getColor(params.dialogColor)
@@ -47,8 +49,8 @@ export class Prompt {
 		this.#canvas.classList.add('odyc-prompt-canvas')
 
 		this.#resizeCanvas()
-		document.body.append(this.#canvas)
-		window.addEventListener('resize', this.#resizeCanvas)
+		this.#container.append(this.#canvas)
+		this.#container.addEventListener('resize', this.#resizeCanvas)
 	}
 
 	get #rect() {
@@ -165,9 +167,12 @@ export class Prompt {
 	}
 
 	#resizeCanvas = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		const left = (window.innerWidth - sideSize) * 0.5
-		const top = (window.innerHeight - sideSize) * 0.5
+		const sideSize = Math.min(
+			this.#container.clientWidth,
+			this.#container.clientHeight,
+		)
+		const left = (this.#container.clientWidth - sideSize) * 0.5
+		const top = (this.#container.clientHeight - sideSize) * 0.5
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
 		this.#canvas.style.setProperty('left', `${left}px`)
@@ -194,4 +199,5 @@ export class Prompt {
 	}
 }
 
-export const initPrompt = (params: DialogParams) => new Prompt(params)
+export const initPrompt = (params: DialogParams, container: HTMLElement) =>
+	new Prompt(params, container)

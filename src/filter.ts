@@ -6,6 +6,7 @@ import {
 
 export class Filter {
 	canvas: HTMLCanvasElement
+	#container: HTMLElement
 	#settings: ReturnType<typeof getFilterSettings>
 	#uniforms: Uniforms = {}
 	#textureSource: HTMLCanvasElement
@@ -16,8 +17,13 @@ export class Filter {
 	#uniformCache = new Map<string, WebGLUniformLocation>()
 	#attributePositionLocation: GLint
 
-	constructor(target: HTMLCanvasElement, options: FilterParams) {
+	constructor(
+		target: HTMLCanvasElement,
+		options: FilterParams,
+		container: HTMLElement,
+	) {
 		this.#settings = getFilterSettings(options)
+		this.#container = container
 
 		if (this.#settings.settings)
 			for (const key in this.#settings.settings) {
@@ -37,7 +43,7 @@ export class Filter {
 		this.canvas.style.setProperty('image-rendering', 'pixelated')
 		this.canvas.classList.add('odyc-filter-canvas')
 
-		window.addEventListener('resize', this.#setSize)
+		this.#container.addEventListener('resize', this.#setSize)
 
 		const gl = this.canvas.getContext('webgl', { preserveDrawingBuffer: true })
 		if (!gl) throw new Error('WebGL not supported')
@@ -99,7 +105,10 @@ export class Filter {
 	#setSize = () => {
 		const orientation =
 			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
+		const sideSize = Math.min(
+			this.#container.clientWidth,
+			this.#container.clientHeight,
+		)
 		let width =
 			orientation === 'horizontal'
 				? sideSize
@@ -108,8 +117,8 @@ export class Filter {
 			orientation === 'vertical'
 				? sideSize
 				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (window.innerWidth - width) * 0.5
-		const top = (window.innerHeight - height) * 0.5
+		const left = (this.#container.clientWidth - width) * 0.5
+		const top = (this.#container.clientHeight - height) * 0.5
 
 		this.canvas.style.setProperty('width', `${width}px`)
 		this.canvas.style.setProperty('height', `${height}px`)
@@ -243,8 +252,9 @@ export class Filter {
 }
 export const initFilter = (
 	target: HTMLCanvasElement,
+	container: HTMLElement,
 	options?: FilterParams,
 ) => {
 	if (!options) return null
-	return new Filter(target, options)
+	return new Filter(target, options, container)
 }

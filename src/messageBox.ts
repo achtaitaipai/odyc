@@ -8,6 +8,7 @@ export type MessageBoxParams = {
 }
 
 export class MessageBox {
+	#container: HTMLElement
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	isOpen = false
@@ -32,7 +33,8 @@ export class MessageBox {
 	#paddingX = 1
 	#spaceBetweenLines = 2
 
-	constructor(params: MessageBoxParams) {
+	constructor(params: MessageBoxParams, container: HTMLElement) {
+		this.#container = container
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.messageBackground)
 		this.#contentColor = this.#getColor(params.messageColor)
@@ -55,15 +57,18 @@ export class MessageBox {
 		this.#textFx = new TextFx('\n', this.#contentColor, this.#configColors)
 
 		this.#resize()
-		window.addEventListener('resize', this.#resize)
+		this.#container.addEventListener('resize', this.#resize)
 
-		document.body.append(this.#canvas)
+		this.#container.append(this.#canvas)
 	}
 
 	#resize = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		const left = (window.innerWidth - sideSize) * 0.5
-		const top = (window.innerHeight - sideSize) * 0.5
+		const sideSize = Math.min(
+			this.#container.clientWidth,
+			this.#container.clientHeight,
+		)
+		const left = (this.#container.clientWidth - sideSize) * 0.5
+		const top = (this.#container.clientHeight - sideSize) * 0.5
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
 		this.#canvas.style.setProperty('left', `${left}px`)
@@ -139,5 +144,7 @@ export class MessageBox {
 	}
 }
 
-export const initMessageBox = (params: MessageBoxParams) =>
-	new MessageBox(params)
+export const initMessageBox = (
+	params: MessageBoxParams,
+	container: HTMLElement,
+) => new MessageBox(params, container)

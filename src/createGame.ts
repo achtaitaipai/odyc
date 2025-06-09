@@ -22,11 +22,15 @@ export const createGame = <T extends string>(
 	const gameState = initGameState(config)
 	const soundPlayer = initSoundPlayer(config)
 	const camera = initCamera(config)
-	const renderer = initRenderer(config)
-	const dialog = initDialog(config)
-	const prompt = initPrompt(config)
-	const messageBox = initMessageBox(config)
-	const gameFilter = initFilter(renderer.canvas, config.filter)
+	const renderer = initRenderer(config, config.container)
+	const dialog = initDialog(config, config.container)
+	const prompt = initPrompt(config, config.container)
+	const messageBox = initMessageBox(config, config.container)
+	const gameFilter = initFilter(
+		renderer.canvas,
+		config.container,
+		config.filter,
+	)
 	const ender = initEnder({ gameState, messageBox, camera })
 
 	const gameLoop = initGameLoop({
@@ -36,7 +40,7 @@ export const createGame = <T extends string>(
 		ender,
 	})
 
-	initInputsHandler(config, (input) => {
+	initInputsHandler(config, config.container, (input) => {
 		if (prompt.isOpen) {
 			prompt.input(input)
 		} else if (messageBox.isOpen) {

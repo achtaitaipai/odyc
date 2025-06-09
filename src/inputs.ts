@@ -19,7 +19,11 @@ class InputsHandler {
 	pointerId?: number
 	isSliding = false
 
-	constructor(params: InputsHandlerParams, onInput: (input: Input) => void) {
+	constructor(
+		params: InputsHandlerParams,
+		container: HTMLElement,
+		onInput: (input: Input) => void,
+	) {
 		this.controls = Object.entries(params.controls) as [
 			Input,
 			string | string[],
@@ -34,8 +38,8 @@ class InputsHandler {
 		touchEventElement.style.setProperty('height', '100vh')
 		touchEventElement.style.setProperty('overflow', 'hidden')
 		touchEventElement.style.setProperty('touch-action', 'none')
-		document.body.appendChild(touchEventElement)
-		document.body.style.setProperty('margin', '0')
+		container.appendChild(touchEventElement)
+		container.style.setProperty('margin', '0')
 
 		document.addEventListener('keydown', this.handleKeydown)
 		touchEventElement.addEventListener('pointerdown', this.handleTouch)
@@ -113,5 +117,6 @@ class InputsHandler {
 
 export const initInputsHandler = (
 	params: InputsHandlerParams,
+	container: HTMLElement,
 	onInput: (input: Input) => void,
-) => new InputsHandler(params, onInput)
+) => new InputsHandler(params, container, onInput)

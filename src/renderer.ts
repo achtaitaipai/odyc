@@ -18,6 +18,7 @@ export type RendererParams = {
 
 class Renderer {
 	canvas: HTMLCanvasElement
+	#container: HTMLElement
 	#zoom = 24
 	screenWidth: number
 	screenHeight: number
@@ -27,7 +28,9 @@ class Renderer {
 	ctx: CanvasRenderingContext2D
 	background?: string | number
 
-	constructor(options: RendererParams) {
+	constructor(options: RendererParams, container: HTMLElement) {
+		this.#container = container
+
 		this.screenWidth = options.screenWidth
 		this.screenHeight = options.screenHeight
 		this.cellWidth = options.cellWidth
@@ -46,14 +49,17 @@ class Renderer {
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		this.ctx = ctx
 		this.#setSize()
-		document.body.append(this.canvas)
+		this.#container.append(this.canvas)
 
-		window.addEventListener('resize', this.#setSize)
+		this.#container.addEventListener('resize', this.#setSize)
 	}
 	#setSize = () => {
 		const orientation =
 			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
+		const sideSize = Math.min(
+			this.#container.clientWidth,
+			this.#container.clientHeight,
+		)
 		let width =
 			orientation === 'horizontal'
 				? sideSize
@@ -62,8 +68,8 @@ class Renderer {
 			orientation === 'vertical'
 				? sideSize
 				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (window.innerWidth - width) * 0.5
-		const top = (window.innerHeight - height) * 0.5
+		const left = (this.#container.clientWidth - width) * 0.5
+		const top = (this.#container.clientHeight - height) * 0.5
 		this.canvas.style.setProperty('width', `${width}px`)
 		this.canvas.style.setProperty('height', `${height}px`)
 		this.canvas.style.setProperty('left', `${left}px`)
@@ -141,4 +147,5 @@ class Renderer {
 	}
 }
 
-export const initRenderer = (options: RendererParams) => new Renderer(options)
+export const initRenderer = (options: RendererParams, container: HTMLElement) =>
+	new Renderer(options, container)

@@ -19,6 +19,7 @@ const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
 export class Dialog {
+	#container: HTMLElement
 	#canvas: HTMLCanvasElement
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: () => void
@@ -48,7 +49,8 @@ export class Dialog {
 	#boxX: number
 	#boxY: number
 
-	constructor(params: DialogParams) {
+	constructor(params: DialogParams, container: HTMLElement) {
+		this.#container = container
 		this.#configColors = params.colors
 		this.#backgroundColor = this.#getColor(params.dialogBackground)
 		this.#contentColor = this.#getColor(params.dialogColor)
@@ -65,8 +67,8 @@ export class Dialog {
 		this.#canvas.classList.add('odyc-dialog-canvas')
 
 		this.#resizeCanvas()
-		document.body.append(this.#canvas)
-		window.addEventListener('resize', this.#resizeCanvas)
+		this.#container.append(this.#canvas)
+		this.#container.addEventListener('resize', this.#resizeCanvas)
 
 		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
 		this.#boxHeight =
@@ -141,9 +143,12 @@ export class Dialog {
 	}
 
 	#resizeCanvas = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		const left = (window.innerWidth - sideSize) * 0.5
-		const top = (window.innerHeight - sideSize) * 0.5
+		const sideSize = Math.min(
+			this.#container.clientWidth,
+			this.#container.clientHeight,
+		)
+		const left = (this.#container.clientWidth - sideSize) * 0.5
+		const top = (this.#container.clientHeight - sideSize) * 0.5
 		this.#canvas.style.setProperty('width', `${sideSize}px`)
 		this.#canvas.style.setProperty('height', `${sideSize}px`)
 		this.#canvas.style.setProperty('left', `${left}px`)
@@ -180,4 +185,5 @@ export class Dialog {
 	}
 }
 
-export const initDialog = (params: DialogParams) => new Dialog(params)
+export const initDialog = (params: DialogParams, container: HTMLElement) =>
+	new Dialog(params, container)
