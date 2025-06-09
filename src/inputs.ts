@@ -16,7 +16,7 @@ class InputsHandler {
 	lastPointerEvent = 0
 	oldTouchX?: number
 	oldTouchY?: number
-	isTouching = false
+	pointerId?: number
 	isSliding = false
 
 	constructor(params: InputsHandlerParams, onInput: (input: Input) => void) {
@@ -41,28 +41,32 @@ class InputsHandler {
 		touchEventElement.addEventListener('pointerdown', this.handleTouch)
 		touchEventElement.addEventListener('pointerup', this.handleTouchUp)
 		touchEventElement.addEventListener('pointerleave', this.handleTouchLeave)
+		touchEventElement.addEventListener('pointercancel', this.handleTouchLeave)
 		touchEventElement.addEventListener('pointermove', this.handleTouchMove)
 	}
 
 	handleTouch = (e: PointerEvent) => {
-		this.isTouching = true
+		if (e.pointerType === 'mouse') return
+		this.pointerId = e.pointerId
 		this.oldTouchX = e.clientX
 		this.oldTouchY = e.clientY
 	}
 
-	handleTouchUp = () => {
+	handleTouchUp = (e: PointerEvent) => {
+		if (this.pointerId !== e.pointerId) return
+		this.pointerId = undefined
 		if (!this.isSliding) this.onInput('ACTION')
-		this.isTouching = false
 		this.isSliding = false
 	}
 
-	handleTouchLeave = () => {
-		this.isTouching = false
+	handleTouchLeave = (e: PointerEvent) => {
+		if (this.pointerId !== e.pointerId) return
+		this.pointerId = undefined
 		this.isSliding = false
 	}
 
 	handleTouchMove = (e: PointerEvent) => {
-		if (!this.isTouching) return
+		if (this.pointerId !== e.pointerId) return
 		const x = e.clientX
 		const y = e.clientY
 		if (
