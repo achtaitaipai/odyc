@@ -71,8 +71,10 @@ export class MessageBox {
 	}
 
 	open(text: string | string[]) {
+		const texts = typeof text === 'string' ? [text] : [...text]
+		if (texts.length === 0 || texts[0]?.length === 0) return
 		this.isOpen = true
-		this.#texts = typeof text === 'string' ? [text] : [...text]
+		this.#texts = texts
 		const currentText = this.#texts[this.#cursor]
 		if (!currentText) return
 		this.#displayedLines = this.#textFx.parseText(
