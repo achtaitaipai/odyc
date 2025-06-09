@@ -103,7 +103,7 @@ const createActors = <T extends string>(
 	return actors
 }
 
-export const createActorFromTemplate = <T extends string>(
+const createActorFromTemplate = <T extends string>(
 	x: number,
 	y: number,
 	symbol: T,
