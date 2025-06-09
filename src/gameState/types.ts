@@ -8,7 +8,7 @@ export type Templates<T extends string = string> = {
 }
 
 export type Template<T extends string = string> = Partial<
-	Omit<ActorState<T>, 'position' | 'symbol'> & ActorEvents<T>
+	Omit<ActorState<T>, 'position' | 'symbol' | 'onScreen'> & ActorEvents<T>
 >
 
 export type Player = ReturnType<typeof createPlayer>
@@ -24,6 +24,8 @@ export type ActorEvents<T extends string> = {
 	onCollide?: (target: ActorProxy<T>) => any
 	onEnter?: (target: ActorProxy<T>) => any
 	onLeave?: (target: ActorProxy<T>) => any
+	onScreenEnter?: (target: ActorProxy<T>) => any
+	onScreenLeave?: (target: ActorProxy<T>) => any
 }
 
 export type ActorState<T extends string> = {
@@ -33,13 +35,11 @@ export type ActorState<T extends string> = {
 	dialog: string | null
 	solid: boolean
 	visible: boolean
+	onScreen: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
-	onCollide?: (target: ActorProxy<T>) => any
-	onEnter?: (target: ActorProxy<T>) => any
-	onLeave?: (target: ActorProxy<T>) => any
-}
+} & ActorEvents<T>
 
-export type ActorProxy<T extends string> = ActorState<T> & {
+export type ActorProxy<T extends string> = Omit<ActorState<T>, 'onScreen'> & {
 	remove: () => void
 }

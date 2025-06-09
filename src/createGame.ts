@@ -46,43 +46,37 @@ export const createGame = <T extends string>(
 		} else if (input !== 'ACTION') gameLoop.update(input)
 	})
 
-	const updateGame = debounce(
-		(
-			player: Player['playerProxy'],
-			actors: ActorState<T>[],
-			uniforms: Uniforms,
-		) => {
-			gameFilter?.setUniforms(uniforms)
-			camera.update(player.position, gameState.mapStore.getDimensions())
-			renderer.render([...actors, player], camera.position)
-			gameFilter?.render()
-		},
-		60,
-	)
-
-	gameState.actors._store.subscribe((actors) => {
-		updateGame(
-			gameState.player.playerProxy,
-			actors,
-			gameState.uniformsStore?.get(),
+	const updateGame = debounce(() => {
+		gameFilter?.setUniforms(gameState.uniformsStore?.get())
+		camera.update(
+			gameState.player.playerProxy.position,
+			gameState.mapStore.getDimensions(),
 		)
-	})
+		gameState.actors._store.silentUpdate((actors) => {
+			return actors.map((el) => {
+				const onScreen = camera.isOnScreen(el.position)
 
-	gameState.player.playerStore.subscribe((player) => {
-		updateGame(
-			player,
-			gameState.actors._store.get(),
-			gameState.uniformsStore?.get(),
+				if (onScreen !== el.onScreen) {
+					const target = gameState.actors.getCell(...el.position)
+					if (onScreen) target.onScreenEnter?.(target)
+					else target.onScreenLeave?.(target)
+				}
+				el.onScreen = onScreen
+				return el
+			})
+		})
+		renderer.render(
+			[...gameState.actors._store.get(), gameState.player.playerProxy],
+			camera,
 		)
-	})
+		gameFilter?.render()
+	}, 60)
 
-	gameState.uniformsStore.subscribe((uniforms) => {
-		updateGame(
-			gameState.player.playerProxy,
-			gameState.actors._store.get(),
-			uniforms,
-		)
-	})
+	gameState.actors._store.subscribe(updateGame)
+
+	gameState.player.playerStore.subscribe(updateGame)
+
+	gameState.uniformsStore.subscribe(updateGame)
 
 	if (config.title) messageBox.open(config.title)
 	return initGameApi<T>(

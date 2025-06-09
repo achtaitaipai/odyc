@@ -82,6 +82,9 @@ export const createActorProxy = <T extends string>(
 		get symbol() {
 			return (getActor()?.symbol as T) ?? null
 		},
+		get onScreen() {
+			return getActor()?.onScreen ?? false
+		},
 		get onCollide() {
 			return getActor()?.onCollide
 		},
@@ -90,6 +93,12 @@ export const createActorProxy = <T extends string>(
 		},
 		get onLeave() {
 			return getActor()?.onLeave
+		},
+		get onScreenEnter() {
+			return getActor()?.onScreenEnter
+		},
+		get onScreenLeave() {
+			return getActor()?.onScreenLeave
 		},
 		remove,
 	}

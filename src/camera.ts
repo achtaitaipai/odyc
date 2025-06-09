@@ -61,6 +61,18 @@ export class Camera {
 		this.clamp(mapDimensions)
 	}
 
+	isOnScreen(position: Position) {
+		const [posX, posY] = position
+		const screenPosX = posX - this.position[0]
+		const screenPosY = posY - this.position[1]
+		return (
+			screenPosX >= 0 &&
+			screenPosY >= 0 &&
+			screenPosX < this.screenWidth &&
+			screenPosY < this.screenHeight
+		)
+	}
+
 	reset() {
 		this.position = [0, 0]
 	}

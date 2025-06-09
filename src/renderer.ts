@@ -1,3 +1,4 @@
+import { Camera } from './camera'
 import { createGridFromString } from './lib'
 import { Position, Tile } from './types.js'
 
@@ -70,9 +71,9 @@ class Renderer {
 		this.canvas.style.setProperty('top', `${top}px`)
 	}
 
-	render(items: Drawable[], cameraPosition: Position) {
+	render(items: Drawable[], camera: Camera) {
 		this.clear()
-		const [cameraX, cameraY] = cameraPosition
+		const [cameraX, cameraY] = camera.position
 
 		for (const item of items) {
 			if (item.sprite === undefined || item.sprite === null) continue
@@ -80,7 +81,8 @@ class Renderer {
 			const [tileX, tileY] = item.position
 			const screenPosX = (tileX - cameraX) * this.cellWidth
 			const screenPosY = (tileY - cameraY) * this.cellHeight
-			this.drawTile(item.sprite, screenPosX, screenPosY)
+			if (camera.isOnScreen(item.position))
+				this.drawTile(item.sprite, screenPosX, screenPosY)
 		}
 	}
 

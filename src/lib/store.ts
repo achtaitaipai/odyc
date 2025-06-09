@@ -1,7 +1,9 @@
 export type Store<T> = {
 	subscribe: (callback: (value: T) => void) => () => void
 	set: (newValue: T) => void
+	silentSet: (newValue: T) => void
 	update: (updateValue: (current: T) => T) => void
+	silentUpdate: (updateValue: (current: T) => T) => void
 	get: () => T
 }
 
@@ -11,7 +13,7 @@ export const createStore = <T>(initialValue: T): Store<T> => {
 	const subscribers: Map<number, (value: T) => void> = new Map()
 
 	return {
-		subscribe: (callback: (value: T) => void) => {
+		subscribe: (callback) => {
 			const subscriberIndex = index
 			index++
 			subscribers.set(subscriberIndex, callback)
@@ -20,11 +22,14 @@ export const createStore = <T>(initialValue: T): Store<T> => {
 				subscribers.delete(subscriberIndex)
 			}
 		},
-		set: (newValue: T) => {
+		set: (newValue) => {
 			value = newValue
 			subscribers.forEach((callback) => {
 				callback(value)
 			})
+		},
+		silentSet: (newValue) => {
+			value = newValue
 		},
 		get: () => value,
 		update: (updateValue) => {
@@ -32,6 +37,9 @@ export const createStore = <T>(initialValue: T): Store<T> => {
 			subscribers.forEach((callback) => {
 				callback(value)
 			})
+		},
+		silentUpdate: (updateValue) => {
+			value = updateValue(value)
 		},
 	}
 }
