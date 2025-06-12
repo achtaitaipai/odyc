@@ -40,7 +40,6 @@ export type ActorState<T extends string> = {
 
 export type ActorProxy<T extends string> = Omit<
 	ActorState<T>,
-	| 'onScreen'
 	| 'onCollide'
 	| 'onEnter'
 	| 'onLeave'
