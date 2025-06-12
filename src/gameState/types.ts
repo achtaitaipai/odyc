@@ -35,6 +35,7 @@ export type ActorState<T extends string> = {
 	onLeave?: (target: ActorProxy<T>) => any
 	onScreenEnter?: (target: ActorProxy<T>) => any
 	onScreenLeave?: (target: ActorProxy<T>) => any
+	onTurn?: (target: ActorProxy<T>) => any
 }
 
 export type ActorProxy<T extends string> = Omit<
@@ -45,6 +46,7 @@ export type ActorProxy<T extends string> = Omit<
 	| 'onLeave'
 	| 'onScreenEnter'
 	| 'onScreenLeave'
+	| 'onTurn'
 > & {
 	remove: () => void
 }

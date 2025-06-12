@@ -81,7 +81,8 @@ export const createActorsStore = <T extends string>(
 			| 'onEnter'
 			| 'onLeave'
 			| 'onScreenLeave'
-			| 'onScreenEnter',
+			| 'onScreenEnter'
+			| 'onTurn',
 	) =>
 		store.get().find((el) => el.position[0] === x && el.position[1] === y)?.[
 			event
@@ -138,6 +139,7 @@ const createActorFromTemplate = <T extends string>(
 		onLeave: template.onLeave,
 		onScreenEnter: template.onScreenEnter,
 		onScreenLeave: template.onScreenLeave,
+		onTurn: template.onTurn,
 	}
 }
 
