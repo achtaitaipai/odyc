@@ -6,13 +6,11 @@ import { initFilter } from './filter.js'
 import { initGameApi } from './gameApi.js'
 import { initGameLoop } from './gameLoop.js'
 import { initGameState } from './gameState/index.js'
-import { ActorState, Player } from './gameState/types.js'
 import { initInputsHandler } from './inputs.js'
 import { debounce } from './lib'
 import { initMessageBox } from './messageBox.js'
 import { initPrompt } from './prompt.js'
 import { initRenderer } from './renderer.js'
-import { Uniforms } from './shaders/filterSettings.js'
 import { initSoundPlayer } from './sound.js'
 
 export const createGame = <T extends string>(
