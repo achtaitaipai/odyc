@@ -50,22 +50,24 @@ export const createGame = <T extends string>(
 			gameState.player.playerProxy.position,
 			gameState.mapStore.getDimensions(),
 		)
-		const screenEventsQueue: (() => void)[] = []
+		const screenLeaveEventsQueue: (() => void)[] = []
+		const screenEnterEventsQueue: (() => void)[] = []
 		gameState.actors._store.silentUpdate((actors) => {
 			return actors.map((el) => {
 				const isOnScreen = camera.isOnScreen(el.position)
 				if (isOnScreen !== el.isOnScreen) {
 					const target = gameState.actors.getCell(...el.position)
 					if (isOnScreen && el.onScreenEnter)
-						screenEventsQueue.push(() => el.onScreenEnter?.(target))
+						screenEnterEventsQueue.push(() => el.onScreenEnter?.(target))
 					else if (!isOnScreen && el.onScreenLeave)
-						screenEventsQueue.push(() => el.onScreenLeave?.(target))
+						screenLeaveEventsQueue.push(() => el.onScreenLeave?.(target))
 				}
 				el.isOnScreen = isOnScreen
 				return el
 			})
 		})
-		screenEventsQueue.forEach((fn) => fn())
+		screenLeaveEventsQueue.forEach((fn) => fn())
+		screenEnterEventsQueue.forEach((fn) => fn())
 
 		renderer.render(
 			[...gameState.actors._store.get(), gameState.player.playerProxy],
