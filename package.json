@@ -1,7 +1,7 @@
 {
 	"name": "odyc",
 	"version": "0.0.91",
-	"description": "",
+	"description": "A tiny JavaScript library to create narrative games with pixels, sounds, and text.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"type": "module",
@@ -16,11 +16,20 @@
 		"format": "prettier . --write",
 		"build": "tsup"
 	},
-	"license": "MIT",
 	"devDependencies": {
 		"prettier": "^3.2.5",
 		"tsup": "^8.0.2",
 		"typescript": "^5.5.4",
 		"pfxr": "^1.0.8"
-	}
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/achtaitaipai/odyc"
+	},
+	"bugs": {
+		"url": "https://github.com/achtaitaipai/odyc/issues"
+	},
+	"author": "Charles Cailleteau",
+	"homepage": "https://odyc.dev"
 }
