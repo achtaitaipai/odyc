@@ -16,7 +16,6 @@ import { initSoundPlayer } from './sound.js'
 export const createGame = <T extends string>(
 	userConfig?: Partial<Config<T>>,
 ) => {
-	console.log('next')
 	const config: Config<T> = Object.assign({}, defaultConfig, userConfig)
 	const gameState = initGameState(config)
 	const soundPlayer = initSoundPlayer(config)
