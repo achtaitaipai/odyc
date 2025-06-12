@@ -81,6 +81,12 @@ class GameLoop<T extends string> {
 			else if (typeof endMessage === 'boolean' && endMessage) this.ender.play()
 			else await this.ender.play(...endMessage)
 		}
+		this.gameState.actors._store.get().forEach((el) => {
+			if (el.onTurn) {
+				const target = this.gameState.actors.getCell(...el.position)
+				el.onTurn(target)
+			}
+		})
 	}
 
 	isCellOnScreen([x, y]: Position) {
