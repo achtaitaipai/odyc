@@ -30,56 +30,63 @@ class GameLoop<T extends string> {
 	async update(input: Input) {
 		const currentCell = this.gameState.player.playerProxy.position
 		const nextCell = addVectors(currentCell, directions[input])
-		if (!this.isCellOnScreen(nextCell)) return
-		const actorOnCurrentCell = this.gameState.actors.getCell(...currentCell)
-		const actorOnNextCell = this.gameState.actors.getCell(...nextCell)
-		const sound = actorOnNextCell.sound
-		if (sound) {
-			const soundParams: PlaySoundArgs = Array.isArray(sound) ? sound : [sound]
-			this.soundPlayer.play(...soundParams)
-		}
+		if (this.isCellOnworld(nextCell)) {
+			const actorOnCurrentCell = this.gameState.actors.getCell(...currentCell)
+			const actorOnNextCell = this.gameState.actors.getCell(...nextCell)
+			const sound = actorOnNextCell.sound
+			if (sound) {
+				const soundParams: PlaySoundArgs = Array.isArray(sound)
+					? sound
+					: [sound]
+				this.soundPlayer.play(...soundParams)
+			}
 
-		const endMessage = actorOnNextCell.end
+			const endMessage = actorOnNextCell.end
 
-		if (actorOnNextCell.solid) {
-			const colliderDialog = actorOnNextCell.dialog
-			if (colliderDialog) await this.dialog.open(colliderDialog)
-			await this.gameState.actors.getEvent(
-				...nextCell,
-				'onCollide',
-			)?.(actorOnNextCell)
-		} else {
-			this.gameState.actors.getEvent(
-				...currentCell,
-				'onLeave',
-			)?.(actorOnCurrentCell)
-			//move the player if the position is not changed
-			if (
-				compareVectors(currentCell, this.gameState.player.playerProxy.position)
-			)
-				this.gameState.player.playerProxy.position = nextCell
+			if (actorOnNextCell.solid) {
+				const colliderDialog = actorOnNextCell.dialog
+				if (colliderDialog) await this.dialog.open(colliderDialog)
+				await this.gameState.actors.getEvent(
+					...nextCell,
+					'onCollide',
+				)?.(actorOnNextCell)
+			} else {
+				this.gameState.actors.getEvent(
+					...currentCell,
+					'onLeave',
+				)?.(actorOnCurrentCell)
+				//move the player if the position is not changed
+				if (
+					compareVectors(
+						currentCell,
+						this.gameState.player.playerProxy.position,
+					)
+				)
+					this.gameState.player.playerProxy.position = nextCell
 
-			if (actorOnNextCell) {
-				const enterDialog = actorOnNextCell?.dialog
-				if (enterDialog)
-					this.dialog.open(enterDialog).then(() => {
+				if (actorOnNextCell) {
+					const enterDialog = actorOnNextCell?.dialog
+					if (enterDialog)
+						this.dialog.open(enterDialog).then(() => {
+							this.gameState.actors.getEvent(
+								...nextCell,
+								'onEnter',
+							)?.(actorOnNextCell)
+						})
+					else {
 						this.gameState.actors.getEvent(
 							...nextCell,
 							'onEnter',
 						)?.(actorOnNextCell)
-					})
-				else {
-					this.gameState.actors.getEvent(
-						...nextCell,
-						'onEnter',
-					)?.(actorOnNextCell)
+					}
 				}
 			}
-		}
-		if (endMessage) {
-			if (typeof endMessage === 'string') await this.ender.play(endMessage)
-			else if (typeof endMessage === 'boolean' && endMessage) this.ender.play()
-			else await this.ender.play(...endMessage)
+			if (endMessage) {
+				if (typeof endMessage === 'string') await this.ender.play(endMessage)
+				else if (typeof endMessage === 'boolean' && endMessage)
+					this.ender.play()
+				else await this.ender.play(...endMessage)
+			}
 		}
 		this.gameState.actors._store.get().forEach((el) => {
 			if (el.onTurn) {
@@ -89,7 +96,7 @@ class GameLoop<T extends string> {
 		})
 	}
 
-	isCellOnScreen([x, y]: Position) {
+	isCellOnworld([x, y]: Position) {
 		return (
 			x >= 0 &&
 			y >= 0 &&
