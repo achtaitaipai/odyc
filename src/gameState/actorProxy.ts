@@ -82,8 +82,8 @@ export const createActorProxy = <T extends string>(
 		get symbol() {
 			return (getActor()?.symbol as T) ?? null
 		},
-		get onScreen() {
-			return getActor()?.onScreen ?? false
+		get isOnScreen() {
+			return getActor()?.isOnScreen ?? false
 		},
 		remove,
 	}

@@ -8,7 +8,7 @@ export type Templates<T extends string = string> = {
 }
 
 export type Template<T extends string = string> = Partial<
-	Omit<ActorState<T>, 'position' | 'symbol' | 'onScreen'>
+	Omit<ActorState<T>, 'position' | 'symbol' | 'isOonScreen'>
 >
 
 export type Player = ReturnType<typeof createPlayer>
@@ -27,7 +27,7 @@ export type ActorState<T extends string> = {
 	dialog: string | null
 	solid: boolean
 	visible: boolean
-	onScreen: boolean
+	isOnScreen: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
 	onCollide?: (target: ActorProxy<T>) => any

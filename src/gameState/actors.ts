@@ -129,7 +129,7 @@ const createActorFromTemplate = <T extends string>(
 		sprite: template.sprite ?? null,
 		position: [x, y],
 		dialog: template.dialog ?? null,
-		onScreen: false,
+		isOnScreen: false,
 		end: template.end ?? null,
 		sound: template.sound ?? null,
 		solid: template.solid !== false,

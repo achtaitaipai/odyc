@@ -53,15 +53,15 @@ export const createGame = <T extends string>(
 		const screenEventsQueue: (() => void)[] = []
 		gameState.actors._store.silentUpdate((actors) => {
 			return actors.map((el) => {
-				const onScreen = camera.isOnScreen(el.position)
-				if (onScreen !== el.onScreen) {
+				const isOnScreen = camera.isOnScreen(el.position)
+				if (isOnScreen !== el.isOnScreen) {
 					const target = gameState.actors.getCell(...el.position)
-					if (onScreen && el.onScreenEnter)
+					if (isOnScreen && el.onScreenEnter)
 						screenEventsQueue.push(() => el.onScreenEnter?.(target))
-					else if (!onScreen && el.onScreenLeave)
+					else if (!isOnScreen && el.onScreenLeave)
 						screenEventsQueue.push(() => el.onScreenLeave?.(target))
 				}
-				el.onScreen = onScreen
+				el.isOnScreen = isOnScreen
 				return el
 			})
 		})
