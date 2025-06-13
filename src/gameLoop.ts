@@ -95,8 +95,8 @@ class GameLoop<T extends string> {
 		return (
 			x >= 0 &&
 			y >= 0 &&
-			x < this.gameState.mapStore.getDimensions()[0] &&
-			y < this.gameState.mapStore.getDimensions()[1]
+			x < this.gameState.gameMap.dimensions[0] &&
+			y < this.gameState.gameMap.dimensions[1]
 		)
 	}
 

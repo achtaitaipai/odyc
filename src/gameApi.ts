@@ -30,7 +30,7 @@ export const initGameApi = <T extends string>(
 		end: (...messages: string[]) => ender.play(...messages),
 		loadMap: (map: string, playerPosition?: Position) => {
 			if (playerPosition) gameState.player.position = [...playerPosition]
-			gameState.mapStore.store.set(map)
+			gameState.gameMap.map = map
 			gameState.player.saveCurrentState()
 		},
 		updateFilter: (uniforms: Uniforms) => {
@@ -42,10 +42,10 @@ export const initGameApi = <T extends string>(
 			})
 		},
 		get width() {
-			return gameState.mapStore.getDimensions()[0]
+			return gameState.gameMap.dimensions[0]
 		},
 		get height() {
-			return gameState.mapStore.getDimensions()[1]
+			return gameState.gameMap.dimensions[1]
 		},
 	}
 	return gameApi

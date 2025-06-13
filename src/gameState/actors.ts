@@ -1,13 +1,13 @@
 import { compareVectors, createGridFromString } from '../lib/index.js'
 import { createStore } from '../lib/store.js'
 import { Unwrap } from '../types.js'
+import { GameMap } from './gameMap.js'
 import { createActorProxy } from './actorProxy.js'
-import { MapStore } from './map.js'
 import { ActorState, GameStateParams, Template, Templates } from './types.js'
 
 export const createActorsStore = <T extends string>(
 	params: Omit<GameStateParams<T>, 'player'>,
-	mapStore: MapStore,
+	gameMap: GameMap,
 ) => {
 	const templates = params.templates
 	let actorsValues: ActorState<T>[] = []
@@ -15,7 +15,8 @@ export const createActorsStore = <T extends string>(
 	store.subscribe((value) => {
 		actorsValues = value
 	})
-	mapStore.store.subscribe((map) => {
+	store.set(createActors(createGridFromString(gameMap.map), templates))
+	gameMap.subscribe((map) => {
 		store.set(createActors(createGridFromString(map), templates))
 	})
 	const getAll = (symbol: T) => {
@@ -70,9 +71,7 @@ export const createActorsStore = <T extends string>(
 	const getCell = (x: number, y: number) => createActorProxy<T>([x, y], store)
 
 	const reset = () =>
-		store.set(
-			createActors(createGridFromString(mapStore.store.get()), templates),
-		)
+		store.set(createActors(createGridFromString(gameMap.map), templates))
 	const getEvent = (
 		x: number,
 		y: number,

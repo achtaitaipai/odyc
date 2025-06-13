@@ -46,7 +46,7 @@ export const createGame = <T extends string>(
 
 	const updateGame = debounce(() => {
 		gameFilter?.setUniforms(gameState.uniformsStore?.get())
-		camera.update(gameState.player.position, gameState.mapStore.getDimensions())
+		camera.update(gameState.player.position, gameState.gameMap.dimensions)
 		const screenLeaveEventsQueue: (() => void)[] = []
 		const screenEnterEventsQueue: (() => void)[] = []
 		gameState.actors._store.silentUpdate((actors) => {
@@ -67,7 +67,7 @@ export const createGame = <T extends string>(
 		screenEnterEventsQueue.forEach((fn) => fn())
 
 		renderer.render(
-			[...gameState.actors._store.get(), gameState.player.api],
+			[...gameState.actors._store.get(), gameState.player.facade],
 			camera,
 		)
 		gameFilter?.render()
