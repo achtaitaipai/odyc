@@ -45,7 +45,7 @@ export const createGame = <T extends string>(
 	})
 
 	const updateGame = debounce(() => {
-		gameFilter?.setUniforms(gameState.uniformsStore?.get())
+		gameFilter?.setUniforms(gameState.filterUniforms.get())
 		camera.update(gameState.player.position, gameState.gameMap.dimensions)
 		const screenLeaveEventsQueue: (() => void)[] = []
 		const screenEnterEventsQueue: (() => void)[] = []
@@ -77,7 +77,7 @@ export const createGame = <T extends string>(
 
 	gameState.player.subscribe(updateGame)
 
-	gameState.uniformsStore.subscribe(updateGame)
+	gameState.filterUniforms.subscribe(updateGame)
 
 	if (config.title) messageBox.open(config.title)
 	return initGameApi<T>(

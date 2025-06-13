@@ -34,12 +34,7 @@ export const initGameApi = <T extends string>(
 			gameState.player.saveCurrentState()
 		},
 		updateFilter: (uniforms: Uniforms) => {
-			gameState.uniformsStore.update((current) => {
-				for (const [key, value] of Object.entries(uniforms)) {
-					current[key] = Array.isArray(value) ? [...value] : value
-				}
-				return current
-			})
+			gameState.filterUniforms.set(uniforms)
 		},
 		get width() {
 			return gameState.gameMap.dimensions[0]
