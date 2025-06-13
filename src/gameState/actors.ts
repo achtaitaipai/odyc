@@ -89,7 +89,7 @@ export class Actors<T extends string> {
 	getEvent(
 		x: number,
 		y: number,
-		event:
+		eventKey:
 			| 'onCollide'
 			| 'onEnter'
 			| 'onLeave'
@@ -97,9 +97,10 @@ export class Actors<T extends string> {
 			| 'onScreenEnter'
 			| 'onTurn',
 	) {
-		return this.#values.find(
+		const event = this.#values.find(
 			(el) => el.position[0] === x && el.position[1] === y,
-		)?.[event]
+		)?.[eventKey]
+		if (event) return () => event(this.getCell(x, y))
 	}
 
 	get() {
@@ -107,21 +108,29 @@ export class Actors<T extends string> {
 	}
 
 	handleScreenEvents(camera: Camera) {
-		const screenLeaveEventsQueue: (() => void)[] = []
-		const screenEnterEventsQueue: (() => void)[] = []
+		const screenLeaveEventsQueue: ((() => void) | undefined)[] = []
+		const screenEnterEventsQueue: ((() => void) | undefined)[] = []
 		for (let index = 0; index < this.#values.length; index++) {
 			const actor = this.#values[index]
 			if (!actor) continue
 			const isOnScreen = camera.isOnScreen(actor.position)
 			if (actor.isOnScreen === isOnScreen) continue
-			const target = new ActorFacade(actor.position, this)
 			this.#values[index]!.isOnScreen = isOnScreen
 			if (!isOnScreen)
-				screenLeaveEventsQueue.push(() => actor.onScreenLeave?.(target))
-			else screenEnterEventsQueue.push(() => actor.onScreenEnter?.(target))
+				screenLeaveEventsQueue.push(
+					this.getEvent(...actor.position, 'onScreenLeave'),
+				)
+			else
+				screenEnterEventsQueue.push(
+					this.getEvent(...actor.position, 'onScreenEnter'),
+				)
 		}
-		screenLeaveEventsQueue.forEach((el) => el())
-		screenEnterEventsQueue.forEach((el) => el())
+		screenLeaveEventsQueue.forEach((el) => {
+			if (el) el()
+		})
+		screenEnterEventsQueue.forEach((el) => {
+			if (el) el()
+		})
 	}
 
 	initActors() {
