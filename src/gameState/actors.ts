@@ -23,8 +23,8 @@ export class Actors<T extends string> {
 		this.#gameMap = gameMap
 		this.#templates = params.templates
 		this.#observable = createObservable()
-		this.#updateValues()
-		gameMap.subscribe(() => this.#updateValues())
+		this.initActors()
+		gameMap.subscribe(() => this.initActors())
 	}
 
 	subscribe(callback: () => void) {
@@ -124,7 +124,7 @@ export class Actors<T extends string> {
 		screenEnterEventsQueue.forEach((el) => el())
 	}
 
-	#updateValues() {
+	initActors() {
 		this.#values = this.#createActors(
 			createGridFromString(this.#gameMap.map),
 			this.#templates,
