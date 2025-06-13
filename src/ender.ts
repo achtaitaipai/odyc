@@ -22,7 +22,7 @@ export const initEnder = <T extends string>({
 			}
 			camera.reset()
 			gameState.player.restoreSavedState()
-			gameState.actors.reset()
+			gameState.actors.initActors()
 		},
 	}
 }

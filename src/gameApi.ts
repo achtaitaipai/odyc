@@ -2,11 +2,12 @@ import { Dialog } from './dialog.js'
 import type { Ender } from './ender.js'
 import { Filter } from './filter.js'
 import { GameState } from './gameState/index.js'
+import { ActorState } from './gameState/types.js'
 import { MessageBox } from './messageBox.js'
 import { MenuOption, Prompt } from './prompt.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
-import { Position } from './types.js'
+import { Position, Unwrap } from './types.js'
 export const initGameApi = <T extends string>(
 	gameState: GameState<T>,
 	dialog: Dialog,
@@ -16,12 +17,20 @@ export const initGameApi = <T extends string>(
 	messageBox: MessageBox,
 ) => {
 	const gameApi = {
-		player: gameState.player.playerProxy,
-		getCell: gameState.actors.getCell,
-		addToCell: gameState.actors.addToCell,
-		setCell: gameState.actors.setCell,
-		getAll: gameState.actors.getAll,
-		setAll: gameState.actors.setAll,
+		player: gameState.player.facade,
+		getCell: (x: number, y: number) => gameState.actors.getCell(x, y),
+		addToCell: (x: number, y: number, symbol: T) =>
+			gameState.actors.addToCell(x, y, symbol),
+		setCell: (
+			x: number,
+			y: number,
+			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
+		) => gameState.actors.setCell(x, y, params),
+		getAll: (symbol: T) => gameState.actors.getAll(symbol),
+		setAll: (
+			symbol: T,
+			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
+		) => gameState.actors.setAll(symbol, params),
 		openDialog: (text: string) => dialog.open(text),
 		prompt: (...options: string[]) => prompt.open(...options),
 		openMenu: (options: MenuOption) => prompt.openMenu(options),
@@ -29,24 +38,18 @@ export const initGameApi = <T extends string>(
 		playSound: (...args: PlaySoundArgs) => soundPlayer.play(...args),
 		end: (...messages: string[]) => ender.play(...messages),
 		loadMap: (map: string, playerPosition?: Position) => {
-			if (playerPosition)
-				gameState.player.playerProxy.position = [...playerPosition]
-			gameState.mapStore.store.set(map)
+			if (playerPosition) gameState.player.position = [...playerPosition]
+			gameState.gameMap.map = map
 			gameState.player.saveCurrentState()
 		},
 		updateFilter: (uniforms: Uniforms) => {
-			gameState.uniformsStore.update((current) => {
-				for (const [key, value] of Object.entries(uniforms)) {
-					current[key] = Array.isArray(value) ? [...value] : value
-				}
-				return current
-			})
+			gameState.filterUniforms.set(uniforms)
 		},
 		get width() {
-			return gameState.mapStore.getDimensions()[0]
+			return gameState.gameMap.dimensions[0]
 		},
 		get height() {
-			return gameState.mapStore.getDimensions()[1]
+			return gameState.gameMap.dimensions[1]
 		},
 	}
 	return gameApi

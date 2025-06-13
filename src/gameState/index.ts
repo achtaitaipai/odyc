@@ -1,45 +1,42 @@
-import { Store } from '../lib/store.js'
-import { Uniforms } from '../shaders/filterSettings.js'
-import { Position, Tile } from '../types.js'
-import { createActorsStore } from './actors.js'
-import { createUniformsStore } from './filterUniforms.js'
-import { createMapStore } from './map.js'
-import { createPlayer } from './player.js'
+import { createObservable } from '../lib/observer.js'
+import { Actors } from './actors.js'
+import { FilterUniforms } from './filterUniforms.js'
+import { GameMap } from './gameMap.js'
+import { Player } from './player.js'
 import { GameStateParams } from './types.js'
 
 export type GameState<T extends string> = {
-	mapStore: {
-		store: Store<string>
-		getDimensions(): Position
-	}
-	player: {
-		playerProxy: {
-			sprite: Tile | null
-			position: Position
-		}
-		playerStore: Store<{
-			sprite: Tile | null
-			position: Position
-		}>
-		restoreSavedState: () => void
-		saveCurrentState: () => void
-	}
-	actors: ReturnType<typeof createActorsStore<T>>
-	uniformsStore: Store<Uniforms>
+	gameMap: GameMap
+	player: Player
+	actors: Actors<T>
+	filterUniforms: FilterUniforms
+	subscribe: (callback: () => void) => void
 }
 
 export const initGameState = <U extends string>(
 	params: GameStateParams<U>,
 ): GameState<U> => {
-	const mapStore = createMapStore(params.map)
-	const uniformsStore = createUniformsStore(params.filter?.settings ?? {})
-	const player = createPlayer(params.player)
-	const actors = createActorsStore<U>(params, mapStore)
+	const gameMap = new GameMap(params.map)
+	const filterUniforms = new FilterUniforms(params.filter?.settings ?? {})
+	const player = new Player(params.player)
+	const actors = new Actors<U>(params, gameMap)
+
+	const observable = createObservable()
+	filterUniforms.subscribe(() => {
+		observable.notify()
+	})
+	player.subscribe(() => {
+		observable.notify()
+	})
+	actors.subscribe(() => {
+		observable.notify()
+	})
 
 	return {
 		player,
 		actors,
-		mapStore,
-		uniformsStore,
+		gameMap,
+		filterUniforms,
+		subscribe: observable.subscribe,
 	}
 }

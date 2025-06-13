@@ -45,44 +45,22 @@ export const createGame = <T extends string>(
 	})
 
 	const updateGame = debounce(() => {
-		gameFilter?.setUniforms(gameState.uniformsStore?.get())
-		camera.update(
-			gameState.player.playerProxy.position,
-			gameState.mapStore.getDimensions(),
-		)
-		const screenLeaveEventsQueue: (() => void)[] = []
-		const screenEnterEventsQueue: (() => void)[] = []
-		gameState.actors._store.silentUpdate((actors) => {
-			return actors.map((el) => {
-				const isOnScreen = camera.isOnScreen(el.position)
-				if (isOnScreen !== el.isOnScreen) {
-					const target = gameState.actors.getCell(...el.position)
-					if (isOnScreen && el.onScreenEnter)
-						screenEnterEventsQueue.push(() => el.onScreenEnter?.(target))
-					else if (!isOnScreen && el.onScreenLeave)
-						screenLeaveEventsQueue.push(() => el.onScreenLeave?.(target))
-				}
-				el.isOnScreen = isOnScreen
-				return el
-			})
-		})
-		screenLeaveEventsQueue.forEach((fn) => fn())
-		screenEnterEventsQueue.forEach((fn) => fn())
-
+		gameFilter?.setUniforms(gameState.filterUniforms.get())
+		camera.update(gameState.player.position, gameState.gameMap.dimensions)
+		gameState.actors.handleScreenEvents(camera)
 		renderer.render(
-			[...gameState.actors._store.get(), gameState.player.playerProxy],
+			[...gameState.actors.get(), gameState.player.facade],
 			camera,
 		)
 		gameFilter?.render()
 	}, 60)
 
-	gameState.actors._store.subscribe(updateGame)
-
-	gameState.player.playerStore.subscribe(updateGame)
-
-	gameState.uniformsStore.subscribe(updateGame)
+	gameState.subscribe(updateGame)
 
 	if (config.title) messageBox.open(config.title)
+
+	updateGame()
+
 	return initGameApi<T>(
 		gameState,
 		dialog,
