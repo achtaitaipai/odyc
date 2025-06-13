@@ -1,10 +1,10 @@
 import { Store } from '../lib/store.js'
 import { Uniforms } from '../shaders/filterSettings.js'
-import { Position, Tile } from '../types.js'
+import { Position } from '../types.js'
 import { createActorsStore } from './actors.js'
 import { createUniformsStore } from './filterUniforms.js'
 import { createMapStore } from './map.js'
-import { createPlayer } from './player.js'
+import { Player } from './player.js'
 import { GameStateParams } from './types.js'
 
 export type GameState<T extends string> = {
@@ -12,18 +12,7 @@ export type GameState<T extends string> = {
 		store: Store<string>
 		getDimensions(): Position
 	}
-	player: {
-		playerProxy: {
-			sprite: Tile | null
-			position: Position
-		}
-		playerStore: Store<{
-			sprite: Tile | null
-			position: Position
-		}>
-		restoreSavedState: () => void
-		saveCurrentState: () => void
-	}
+	player: Player
 	actors: ReturnType<typeof createActorsStore<T>>
 	uniformsStore: Store<Uniforms>
 }
@@ -33,8 +22,8 @@ export const initGameState = <U extends string>(
 ): GameState<U> => {
 	const mapStore = createMapStore(params.map)
 	const uniformsStore = createUniformsStore(params.filter?.settings ?? {})
-	const player = createPlayer(params.player)
 	const actors = createActorsStore<U>(params, mapStore)
+	const player = new Player(params.player)
 
 	return {
 		player,

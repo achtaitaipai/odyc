@@ -28,7 +28,7 @@ class GameLoop<T extends string> {
 	}
 
 	async update(input: Input) {
-		const currentCell = this.gameState.player.playerProxy.position
+		const currentCell = this.gameState.player.position
 		const nextCell = addVectors(currentCell, directions[input])
 		if (this.isCellOnworld(nextCell)) {
 			const actorOnCurrentCell = this.gameState.actors.getCell(...currentCell)
@@ -56,13 +56,8 @@ class GameLoop<T extends string> {
 					'onLeave',
 				)?.(actorOnCurrentCell)
 				//move the player if the position is not changed
-				if (
-					compareVectors(
-						currentCell,
-						this.gameState.player.playerProxy.position,
-					)
-				)
-					this.gameState.player.playerProxy.position = nextCell
+				if (compareVectors(currentCell, this.gameState.player.position))
+					this.gameState.player.position = nextCell
 
 				if (actorOnNextCell) {
 					const enterDialog = actorOnNextCell?.dialog

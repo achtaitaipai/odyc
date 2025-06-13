@@ -16,7 +16,7 @@ export const initGameApi = <T extends string>(
 	messageBox: MessageBox,
 ) => {
 	const gameApi = {
-		player: gameState.player.playerProxy,
+		player: gameState.player.facade,
 		getCell: gameState.actors.getCell,
 		addToCell: gameState.actors.addToCell,
 		setCell: gameState.actors.setCell,
@@ -29,8 +29,7 @@ export const initGameApi = <T extends string>(
 		playSound: (...args: PlaySoundArgs) => soundPlayer.play(...args),
 		end: (...messages: string[]) => ender.play(...messages),
 		loadMap: (map: string, playerPosition?: Position) => {
-			if (playerPosition)
-				gameState.player.playerProxy.position = [...playerPosition]
+			if (playerPosition) gameState.player.position = [...playerPosition]
 			gameState.mapStore.store.set(map)
 			gameState.player.saveCurrentState()
 		},
