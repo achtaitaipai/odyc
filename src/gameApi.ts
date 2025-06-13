@@ -2,11 +2,12 @@ import { Dialog } from './dialog.js'
 import type { Ender } from './ender.js'
 import { Filter } from './filter.js'
 import { GameState } from './gameState/index.js'
+import { ActorState } from './gameState/types.js'
 import { MessageBox } from './messageBox.js'
 import { MenuOption, Prompt } from './prompt.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
-import { Position } from './types.js'
+import { Position, Unwrap } from './types.js'
 export const initGameApi = <T extends string>(
 	gameState: GameState<T>,
 	dialog: Dialog,
@@ -17,11 +18,19 @@ export const initGameApi = <T extends string>(
 ) => {
 	const gameApi = {
 		player: gameState.player.facade,
-		getCell: gameState.actors.getCell,
-		addToCell: gameState.actors.addToCell,
-		setCell: gameState.actors.setCell,
-		getAll: gameState.actors.getAll,
-		setAll: gameState.actors.setAll,
+		getCell: (x: number, y: number) => gameState.actors.getCell(x, y),
+		addToCell: (x: number, y: number, symbol: T) =>
+			gameState.actors.addToCell(x, y, symbol),
+		setCell: (
+			x: number,
+			y: number,
+			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
+		) => gameState.actors.setCell(x, y, params),
+		getAll: (symbol: T) => gameState.actors.getAll(symbol),
+		setAll: (
+			symbol: T,
+			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
+		) => gameState.actors.setAll(symbol, params),
 		openDialog: (text: string) => dialog.open(text),
 		prompt: (...options: string[]) => prompt.open(...options),
 		openMenu: (options: MenuOption) => prompt.openMenu(options),

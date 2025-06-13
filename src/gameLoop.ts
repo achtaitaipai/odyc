@@ -83,7 +83,7 @@ class GameLoop<T extends string> {
 				else await this.ender.play(...endMessage)
 			}
 		}
-		this.gameState.actors._store.get().forEach((el) => {
+		this.gameState.actors.get().forEach((el) => {
 			if (el.onTurn) {
 				const target = this.gameState.actors.getCell(...el.position)
 				el.onTurn(target)

@@ -1,6 +1,7 @@
 import { FilterParams } from '../shaders/filterSettings.js'
 import { PlaySoundArgs } from '../sound.js'
 import { Tile, UnTuplify } from '../types.js'
+import { ActorFacade } from './actorFacade.js'
 import { PlayerParams } from './player.js'
 
 export type Templates<T extends string = string> = {
@@ -28,22 +29,10 @@ export type ActorState<T extends string> = {
 	isOnScreen: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
-	onCollide?: (target: ActorProxy<T>) => any
-	onEnter?: (target: ActorProxy<T>) => any
-	onLeave?: (target: ActorProxy<T>) => any
-	onScreenEnter?: (target: ActorProxy<T>) => any
-	onScreenLeave?: (target: ActorProxy<T>) => any
-	onTurn?: (target: ActorProxy<T>) => any
-}
-
-export type ActorProxy<T extends string> = Omit<
-	ActorState<T>,
-	| 'onCollide'
-	| 'onEnter'
-	| 'onLeave'
-	| 'onScreenEnter'
-	| 'onScreenLeave'
-	| 'onTurn'
-> & {
-	remove: () => void
+	onCollide?: (target: ActorFacade<T>) => any
+	onEnter?: (target: ActorFacade<T>) => any
+	onLeave?: (target: ActorFacade<T>) => any
+	onScreenEnter?: (target: ActorFacade<T>) => any
+	onScreenLeave?: (target: ActorFacade<T>) => any
+	onTurn?: (target: ActorFacade<T>) => any
 }
