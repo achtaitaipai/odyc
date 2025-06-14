@@ -1,9 +1,10 @@
+import { Camera } from './camera.js'
 import { Dialog } from './dialog.js'
 import { Ender } from './ender.js'
 import { ActorFacade } from './gameState/actorFacade.js'
 import { GameState } from './gameState/index.js'
 import { Input } from './inputs.js'
-import { addVectors, compareVectors } from './lib/vector.js'
+import { addVectors } from './lib/vector.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
 import { Position } from './types.js'
 
@@ -12,6 +13,7 @@ export type GameLoopParams<T extends string> = {
 	dialog: Dialog
 	gameState: GameState<T>
 	ender: Ender
+	camera: Camera
 }
 
 class GameLoop<T extends string> {
@@ -19,12 +21,14 @@ class GameLoop<T extends string> {
 	soundPlayer: SoundPlayer
 	dialog: Dialog
 	ender: Ender
+	camera: Camera
 
 	constructor(params: GameLoopParams<T>) {
 		this.gameState = params.gameState
 		this.soundPlayer = params.soundPlayer
 		this.dialog = params.dialog
 		this.ender = params.ender
+		this.camera = params.camera
 	}
 
 	async update(input: Input) {
@@ -36,6 +40,10 @@ class GameLoop<T extends string> {
 		if (!actor.solid) {
 			await this.gameState.actors.getEvent(...from, 'onLeave')?.()
 			this.gameState.player.position = to
+			this.camera.update(
+				this.gameState.player.position,
+				this.gameState.gameMap.dimensions,
+			)
 		}
 
 		this.#playSound(actor)

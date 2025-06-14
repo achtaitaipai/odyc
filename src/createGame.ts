@@ -32,6 +32,7 @@ export const createGame = <T extends string>(
 		soundPlayer,
 		dialog,
 		ender,
+		camera,
 	})
 
 	initInputsHandler(config, (input) => {
@@ -67,5 +68,6 @@ export const createGame = <T extends string>(
 		soundPlayer,
 		ender,
 		messageBox,
+		camera,
 	)
 }
