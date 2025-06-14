@@ -128,7 +128,9 @@ class Renderer {
 				const char = grid[y]?.charAt(x)
 				if (!char) continue
 				const charset =
-					'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+					'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(
+						'',
+					)
 				const charIndex = charset.findIndex((ch) => ch === char)
 				const color = this.colors[charIndex]
 				if (!color) continue
