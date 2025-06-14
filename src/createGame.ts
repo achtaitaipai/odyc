@@ -27,6 +27,17 @@ export const createGame = <T extends string>(
 	const gameFilter = initFilter(renderer.canvas, config.filter)
 	const ender = initEnder({ gameState, messageBox, camera })
 
+	const renderGame = debounce(() => {
+		gameFilter?.setUniforms(gameState.filterUniforms.get())
+		camera.update(gameState.player.position, gameState.gameMap.dimensions)
+		renderer.render(
+			[...gameState.actors.get(), gameState.player.facade],
+			camera,
+		)
+		gameState.actors.handleScreenEvents(camera)
+		gameFilter?.render()
+	}, 60)
+
 	const gameLoop = initGameLoop({
 		gameState,
 		soundPlayer,
@@ -44,22 +55,11 @@ export const createGame = <T extends string>(
 		} else if (input !== 'ACTION') gameLoop.update(input)
 	})
 
-	const updateGame = debounce(() => {
-		gameFilter?.setUniforms(gameState.filterUniforms.get())
-		camera.update(gameState.player.position, gameState.gameMap.dimensions)
-		gameState.actors.handleScreenEvents(camera)
-		renderer.render(
-			[...gameState.actors.get(), gameState.player.facade],
-			camera,
-		)
-		gameFilter?.render()
-	}, 60)
-
-	gameState.subscribe(updateGame)
+	gameState.subscribe(renderGame)
 
 	if (config.title) messageBox.open(config.title)
 
-	updateGame()
+	renderGame()
 
 	return initGameApi<T>(
 		gameState,
