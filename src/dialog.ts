@@ -5,6 +5,7 @@ export type DialogParams = {
 	dialogBackground: string | number
 	dialogColor: string | number
 	dialogBorder: string | number
+	dialogInternvalMs?: number
 	colors: RendererParams['colors']
 }
 
@@ -43,6 +44,8 @@ export class Dialog {
 	#contentColor: string
 	#borderColor: string
 
+	#animationIntervalMs?: number
+
 	#boxHeight: number
 	#boxWidth: number
 	#boxX: number
@@ -53,6 +56,7 @@ export class Dialog {
 		this.#backgroundColor = this.#getColor(params.dialogBackground)
 		this.#contentColor = this.#getColor(params.dialogColor)
 		this.#borderColor = this.#getColor(params.dialogBorder)
+		this.#animationIntervalMs = params.dialogInternvalMs
 
 		this.#canvas = document.createElement('canvas')
 		this.#canvas.style.setProperty('position', 'absolute')
@@ -117,7 +121,11 @@ export class Dialog {
 
 	#update = (time: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (time - this.#lastFrameTime < ANIMATION_INTERVAL_MS) return
+		if (
+			time - this.#lastFrameTime <
+			(this.#animationIntervalMs || ANIMATION_INTERVAL_MS)
+		)
+			return
 		this.#lastFrameTime = time
 		if (
 			this.#currentLineQueue?.length === 0 &&
