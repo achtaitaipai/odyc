@@ -26,10 +26,13 @@ export type ActorState<T extends string> = {
 	dialog: string | null
 	solid: boolean
 	visible: boolean
+	isOnScreen: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
 	onCollide?: (target: ActorFacade<T>) => any
 	onEnter?: (target: ActorFacade<T>) => any
 	onLeave?: (target: ActorFacade<T>) => any
+	onScreenEnter?: (target: ActorFacade<T>) => any
+	onScreenLeave?: (target: ActorFacade<T>) => any
 	onTurn?: (target: ActorFacade<T>) => any
 }

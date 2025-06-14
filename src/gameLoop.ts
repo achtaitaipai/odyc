@@ -1,4 +1,3 @@
-import { Camera } from './camera.js'
 import { Dialog } from './dialog.js'
 import { Ender } from './ender.js'
 import { ActorFacade } from './gameState/actorFacade.js'
@@ -13,7 +12,6 @@ export type GameLoopParams<T extends string> = {
 	dialog: Dialog
 	gameState: GameState<T>
 	ender: Ender
-	camera: Camera
 }
 
 class GameLoop<T extends string> {
@@ -21,14 +19,12 @@ class GameLoop<T extends string> {
 	soundPlayer: SoundPlayer
 	dialog: Dialog
 	ender: Ender
-	camera: Camera
 
 	constructor(params: GameLoopParams<T>) {
 		this.gameState = params.gameState
 		this.soundPlayer = params.soundPlayer
 		this.dialog = params.dialog
 		this.ender = params.ender
-		this.camera = params.camera
 	}
 
 	async update(input: Input) {
@@ -40,10 +36,6 @@ class GameLoop<T extends string> {
 		if (!actor.solid) {
 			await this.gameState.actors.getEvent(...from, 'onLeave')?.()
 			this.gameState.player.position = to
-			this.camera.update(
-				this.gameState.player.position,
-				this.gameState.gameMap.dimensions,
-			)
 		}
 
 		this.#playSound(actor)
@@ -53,11 +45,13 @@ class GameLoop<T extends string> {
 			await this.gameState.actors.getEvent(...to, 'onCollide')?.()
 		else await this.gameState.actors.getEvent(...to, 'onEnter')?.()
 
-		this.gameState.actors.get().forEach((el) => {
-			if (el.onTurn) {
-				const target = this.gameState.actors.getCell(...el.position)
-				el.onTurn(target)
-			}
+		setTimeout(() => {
+			this.gameState.actors.get().forEach((el) => {
+				if (el.onTurn) {
+					const target = this.gameState.actors.getCell(...el.position)
+					el.onTurn(target)
+				}
+			})
 		})
 		await this.#end(actor)
 	}
