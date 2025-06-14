@@ -15,43 +15,41 @@ export type GameLoopParams<T extends string> = {
 }
 
 class GameLoop<T extends string> {
-	gameState: GameState<T>
-	soundPlayer: SoundPlayer
-	dialog: Dialog
-	ender: Ender
+	#gameState: GameState<T>
+	#soundPlayer: SoundPlayer
+	#dialog: Dialog
+	#ender: Ender
 
 	constructor(params: GameLoopParams<T>) {
-		this.gameState = params.gameState
-		this.soundPlayer = params.soundPlayer
-		this.dialog = params.dialog
-		this.ender = params.ender
+		this.#gameState = params.gameState
+		this.#soundPlayer = params.soundPlayer
+		this.#dialog = params.dialog
+		this.#ender = params.ender
 	}
 
 	async update(input: Input) {
-		const from = this.gameState.player.position
+		const from = this.#gameState.player.position
 		const to = addVectors(from, directions[input])
 
-		const actor = this.gameState.actors.getCell(...to)
+		const actor = this.#gameState.actors.getCell(...to)
 
 		if (!actor.solid) {
-			await this.gameState.actors.getEvent(...from, 'onLeave')?.()
-			this.gameState.player.position = to
+			await this.#gameState.actors.getEvent(...from, 'onLeave')?.()
+			this.#gameState.player.position = to
 		}
 
 		this.#playSound(actor)
 		await this.#openDialog(actor)
 
 		if (actor.solid)
-			await this.gameState.actors.getEvent(...to, 'onCollide')?.()
-		else await this.gameState.actors.getEvent(...to, 'onEnter')?.()
+			await this.#gameState.actors.getEvent(...to, 'onCollide')?.()
+		else await this.#gameState.actors.getEvent(...to, 'onEnter')?.()
 
-		setTimeout(() => {
-			this.gameState.actors.get().forEach((el) => {
-				if (el.onTurn) {
-					const target = this.gameState.actors.getCell(...el.position)
-					el.onTurn(target)
-				}
-			})
+		this.#gameState.actors.get().forEach((el) => {
+			if (el.onTurn) {
+				const target = this.#gameState.actors.getCell(...el.position)
+				el.onTurn(target)
+			}
 		})
 		await this.#end(actor)
 	}
@@ -60,19 +58,19 @@ class GameLoop<T extends string> {
 		const sound = actor.sound
 		if (sound) {
 			const soundParams: PlaySoundArgs = Array.isArray(sound) ? sound : [sound]
-			this.soundPlayer.play(...soundParams)
+			this.#soundPlayer.play(...soundParams)
 		}
 	}
 	async #openDialog(actor: ActorFacade<T>) {
-		if (actor.dialog) await this.dialog.open(actor.dialog)
+		if (actor.dialog) await this.#dialog.open(actor.dialog)
 	}
 
 	async #end(actor: ActorFacade<T>) {
 		const endMessage = actor.end
 		if (endMessage) {
-			if (typeof endMessage === 'string') await this.ender.play(endMessage)
-			else if (typeof endMessage === 'boolean' && endMessage) this.ender.play()
-			else await this.ender.play(...endMessage)
+			if (typeof endMessage === 'string') await this.#ender.play(endMessage)
+			else if (typeof endMessage === 'boolean' && endMessage) this.#ender.play()
+			else await this.#ender.play(...endMessage)
 		}
 	}
 
@@ -80,8 +78,8 @@ class GameLoop<T extends string> {
 		return (
 			x >= 0 &&
 			y >= 0 &&
-			x < this.gameState.gameMap.dimensions[0] &&
-			y < this.gameState.gameMap.dimensions[1]
+			x < this.#gameState.gameMap.dimensions[0] &&
+			y < this.#gameState.gameMap.dimensions[1]
 		)
 	}
 }
