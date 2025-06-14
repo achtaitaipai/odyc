@@ -1,7 +1,7 @@
 import { Dialog } from './dialog.js'
 import { Ender } from './ender.js'
+import { ActorFacade } from './gameState/actorFacade.js'
 import { GameState } from './gameState/index.js'
-import { ActorState } from './gameState/types.js'
 import { Input } from './inputs.js'
 import { addVectors, compareVectors } from './lib/vector.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
@@ -28,70 +28,58 @@ class GameLoop<T extends string> {
 	}
 
 	async update(input: Input) {
-		const currentCell = this.gameState.player.position
-		const nextCell = addVectors(currentCell, directions[input])
-		if (this.isCellOnworld(nextCell)) {
-			const actorOnCurrentCell = this.gameState.actors.getCell(...currentCell)
-			const actorOnNextCell = this.gameState.actors.getCell(...nextCell)
-			const sound = actorOnNextCell.sound
-			if (sound) {
-				const soundParams: PlaySoundArgs = Array.isArray(sound)
-					? sound
-					: [sound]
-				this.soundPlayer.play(...soundParams)
-			}
+		const from = this.gameState.player.position
+		const to = addVectors(from, directions[input])
 
-			const endMessage = actorOnNextCell.end
+		const actor = this.gameState.actors.getCell(...to)
 
-			if (actorOnNextCell.solid) {
-				const colliderDialog = actorOnNextCell.dialog
-				if (colliderDialog) await this.dialog.open(colliderDialog)
-				await this.gameState.actors.getEvent(...nextCell, 'onCollide')?.()
-			} else {
-				this.gameState.actors.getEvent(...currentCell, 'onLeave')?.()
-				//move the player if the position is not changed
-				if (compareVectors(currentCell, this.gameState.player.position))
-					this.gameState.player.position = nextCell
-
-				if (actorOnNextCell) {
-					const enterDialog = actorOnNextCell?.dialog
-					if (enterDialog)
-						this.dialog.open(enterDialog).then(() => {
-							this.gameState.actors.getEvent(...nextCell, 'onEnter')?.()
-						})
-					else {
-						this.gameState.actors.getEvent(...nextCell, 'onEnter')?.()
-					}
-				}
-			}
-			if (endMessage) {
-				if (typeof endMessage === 'string') await this.ender.play(endMessage)
-				else if (typeof endMessage === 'boolean' && endMessage)
-					this.ender.play()
-				else await this.ender.play(...endMessage)
-			}
+		if (!actor.solid) {
+			await this.gameState.actors.getEvent(...from, 'onLeave')?.()
+			this.gameState.player.position = to
 		}
+
+		this.#playSound(actor)
+		await this.#openDialog(actor)
+
+		if (actor.solid)
+			await this.gameState.actors.getEvent(...to, 'onCollide')?.()
+		else await this.gameState.actors.getEvent(...to, 'onEnter')?.()
+
 		this.gameState.actors.get().forEach((el) => {
 			if (el.onTurn) {
 				const target = this.gameState.actors.getCell(...el.position)
 				el.onTurn(target)
 			}
 		})
+		await this.#end(actor)
 	}
 
-	isCellOnworld([x, y]: Position) {
+	#playSound(actor: ActorFacade<T>) {
+		const sound = actor.sound
+		if (sound) {
+			const soundParams: PlaySoundArgs = Array.isArray(sound) ? sound : [sound]
+			this.soundPlayer.play(...soundParams)
+		}
+	}
+	async #openDialog(actor: ActorFacade<T>) {
+		if (actor.dialog) await this.dialog.open(actor.dialog)
+	}
+
+	async #end(actor: ActorFacade<T>) {
+		const endMessage = actor.end
+		if (endMessage) {
+			if (typeof endMessage === 'string') await this.ender.play(endMessage)
+			else if (typeof endMessage === 'boolean' && endMessage) this.ender.play()
+			else await this.ender.play(...endMessage)
+		}
+	}
+
+	#isCellOnworld([x, y]: Position) {
 		return (
 			x >= 0 &&
 			y >= 0 &&
 			x < this.gameState.gameMap.dimensions[0] &&
 			y < this.gameState.gameMap.dimensions[1]
-		)
-	}
-
-	getActorOnCell(actors: ActorState<T>[], cellPosition: Position) {
-		return actors.find(
-			({ position }) =>
-				position[0] === cellPosition[0] && position[1] === cellPosition[1],
 		)
 	}
 }

@@ -101,8 +101,6 @@ export class Actors<T extends string> {
 		return this.#values
 	}
 
-	}
-
 	initActors() {
 		this.#values = this.#createActors(
 			createGridFromString(this.#gameMap.map),
