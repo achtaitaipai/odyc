@@ -1,10 +1,10 @@
-import { Camera } from '../camera'
 import {
 	compareVectors,
 	createGridFromString,
 	createObservable,
 	Observable,
 } from '../lib'
+import { PlaySoundArgs } from '../sound'
 import { Unwrap } from '../types'
 import { ActorFacade } from './actorFacade'
 import { GameMap } from './gameMap'
@@ -89,13 +89,7 @@ export class Actors<T extends string> {
 	getEvent(
 		x: number,
 		y: number,
-		eventKey:
-			| 'onCollide'
-			| 'onEnter'
-			| 'onLeave'
-			| 'onScreenLeave'
-			| 'onScreenEnter'
-			| 'onTurn',
+		eventKey: 'onCollide' | 'onEnter' | 'onLeave' | 'onTurn',
 	) {
 		const event = this.#values.find(
 			(el) => el.position[0] === x && el.position[1] === y,
@@ -107,30 +101,6 @@ export class Actors<T extends string> {
 		return this.#values
 	}
 
-	handleScreenEvents(camera: Camera) {
-		const screenLeaveEventsQueue: ((() => void) | undefined)[] = []
-		const screenEnterEventsQueue: ((() => void) | undefined)[] = []
-		for (let index = 0; index < this.#values.length; index++) {
-			const actor = this.#values[index]
-			if (!actor) continue
-			const isOnScreen = camera.isOnScreen(actor.position)
-			if (actor.isOnScreen === isOnScreen) continue
-			this.#values[index]!.isOnScreen = isOnScreen
-			if (!isOnScreen)
-				screenLeaveEventsQueue.push(
-					this.getEvent(...actor.position, 'onScreenLeave'),
-				)
-			else
-				screenEnterEventsQueue.push(
-					this.getEvent(...actor.position, 'onScreenEnter'),
-				)
-		}
-		screenLeaveEventsQueue.forEach((el) => {
-			if (el) el()
-		})
-		screenEnterEventsQueue.forEach((el) => {
-			if (el) el()
-		})
 	}
 
 	initActors() {
@@ -167,7 +137,6 @@ export class Actors<T extends string> {
 			sprite: template.sprite ?? null,
 			position: [x, y],
 			dialog: template.dialog ?? null,
-			isOnScreen: false,
 			end: template.end ?? null,
 			sound: template.sound ?? null,
 			solid: template.solid !== false,
@@ -175,8 +144,6 @@ export class Actors<T extends string> {
 			onCollide: template.onCollide,
 			onEnter: template.onEnter,
 			onLeave: template.onLeave,
-			onScreenEnter: template.onScreenEnter,
-			onScreenLeave: template.onScreenLeave,
 			onTurn: template.onTurn,
 		}
 	}

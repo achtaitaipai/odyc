@@ -76,10 +76,6 @@ export class ActorFacade<T extends string> {
 		return (this.#getActor()?.symbol as T) ?? null
 	}
 
-	get isOnScreen() {
-		return this.#getActor()?.isOnScreen ?? false
-	}
-
 	remove() {
 		this.#actors.clearCell(...this.#position)
 	}

@@ -47,7 +47,6 @@ export const createGame = <T extends string>(
 	const updateGame = debounce(() => {
 		gameFilter?.setUniforms(gameState.filterUniforms.get())
 		camera.update(gameState.player.position, gameState.gameMap.dimensions)
-		gameState.actors.handleScreenEvents(camera)
 		renderer.render(
 			[...gameState.actors.get(), gameState.player.facade],
 			camera,
