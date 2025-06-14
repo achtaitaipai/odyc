@@ -31,27 +31,25 @@ class GameLoop<T extends string> {
 		const from = this.#gameState.player.position
 		const to = addVectors(from, directions[input])
 
-		const actor = this.#gameState.actors.getCell(...to)
+		if (this.#isCellOnworld(to)) {
+			const actor = this.#gameState.actors.getCell(...to)
 
-		if (!actor.solid) {
-			await this.#gameState.actors.getEvent(...from, 'onLeave')?.()
-			this.#gameState.player.position = to
-		}
-
-		this.#playSound(actor)
-		await this.#openDialog(actor)
-
-		if (actor.solid)
-			await this.#gameState.actors.getEvent(...to, 'onCollide')?.()
-		else await this.#gameState.actors.getEvent(...to, 'onEnter')?.()
-
-		this.#gameState.actors.get().forEach((el) => {
-			if (el.onTurn) {
-				const target = this.#gameState.actors.getCell(...el.position)
-				el.onTurn(target)
+			if (!actor.solid) {
+				await this.#gameState.actors.getEvent(...from, 'onLeave')?.()
+				this.#gameState.player.position = to
 			}
-		})
-		await this.#end(actor)
+
+			this.#playSound(actor)
+			await this.#openDialog(actor)
+
+			if (actor.solid)
+				await this.#gameState.actors.getEvent(...to, 'onCollide')?.()
+			else await this.#gameState.actors.getEvent(...to, 'onEnter')?.()
+		}
+		for (const actor of this.#gameState.actors.get()) {
+			await this.#gameState.actors.getEvent(...actor.position, 'onTurn')?.()
+		}
+		await this.#end(this.#gameState.actors.getCell(...to))
 	}
 
 	#playSound(actor: ActorFacade<T>) {
