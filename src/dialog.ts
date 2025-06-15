@@ -85,10 +85,10 @@ export class Dialog {
 		this.#textFx = new TextFx('|', this.#contentColor, params.colors)
 	}
 
-	async open(text: string, voiceOverride?: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null }) {
+	async open(text: string, defaultVoice?: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null } | null, voiceOverride?: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null }) {
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
-		this.#currentVoiceOverride = voiceOverride
+		this.#currentVoiceOverride = voiceOverride || defaultVoice || undefined
 		this.#dialogSeed = undefined // Reset dialog seed for new dialog
 
 		this.#remainingLines = this.#textFx.parseText(text, MAX_CHARS_PER_LINE)

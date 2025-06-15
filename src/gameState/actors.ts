@@ -166,6 +166,7 @@ export class Actors<T extends string> {
 			sprite: template.sprite ?? null,
 			position: [x, y],
 			dialog: template.dialog ?? null,
+			voice: template.voice ?? null,
 			isOnScreen: false,
 			end: template.end ?? null,
 			sound: template.sound ?? null,
