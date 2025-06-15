@@ -24,6 +24,7 @@ export type ActorState<T extends string> = {
 	sprite: Tile | null
 	sound: UnTuplify<PlaySoundArgs> | null
 	dialog: string | null
+	voice: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null } | null
 	solid: boolean
 	visible: boolean
 	isOnScreen: boolean

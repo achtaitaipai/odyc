@@ -62,7 +62,7 @@ class GameLoop<T extends string> {
 		}
 	}
 	async #openDialog(actor: ActorFacade<T>) {
-		if (actor.dialog) await this.#dialog.open(actor.dialog)
+		if (actor.dialog) await this.#dialog.open(actor.dialog, actor.voice)
 	}
 
 	async #end(actor: ActorFacade<T>) {
