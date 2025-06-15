@@ -24,7 +24,6 @@ export class GameMap {
 
 	set map(value: string) {
 		this.#map = value
-		console.log(this.#map)
 		this.#observable.notify(this.#map)
 	}
 

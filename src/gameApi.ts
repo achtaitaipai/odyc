@@ -51,6 +51,9 @@ export const initGameApi = <T extends string>(
 		get height() {
 			return gameState.gameMap.dimensions[1]
 		},
+		get turn() {
+			return gameState.turn.value
+		},
 	}
 	return gameApi
 }

@@ -15,14 +15,23 @@ export const initEnder = <T extends string>({
 	messageBox,
 	camera,
 }: EnderParams<T>) => {
+	let ending = false
 	return {
 		play: async (...messages: string[]) => {
 			if (messages.length) {
 				messageBox.open(messages)
 			}
+			ending = true
 			camera.reset()
+			gameState.turn.reset()
 			gameState.player.restoreSavedState()
 			gameState.actors.initActors()
+		},
+		get ending() {
+			return ending
+		},
+		set ending(value: boolean) {
+			ending = value
 		},
 	}
 }

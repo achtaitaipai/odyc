@@ -32,7 +32,6 @@ export class Actors<T extends string> {
 	}
 
 	getAll(symbol: T) {
-		console.log(symbol, this.#values)
 		return this.#values
 			.filter((el) => el.symbol === symbol)
 			.map((el) => new ActorFacade(el.position, this))
