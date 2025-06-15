@@ -1,4 +1,9 @@
-import { Char, TextFx } from './lib'
+import {
+	Char,
+	getColorFrompalette,
+	getColorFrompalette as getColorFromPalette,
+	TextFx,
+} from './lib'
 import { RendererParams } from './renderer'
 const ANIMATION_INTERVAL_MS = 30
 export type MessageBoxParams = {
@@ -37,8 +42,11 @@ export class MessageBox {
 
 	constructor(params: MessageBoxParams) {
 		this.#configColors = params.colors
-		this.#backgroundColor = this.#getColor(params.messageBackground)
-		this.#contentColor = this.#getColor(params.messageColor)
+		this.#backgroundColor = getColorFromPalette(
+			params.messageBackground,
+			params.colors,
+		)
+		this.#contentColor = getColorFrompalette(params.messageColor, params.colors)
 		this.#maxCharsPerLine = Math.floor(
 			(this.#canvasSize - 2 * this.#paddingX) / 8,
 		)

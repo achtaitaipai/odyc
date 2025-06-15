@@ -1,4 +1,4 @@
-import { Char, TextFx } from './lib'
+import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 export type DialogParams = {
@@ -53,9 +53,12 @@ export class Dialog {
 
 	constructor(params: DialogParams) {
 		this.#configColors = params.colors
-		this.#backgroundColor = this.#getColor(params.dialogBackground)
-		this.#contentColor = this.#getColor(params.dialogColor)
-		this.#borderColor = this.#getColor(params.dialogBorder)
+		this.#backgroundColor = getColorFrompalette(
+			params.dialogBackground,
+			params.colors,
+		)
+		this.#contentColor = getColorFrompalette(params.dialogColor, params.colors)
+		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
 		this.#animationIntervalMs = params.dialogInternvalMs
 
 		this.#canvas = document.createElement('canvas')
@@ -181,11 +184,6 @@ export class Dialog {
 		)
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)
-	}
-
-	#getColor(color: string | number) {
-		if (typeof color === 'string') return color
-		return this.#configColors[color] ?? 'black'
 	}
 }
 

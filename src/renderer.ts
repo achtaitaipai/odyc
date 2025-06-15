@@ -1,5 +1,8 @@
 import { Camera } from './camera'
-import { createGridFromString } from './lib'
+import {
+	createGridFromString,
+	getColorFrompalette as getColorFromPalette,
+} from './lib'
 import { Position, Tile } from './types.js'
 
 export type Drawable = {
@@ -127,12 +130,7 @@ class Renderer {
 			for (let x = 0; x < this.cellWidth; x++) {
 				const char = grid[y]?.charAt(x)
 				if (!char) continue
-				const charset =
-					'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(
-						'',
-					)
-				const charIndex = charset.findIndex((ch) => ch === char)
-				const color = this.colors[charIndex]
+				const color = getColorFromPalette(char, this.colors)
 				if (!color) continue
 				this.ctx.fillStyle = color
 				this.ctx.fillRect(

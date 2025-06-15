@@ -50,3 +50,18 @@ export const isUrl = (str: string) => {
 		return false
 	}
 }
+
+const charset =
+	'0123456789abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'.split('')
+
+export const getColorFrompalette = (
+	text: string | number,
+	palette: string[],
+) => {
+	text = `${text}`
+	if (text.length > 1) return text
+	if (!charset.includes(text)) return 'transparent'
+	const charIndex = charset.findIndex((ch) => ch === text)
+	const color = palette[charIndex]
+	return color ?? 'transparent'
+}
