@@ -2,9 +2,6 @@ name: I’m having trouble with Odyc
 description: Have a problem? It might be a bug! Create a report to help us improve.
 labels: [bug]
 body:
-  - type: markdown
-    attributes:
-      value: Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
   - type: textarea
     id: bug-description
     attributes:
@@ -16,7 +13,7 @@ body:
     id: repro
     attributes:
       label: Reproduction steps
-      description: Steps to reproduce the behavior.
+      description: 'Optional: Steps to reproduce the behavior.'
       value: |
         1. Go to '...'
         2. Click on '....'
@@ -26,12 +23,12 @@ body:
     id: expected
     attributes:
       label: Expected behavior
-      description: A clear and concise description of what you expected to happen.
+      description: 'Optional: A clear and concise description of what you expected to happen.'
   - type: input
     id: repro-url
     attributes:
       label: Reproduction URL
-      description: "Optional: The URL to the **public** repository for the reproduction. _[parser:url]_"
+      description: 'Optional: The URL to the **public** repository for the reproduction. _[parser:url]_'
       placeholder: e.g. https://github.com/...
     validations:
       required: false
@@ -39,4 +36,4 @@ body:
     id: screenshots
     attributes:
       label: Screenshots
-      description: "Optional: If applicable, add screenshots to help explain your problem."
+      description: 'Optional: If applicable, add screenshots to help explain your problem.'
