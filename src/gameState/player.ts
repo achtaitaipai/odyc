@@ -44,14 +44,6 @@ export class Player {
 		return this.#position
 	}
 
-	get x() {
-		return this.#position[0]
-	}
-
-	get y() {
-		return this.#position[1]
-	}
-
 	set sprite(value: Tile | null) {
 		this.#sprite = value
 		this.#observable.notify()
@@ -59,16 +51,6 @@ export class Player {
 
 	set position(value: Position) {
 		this.#position = [...value]
-		this.#observable.notify()
-	}
-
-	set x(value: number) {
-		this.#position[0] = value
-		this.#observable.notify()
-	}
-
-	set y(value: number) {
-		this.#position[1] = value
 		this.#observable.notify()
 	}
 
@@ -83,18 +65,6 @@ export class Player {
 			},
 			get position() {
 				return self.position
-			},
-			get x() {
-				return self.x
-			},
-			get y() {
-				return self.y
-			},
-			set x(value: number) {
-				self.x = value
-			},
-			set y(value: number) {
-				self.y = value
 			},
 			set position(value: Position) {
 				self.position = value

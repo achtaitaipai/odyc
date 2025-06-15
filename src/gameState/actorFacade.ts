@@ -40,14 +40,6 @@ export class ActorFacade<T extends string> {
 		return this.#getActor()?.position ?? [-1, -1]
 	}
 
-	get x() {
-		return this.#getActor()?.position?.[0] ?? -1
-	}
-
-	get y() {
-		return this.#getActor()?.position?.[1] ?? -1
-	}
-
 	get dialog() {
 		return this.#getActor()?.dialog ?? null
 	}
