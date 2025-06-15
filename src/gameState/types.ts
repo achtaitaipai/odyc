@@ -9,7 +9,7 @@ export type Templates<T extends string = string> = {
 }
 
 export type Template<T extends string = string> = Partial<
-	Omit<ActorState<T>, 'position' | 'symbol' | 'isOonScreen'>
+	Omit<ActorState<T>, 'position' | 'symbol' | 'isOnScreen'>
 >
 
 export type GameStateParams<T extends string> = {
