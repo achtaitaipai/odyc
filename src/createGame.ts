@@ -21,7 +21,10 @@ export const createGame = <T extends string>(
 	const soundPlayer = initSoundPlayer(config)
 	const camera = initCamera(config)
 	const renderer = initRenderer(config)
-	const dialog = initDialog(config)
+	const dialog = initDialog({
+		...config,
+		soundPlayer,
+	})
 	const prompt = initPrompt(config)
 	const messageBox = initMessageBox(config)
 	const gameFilter = initFilter(renderer.canvas, config.filter)

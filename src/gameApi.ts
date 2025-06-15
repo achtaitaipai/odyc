@@ -31,7 +31,7 @@ export const initGameApi = <T extends string>(
 			symbol: T,
 			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
 		) => gameState.actors.setAll(symbol, params),
-		openDialog: (text: string) => dialog.open(text),
+		openDialog: (text: string, voiceOverride?: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null }) => dialog.open(text, voiceOverride),
 		prompt: (...options: string[]) => prompt.open(...options),
 		openMenu: (options: MenuOption) => prompt.openMenu(options),
 		openMessage: (...args: string[]) => messageBox.open(args),
