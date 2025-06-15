@@ -113,8 +113,8 @@ class Renderer {
 		)
 			return
 
-		if (typeof tile === 'number') {
-			const color = this.colors[tile]
+		if (typeof tile === 'number' || tile.length === 1) {
+			const color = getColorFromPalette(tile, this.colors)
 			if (!color) return
 			this.ctx.fillStyle = color
 			this.ctx.fillRect(
