@@ -1,4 +1,5 @@
 import { RendererParams } from '../../renderer'
+import { getColorFrompalette } from '../string'
 import { characters } from './font'
 
 const EFFECTS = {
@@ -31,7 +32,7 @@ type Effect = (typeof EFFECTS)[EffectSymbol]
 
 export type Char = {
 	value: string
-	color?: number
+	color?: string
 	effect?: Effect
 }
 
@@ -61,7 +62,7 @@ export class TextFx {
 				type: 'char',
 			},
 			{
-				pattern: '<\\d>',
+				pattern: '<.>',
 				type: 'color',
 				process: (m: string) => m.charAt(1),
 			},
@@ -102,7 +103,9 @@ export class TextFx {
 			if (char === undefined) continue
 			let posX = x + charIndex * FONT_SIZE
 			let posY = y
-			const charColor = char.color ? this.#colors[char.color] : null
+			const charColor = char.color
+				? getColorFrompalette(char.color, this.#colors)
+				: null
 			if (charColor) ctx.fillStyle = charColor
 			else ctx.fillStyle = this.#defaultColor
 
@@ -146,7 +149,7 @@ export class TextFx {
 
 	#tokensToChars(tokens: Token[]): Char[] {
 		let chars: Char[] = []
-		const colorsQueue: number[] = []
+		const colorsQueue: string[] = []
 		const effectsQueue: Effect[] = []
 		for (let index = 0; index < tokens.length; index++) {
 			const token = tokens[index]
@@ -165,9 +168,9 @@ export class TextFx {
 			}
 
 			if (token.type === 'color') {
-				const index = colorsQueue.lastIndexOf(parseInt(value))
+				const index = colorsQueue.lastIndexOf(value)
 				if (index !== -1) colorsQueue.splice(index, 1)
-				else colorsQueue.push(parseInt(value))
+				else colorsQueue.push(value)
 				continue
 			}
 
