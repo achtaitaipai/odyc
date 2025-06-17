@@ -53,6 +53,10 @@ export const createGame = <T extends string>(
 		} else if (dialog.isOpen) {
 			if (input === 'ACTION') dialog.next()
 		} else if (input !== 'ACTION') gameLoop.update(input)
+
+		if (config.onInput) {
+			config.onInput(input)
+		}
 	})
 
 	gameState.subscribe(renderGame)
