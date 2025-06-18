@@ -5,9 +5,9 @@ import { createGame } from '../../../dist/index'
 export const init = () => {
 	const game = createGame({
 		templates: {
-			'.': { sprite: 5, visible: false },
+			's': { sprite: 5, visible: false },
 		},
-		map: '.',
+		map: 's',
 	})
 
 	return { game, state }
