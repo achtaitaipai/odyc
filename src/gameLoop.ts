@@ -29,6 +29,9 @@ class GameLoop<T extends string> {
 
 	async update(input: Input) {
 		this.#ender.ending = false
+
+		this.#gameState.player.setDirection(input)
+
 		const from = this.#gameState.player.position
 		const to = addVectors(from, directions[input])
 
