@@ -16,6 +16,7 @@
 		"format": "prettier . --write",
 		"build": "tsup",
 		"test": "vitest",
+		"test:update": "vitest -u",
 		"prepublishOnly": "npm run lint && npm run build",
 		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
 		"publish:latest": "npm version patch && npm publish --access public --tag latest",

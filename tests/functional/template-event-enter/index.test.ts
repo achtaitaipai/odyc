@@ -1,10 +1,9 @@
 import { expect, test } from 'vitest'
-import { init } from './index.js'
-import { createGame } from '../../../dist/index.js'
+import { init } from './index'
 import { userEvent } from '@vitest/browser/context'
 
 test('player can collect coins', async () => {
-	const { game, state } = init(createGame)
+	const { game, state } = init()
 
 	// Ensure starting point
 	expect(game.player.position[0]).toBe(1)

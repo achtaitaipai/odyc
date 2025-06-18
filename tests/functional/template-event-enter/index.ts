@@ -1,8 +1,10 @@
+import { createGame } from '../../../dist/index'
+
 const state = {
 	balance: 0, // coins collected
 }
 
-export const init = (createGame) => {
+export const init = () => {
 	const game = createGame({
 		templates: {
 			// coin

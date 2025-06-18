@@ -58,8 +58,8 @@ const game = createGame({
 
 2. Copy any existing test, ideally similar to yours, as a "template". Make sure to update:
 
-- Folder name
-- Test name in `index.test.js`
+- Test directory name
+- Test function name in `index.test.js`
 - Test code itself (assertions)
 - Test game code in `index.js`
 
@@ -68,8 +68,10 @@ const game = createGame({
 Tips and tricks:
 
 - When test fails, a screenshot will be generated for you in `__screenshots__` folder inside test directory. This is screenshot from the moment test failed, and can help you understand what is current status of game.
-- Write failure tests too, not only success ones. For example, when testing color renders correctly, also try some non-existing color, and ensure it doesnt render. If needed, you can also expect an exception being thrown.
+- Write failure tests too, not only success ones. For example, when testing color renders correctly, also try some non-existing color, and ensure it doesn't render. If needed, you can also expect an exception being thrown.
 - Relay on game state itself as much as possible, like player's position, cell value, and such. If not possible, use `state` created exactly for this purpose - you can take inspiration from `template-event-enter` test.
+- You can keep running tests - they run in watch mode. First time all runs, but afterwards, only ones you modified will re-run after changes are saved.
+- If visual test is expected to change snapshot, copy it's new version from `__screenshots__` and replace one in `__snapshots__` folder. If it's first time running the test, file will be created automatically.
 
 #### Running tests
 
