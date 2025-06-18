@@ -4,6 +4,18 @@ import { Tile, UnTuplify } from '../types.js'
 import { ActorFacade } from './actorFacade.js'
 import { PlayerParams } from './player.js'
 
+export type VoiceConfig = {
+	template?: 'HUMAN' | 'ROBOT' | 'GHOST' | 'MONSTER' | 'ALIEN' | 'NARRATOR' | 'RANDOM'
+	seed?: number | null
+}
+
+export type DialogLine<T extends string> = [T, string]
+export type DialogArray<T extends string> = DialogLine<T>[]
+
+export type SpeakerConfig = {
+	voice: VoiceConfig | null
+}
+
 export type Templates<T extends string = string> = {
 	[K in T]: (() => Template<K>) | Template<K>
 }
@@ -17,14 +29,15 @@ export type GameStateParams<T extends string> = {
 	templates: Templates<T>
 	map: string
 	filter?: FilterParams
+	speakers?: Record<string, SpeakerConfig>
 }
 
 export type ActorState<T extends string> = {
 	symbol: T
 	sprite: Tile | null
 	sound: UnTuplify<PlaySoundArgs> | null
-	dialog: string | null
-	voice: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null } | null
+	dialog: string | DialogArray<T> | null
+	voice: VoiceConfig | null
 	solid: boolean
 	visible: boolean
 	isOnScreen: boolean

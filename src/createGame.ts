@@ -24,6 +24,7 @@ export const createGame = <T extends string>(
 	const dialog = initDialog({
 		...config,
 		soundPlayer,
+		speakers: config.speakers,
 	})
 	const prompt = initPrompt(config)
 	const messageBox = initMessageBox(config)

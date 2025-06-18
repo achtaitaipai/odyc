@@ -2,7 +2,7 @@ import { Dialog } from './dialog.js'
 import type { Ender } from './ender.js'
 import { Filter } from './filter.js'
 import { GameState } from './gameState/index.js'
-import { ActorState } from './gameState/types.js'
+import { ActorState, DialogArray, VoiceConfig } from './gameState/types.js'
 import { MessageBox } from './messageBox.js'
 import { MenuOption, Prompt } from './prompt.js'
 import { Uniforms } from './shaders/filterSettings.js'
@@ -31,7 +31,7 @@ export const initGameApi = <T extends string>(
 			symbol: T,
 			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
 		) => gameState.actors.setAll(symbol, params),
-		openDialog: (text: string, voiceOverride?: { template?: 'BLIP' | 'HIT' | 'PICKUP' | 'JUMP' | 'FALL' | 'POWERUP' | 'LASER' | 'BLIP_RANDOM', seed?: number | null }) => dialog.open(text, undefined, voiceOverride),
+		openDialog: (text: string | DialogArray<string>, voiceOverride?: VoiceConfig) => dialog.open(text, undefined, voiceOverride),
 		prompt: (...options: string[]) => prompt.open(...options),
 		openMenu: (options: MenuOption) => prompt.openMenu(options),
 		openMessage: (...args: string[]) => messageBox.open(args),

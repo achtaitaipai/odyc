@@ -94,19 +94,18 @@ export class SoundPlayer {
 
 	async #generateVoiceSamples() {
 		const voiceTemplates = {
-			BLIP: { frequency: 800, waveForm: 0, sustainTime: 0.025, decayTime: 0.003 },
-			HIT: { frequency: 600, waveForm: 2, sustainTime: 0.020, decayTime: 0.005 },
-			PICKUP: { frequency: 1000, waveForm: 3, sustainTime: 0.030, decayTime: 0.002 },
-			JUMP: { frequency: 700, waveForm: 3, sustainTime: 0.025, decayTime: 0.003 },
-			FALL: { frequency: 900, waveForm: 0, sustainTime: 0.030, decayTime: 0.005 },
-			POWERUP: { frequency: 800, waveForm: 1, sustainTime: 0.025, decayTime: 0.003 },
-			LASER: { frequency: 500, waveForm: 1, sustainTime: 0.020, decayTime: 0.004 }
+			HUMAN: { frequency: 800, waveForm: 0, sustainTime: 0.025, decayTime: 0.003 },
+			ROBOT: { frequency: 100, waveForm: 1, sustainTime: 0.028, decayTime: 0.006 },
+			GHOST: { frequency: 1200, waveForm: 0, sustainTime: 0.040, decayTime: 0.012 },
+			MONSTER: { frequency: 300, waveForm: 1, sustainTime: 0.030, decayTime: 0.015 },
+			ALIEN: { frequency: 1000, waveForm: 3, sustainTime: 0.020, decayTime: 0.005 },
+			NARRATOR: { frequency: 600, waveForm: 0, sustainTime: 0.035, decayTime: 0.006 }
 		}
 
 		for (const [templateName, params] of Object.entries(voiceTemplates)) {
 			try {
-				// Create base PFXR sound with optimized voice parameters
-				const sound = createSoundFromTemplate(SOUNDTEMPLATES.BLIP, 42)
+				// Create base PFXR sound with optimized voice parameters  
+				const sound = createSoundFromTemplate(SOUNDTEMPLATES.PICKUP, 42)
 				const voiceSound = {
 					...sound,
 					...params,
