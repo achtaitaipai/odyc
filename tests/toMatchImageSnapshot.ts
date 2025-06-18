@@ -1,12 +1,17 @@
 // TODO: Replace with Vitest Visual Regression once implemented: https://github.com/vitest-dev/vitest/pull/8041
 import { server } from '@vitest/browser/context'
+import { Buffer } from 'buffer'
+
+// @ts-ignore Prevent Vitest exception with buffers
+window.Buffer = Buffer
 
 const { readFile, writeFile } = server.commands
 
-export const registerImageSnapshot = (expect) => {
+// TODO: Avoid "any" here; dont know TypeScript enough to type it properly
+export const registerImageSnapshot = (expect: any) => {
 	expect.extend({
 		// Compare base64 (received) with snapshot path (expected)
-		async toMatchImageSnapshot(received, expected) {
+		async toMatchImageSnapshot(received: string, expected: string) {
 			const { isNot, testPath } = this
 
 			const testDir = testPath.split('/').slice(0, -1).join('/')
@@ -16,11 +21,13 @@ export const registerImageSnapshot = (expect) => {
 			let snapshot
 			try {
 				snapshot = await readFile(path, 'base64')
-			} catch (err) {
+			} catch (err: unknown) {
 				// No such file or directory
-				if (err.toString().includes('ENOENT')) {
-					const buffer = atob(received)
-					await writeFile(path, [buffer])
+				if (err?.toString().includes('ENOENT')) {
+					const buffer = [Buffer.from(received, 'base64')]
+
+					// @ts-ignore writeFile has wrong interface, but low-level method accepts buffer
+					await writeFile(path, buffer)
 					return {
 						pass: true,
 					}

@@ -46,9 +46,9 @@ export class Player {
 
 	dispatchOnTurn() {
 		this.#onTurn?.(this.facade)
-  }
+	}
 
-  dispatchOnInput(input: Input) {
+	dispatchOnInput(input: Input) {
 		this.#onInput?.(input)
 	}
 
