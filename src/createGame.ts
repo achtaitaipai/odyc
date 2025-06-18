@@ -52,7 +52,10 @@ export const createGame = <T extends string>(
 			if (input === 'ACTION') messageBox.next()
 		} else if (dialog.isOpen) {
 			if (input === 'ACTION') dialog.next()
-		} else if (input !== 'ACTION') gameLoop.update(input)
+		} else {
+			if (input !== 'ACTION') gameLoop.update(input)
+			gameState.player.dispatchOnInput(input)
+		}
 	})
 
 	gameState.subscribe(renderGame)
