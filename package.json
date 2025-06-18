@@ -15,15 +15,20 @@
 		"lint": "tsc",
 		"format": "prettier . --write",
 		"build": "tsup",
+		"test": "vitest",
 		"prepublishOnly": "npm run lint && npm run build",
 		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
-		"publish:latest": "npm version patch && npm publish --access public --tag latest"
+		"publish:latest": "npm version patch && npm publish --access public --tag latest",
+		"test:browser": "vitest --config=vitest.browser.config.ts"
 	},
 	"devDependencies": {
+		"@vitest/browser": "^3.2.4",
+		"pfxr": "^1.0.8",
+		"playwright": "^1.53.0",
 		"prettier": "^3.2.5",
 		"tsup": "^8.0.2",
 		"typescript": "^5.5.4",
-		"pfxr": "^1.0.8"
+		"vitest": "^3.2.4"
 	},
 	"license": "MIT",
 	"repository": {

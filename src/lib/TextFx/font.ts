@@ -663,5 +663,4 @@ export const characters = [
 	{ start: 0x03040, characters: hiragana },
 	{ start: 0x02580, characters: blocks },
 	{ start: 0x0400, characters: cyrillicExtended },
-
 ]
