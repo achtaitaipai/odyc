@@ -37,7 +37,7 @@ export const init = () => {
 		colors,
 		screenWidth: 1,
 		screenHeight: 1,
-		cellWidth: 3,
+		cellWidth: 4,
 		cellHeight: 2,
 		player: {
 			sprite: `
