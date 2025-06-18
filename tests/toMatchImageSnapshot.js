@@ -20,7 +20,7 @@ export const registerImageSnapshot = (expect) => {
 			} catch (err) {
 				// No such file or directory
 				if (err.toString().includes('ENOENT')) {
-					const buffer = Buffer.from(received, 'base64')
+					const buffer = atob(received)
 					await writeFile(path, [buffer])
 					return {
 						pass: true,
