@@ -20,5 +20,8 @@ jobs:
     - name: Install dependencies
       run: npm install
       
+    - name: Build Odyc.js
+      run: npm run build
+
     - name: Run tests
       run: npm run test
