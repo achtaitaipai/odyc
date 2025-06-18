@@ -8,6 +8,9 @@ export const init = () => {
 			'.': { sprite: 5, visible: false },
 		},
 		map: '.',
+		player: {
+			sprite: ``
+		}
 	})
 
 	return { game, state }
