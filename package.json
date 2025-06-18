@@ -19,7 +19,7 @@
 		"prepublishOnly": "npm run lint && npm run build",
 		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
 		"publish:latest": "npm version patch && npm publish --access public --tag latest",
-		"test:browser": "vitest --config=vitest.browser.config.ts"
+		"release": "npm run lint && npm version patch  && git add . && git commit -m 'build: release' && git push --follow-tags"
 	},
 	"devDependencies": {
 		"@vitest/browser": "^3.2.4",
