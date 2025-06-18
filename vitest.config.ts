@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
 	test: {
 		browser: {
-			viewport: { height: 500, width: 500 },
+			viewport: { height: 512, width: 512 },
 			enabled: true,
 			headless: true,
 			provider: 'playwright',
