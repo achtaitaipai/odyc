@@ -5,47 +5,6 @@ Everything is built through code, but without unnecessary complexity: your entir
 
 🔗 **Get started** → [https://odyc.dev](https://odyc.dev)
 
-### Installation
-
-```bash
-npm install odyc
-```
-
-### Quick example
-
-```js
-import { createGame } from 'odyc'
-
-const game = createGame({
-	player: {
-		sprite: `
-			...00...
-			...00...
-			.000000.
-			0.0000.0
-			0.0000.0
-			..0000..
-			..0..0..
-			..0..0..
-		`,
-		position: [3, 1],
-	},
-	templates: {
-		x: { sprite: 2 },
-	},
-	map: `
-		xxxxxxxx
-		x......x
-		x......x
-		x......x
-		x......x
-		x......x
-		x......x
-		xxxxxxxx
-	`,
-})
-```
-
 ## Contributing
 
 ### Tests
