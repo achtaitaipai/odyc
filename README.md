@@ -18,7 +18,7 @@ Everything is built through code, but without unnecessary complexity: your entir
 2. Copy any existing test, ideally similar to yours, as a "template". Make sure to update:
 
 - Test directory name
-- Test function name in `index.test.js`
+- Test test description in `test()` parameter in `index.test.js`
 - Test code itself (assertions)
 - Test game code in `index.js`
 
