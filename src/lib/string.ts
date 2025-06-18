@@ -52,7 +52,7 @@ export const isUrl = (str: string) => {
 }
 
 const charset =
-	'0123456789abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'.split('')
+	'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
 export const getColorFrompalette = (
 	text: string | number,
