@@ -17,7 +17,8 @@
 		"build": "tsup",
 		"prepublishOnly": "npm run lint && npm run build",
 		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
-		"publish:latest": "npm version patch && npm publish --access public --tag latest"
+		"publish:latest": "npm version patch && npm publish --access public --tag latest",
+		"release": "npm run lint && git add . && git commit -m 'build: release' && npm version patch && git push --follow-tags"
 	},
 	"devDependencies": {
 		"prettier": "^3.2.5",
