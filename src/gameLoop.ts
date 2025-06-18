@@ -50,6 +50,7 @@ class GameLoop<T extends string> {
 		for (const actor of this.#gameState.actors.get()) {
 			await this.#gameState.actors.getEvent(...actor.position, 'onTurn')?.()
 		}
+		this.#gameState.player.dispatchOnTurn()
 		if (!this.#ender.ending) this.#gameState.turn.next()
 		await this.#end(this.#gameState.actors.getCell(...to))
 	}

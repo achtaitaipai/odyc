@@ -5,6 +5,7 @@ import { Position, Tile } from '../types.js'
 export type PlayerParams = {
 	sprite?: Tile
 	position?: Position
+	onTurn?: (player: Player['facade']) => any
 	onInput?: (input: Input) => any
 }
 
@@ -13,6 +14,7 @@ export class Player {
 	#savedPosition: Position
 	#sprite: Tile | null
 	#position: Position
+	#onTurn?: (target: Player['facade']) => any
 	#onInput?: (input: Input) => any
 	#observable: Observable
 
@@ -21,6 +23,7 @@ export class Player {
 		this.#savedPosition = params.position ?? [0, 0]
 		this.#sprite = params.sprite ?? null
 		this.#position = params.position ?? [0, 0]
+		this.#onTurn = params.onTurn
 		this.#onInput = params.onInput
 		this.#observable = createObservable()
 	}
@@ -40,7 +43,11 @@ export class Player {
 		this.#observable.notify()
 	}
 
-	dispatchOnInput(input: Input) {
+	dispatchOnTurn() {
+		this.#onTurn?.(this.facade)
+  }
+
+  dispatchOnInput(input: Input) {
 		this.#onInput?.(input)
 	}
 
