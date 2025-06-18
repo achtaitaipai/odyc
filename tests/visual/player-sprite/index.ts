@@ -9,8 +9,8 @@ export const init = () => {
     `,
 		screenWidth: 1,
 		screenHeight: 1,
-		cellWidth: 3,
-		cellHeight: 3,
+		cellWidth: 4,
+		cellHeight: 4,
 		player: {
 			sprite: `
       012

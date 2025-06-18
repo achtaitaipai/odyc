@@ -12,7 +12,7 @@ export const registerImageSnapshot = (expect: any) => {
 	expect.extend({
 		// Compare base64 (received) with snapshot path (expected)
 		async toMatchImageSnapshot(received: string, expected: string) {
-			const { isNot, testPath } = this
+			const { isNot, testPath, currentTestName } = this
 
 			const testDir = testPath.split('/').slice(0, -1).join('/')
 			const dir = testDir + '/__snapshots__'
@@ -34,8 +34,22 @@ export const registerImageSnapshot = (expect: any) => {
 				}
 			}
 
+			const pass = isNot ? received !== snapshot : received === snapshot
+
+			if (!pass) {
+				const buffer = [Buffer.from(received, 'base64')]
+
+				const escapedTestName = currentTestName.replace(/[^a-zA-Z0-9]/g, '-')
+
+				await writeFile(
+					'.github/snapshots/' + escapedTestName + '-' + expected + '.png',
+					// @ts-ignore writeFile has wrong interface, but low-level method accepts buffer
+					buffer,
+				)
+			}
+
 			return {
-				pass: isNot ? received !== snapshot : received === snapshot,
+				pass,
 				message: () =>
 					`Screenshot does${isNot ? ' not' : ''} match ${expected}.png file`,
 			}

@@ -4,13 +4,9 @@ import { createGame } from '../../../dist/index'
 
 export const init = () => {
 	const game = createGame({
-		templates: {
-			'.': { sprite: 5, visible: false },
-		},
-		map: '.',
-		player: {
-			sprite: ``,
-		},
+		map: ``,
+		screenWidth: 8,
+		screenHeight: 8,
 	})
 
 	return { game, state }

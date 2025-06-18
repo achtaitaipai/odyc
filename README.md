@@ -31,6 +31,7 @@ Follow these rules when writing tests:
 - All tests should assert failures as well. Ensure such "problem" behaves as expected.
 - Relay on game state. If not possible, use `state` object.
 - Visual tests generate first snapshot. Ensure it looks as expected, or delete it and try again.
+- Visual tests must use `2^n` for all sizes. Map width 4, sprite size 8, tile size 16, and similar. This prevents half-pixel bugs.
 
 Tips and tricks:
 

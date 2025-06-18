@@ -22,9 +22,20 @@ jobs:
 
       - name: Install browser
         run: npx playwright install
+        
+      - name: Show Playwright version
+        run: npx playwright -V
 
       - name: Build Odyc.js
         run: npm run build
 
       - name: Run tests
         run: npm run test
+
+      - name: Visual failures artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-failures
+          path: |
+            .github/snapshots
