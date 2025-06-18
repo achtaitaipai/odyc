@@ -1,3 +1,4 @@
+import { Canvas } from './canvas'
 import {
 	Char,
 	getColorFrompalette,
@@ -14,7 +15,7 @@ export type MessageBoxParams = {
 }
 
 export class MessageBox {
-	#canvas: HTMLCanvasElement
+	#canvas: Canvas
 	#ctx: CanvasRenderingContext2D
 	isOpen = false
 	#resolePromise?: () => void
@@ -55,31 +56,11 @@ export class MessageBox {
 		)
 		this.#animationIntervalMs = params.messageInternvalMs
 
-		this.#canvas = document.createElement('canvas')
-		this.#canvas.style.setProperty('position', 'absolute')
-		this.#canvas.style.setProperty('box-sizing', 'border-box')
-		this.#canvas.style.setProperty('display', 'none')
-		this.#canvas.style.setProperty('image-rendering', 'pixelated')
-		this.#ctx = this.#canvas.getContext('2d')!
-		this.#canvas.width = this.#canvasSize
-		this.#canvas.height = this.#canvasSize
-		this.#canvas.classList.add('odyc-message-canvas')
+		this.#canvas = new Canvas({ id: 'odyc-message-canvas', zIndex: 10 })
+		this.#canvas.hide()
+		this.#ctx = this.#canvas.get2dCtx()
+		this.#canvas.setSize(this.#canvasSize, this.#canvasSize)
 		this.#textFx = new TextFx('\n', this.#contentColor, this.#configColors)
-
-		this.#resize()
-		window.addEventListener('resize', this.#resize)
-
-		document.body.append(this.#canvas)
-	}
-
-	#resize = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		const left = (window.innerWidth - sideSize) * 0.5
-		const top = (window.innerHeight - sideSize) * 0.5
-		this.#canvas.style.setProperty('width', `${sideSize}px`)
-		this.#canvas.style.setProperty('height', `${sideSize}px`)
-		this.#canvas.style.setProperty('left', `${left}px`)
-		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
 	open(text: string | string[]) {
@@ -93,7 +74,7 @@ export class MessageBox {
 			currentText,
 			this.#maxCharsPerLine,
 		)
-		this.#canvas.style.removeProperty('display')
+		this.#canvas.show()
 		this.#animationId = requestAnimationFrame(this.#update)
 		return new Promise<void>((res) => (this.#resolePromise = () => res()))
 	}
@@ -122,21 +103,21 @@ export class MessageBox {
 	}
 
 	#render(time: number) {
-		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
+		this.#ctx.clearRect(0, 0, this.#canvasSize, this.#canvasSize)
 
 		this.#ctx.fillStyle = this.#backgroundColor
-		this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height)
+		this.#ctx.fillRect(0, 0, this.#canvasSize, this.#canvasSize)
 		this.#ctx.fillStyle = this.#contentColor
 
 		const lineCount = Math.min(this.#displayedLines.length, this.#maxLines)
 
 		const textHeight = lineCount * 8 + (lineCount - 1) * this.#spaceBetweenLines
-		const top = (this.#canvas.height - textHeight) * 0.5
+		const top = (this.#canvasSize - textHeight) * 0.5
 		for (let i = 0; i < lineCount; i++) {
 			const line = this.#displayedLines[i]
 			if (!line) continue
 			const lineWidth = line.length * 8
-			const posX = (this.#canvas.width - lineWidth) * 0.5
+			const posX = (this.#canvasSize - lineWidth) * 0.5
 			const posY = top + i * 8 + i * this.#spaceBetweenLines
 			this.#textFx.draw(this.#ctx, line, posX, posY, time)
 		}
@@ -147,13 +128,8 @@ export class MessageBox {
 		this.#displayedLines = []
 		this.isOpen = false
 		if (this.#animationId) cancelAnimationFrame(this.#animationId)
-		this.#canvas.style.setProperty('display', 'none')
+		this.#canvas.hide()
 		this.#resolePromise?.()
-	}
-
-	#getColor(color: string | number) {
-		if (typeof color === 'string') return color
-		return this.#configColors[color] ?? 'black'
 	}
 }
 

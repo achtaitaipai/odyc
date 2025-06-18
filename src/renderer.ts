@@ -1,4 +1,5 @@
 import { Camera } from './camera'
+import { Canvas } from './canvas'
 import {
 	createGridFromString,
 	getColorFrompalette as getColorFromPalette,
@@ -21,7 +22,7 @@ export type RendererParams = {
 }
 
 class Renderer {
-	canvas: HTMLCanvasElement
+	canvas: Canvas
 	#zoom = 24
 	screenWidth: number
 	screenHeight: number
@@ -39,39 +40,13 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		this.canvas = document.createElement('canvas')
-		this.canvas.width = this.cellWidth * options.screenWidth * this.#zoom
-		this.canvas.height = this.cellHeight * options.screenHeight * this.#zoom
+		this.canvas = new Canvas({ id: 'odyc-renderer-canvas' })
+		this.canvas.setSize(
+			this.cellWidth * options.screenWidth * this.#zoom,
+			this.cellHeight * options.screenHeight * this.#zoom,
+		)
 
-		this.canvas.style.setProperty('position', 'absolute')
-		this.canvas.style.setProperty('image-rendering', 'pixelated')
-		this.canvas.classList.add('odyc-renderer-canvas')
-		const ctx = this.canvas.getContext('2d')
-		if (!ctx) throw new Error('failled to access context of the canvas')
-		this.ctx = ctx
-		this.#setSize()
-		document.body.append(this.canvas)
-
-		window.addEventListener('resize', this.#setSize)
-	}
-	#setSize = () => {
-		const orientation =
-			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		let width =
-			orientation === 'horizontal'
-				? sideSize
-				: (sideSize / this.canvas.height) * this.canvas.width
-		let height =
-			orientation === 'vertical'
-				? sideSize
-				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (window.innerWidth - width) * 0.5
-		const top = (window.innerHeight - height) * 0.5
-		this.canvas.style.setProperty('width', `${width}px`)
-		this.canvas.style.setProperty('height', `${height}px`)
-		this.canvas.style.setProperty('left', `${left}px`)
-		this.canvas.style.setProperty('top', `${top}px`)
+		this.ctx = this.canvas.get2dCtx()
 	}
 
 	render(items: Drawable[], camera: Camera) {
