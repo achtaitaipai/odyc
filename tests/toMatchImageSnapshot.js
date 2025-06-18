@@ -8,9 +8,10 @@ export const registerImageSnapshot = (expect) => {
 	expect.extend({
 		// Compare base64 (received) with snapshot path (expected)
 		async toMatchImageSnapshot(received, expected) {
-			const { isNot } = this
+			const { isNot, testPath } = this
 
-			const dir = '__snapshots__'
+			const testDir = testPath.split('/').slice(0, -1).join('/')
+			const dir = testDir + '/__snapshots__'
 			const path = dir + '/' + expected + '.png'
 
 			let snapshot
