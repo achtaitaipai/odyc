@@ -171,7 +171,7 @@ export class Actors<T extends string> {
 			sound: template.sound ?? null,
 			solid: template.solid !== false,
 			visible: template.visible !== false,
-			foreground: template.foreground !== false,
+			foreground: template.foreground === true,
 			onCollide: template.onCollide,
 			onEnter: template.onEnter,
 			onLeave: template.onLeave,
