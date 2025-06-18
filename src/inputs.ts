@@ -7,7 +7,6 @@ export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
 export type InputsHandlerParams = {
 	controls: Record<Input, string | string[]>
 	autoFocus?: boolean
-	onInput?: (input: Input) => void
 }
 
 class InputsHandler {
