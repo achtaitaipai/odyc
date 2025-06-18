@@ -41,9 +41,9 @@ export const registerImageSnapshot = (expect: any) => {
 
 				const escapedTestName = currentTestName.replace(/[^a-zA-Z0-9]/g, '-')
 
-				// @ts-ignore writeFile has wrong interface, but low-level method accepts buffer
 				await writeFile(
 					'.github/snapshots/' + escapedTestName + '-' + expected + '.png',
+					// @ts-ignore writeFile has wrong interface, but low-level method accepts buffer
 					buffer,
 				)
 			}

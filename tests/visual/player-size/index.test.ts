@@ -3,7 +3,7 @@ import { init } from './index'
 import { page } from '@vitest/browser/context'
 import { registerImageSnapshot } from '../../toMatchImageSnapshot'
 
-test('template is not rendered when visible is false', async () => {
+test('player renders in correct size', async () => {
 	registerImageSnapshot(expect)
 
 	const { game, state } = init()
