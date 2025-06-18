@@ -65,13 +65,18 @@ const game = createGame({
 
 3. Run test to ensure it passes (explained in section below)
 
+Follow these rules when writing tests:
+
+- Write mostly `functional` tests. Only use `visual` tests when necessary, and keep them minimal.
+- Write small test files. You can do many assertions, but make sure they tell a story together.
+- All tests should assert failures as well. Ensure such "problem" behaves as expected.
+- Relay on game state. If not possible, use `state` object.
+- Visual tests generate first snapshot. Ensure it looks as expected, or delete it and try again.
+
 Tips and tricks:
 
-- When test fails, a screenshot will be generated for you in `__screenshots__` folder inside test directory. This is screenshot from the moment test failed, and can help you understand what is current status of game.
-- Write failure tests too, not only success ones. For example, when testing color renders correctly, also try some non-existing color, and ensure it doesn't render. If needed, you can also expect an exception being thrown.
-- Relay on game state itself as much as possible, like player's position, cell value, and such. If not possible, use `state` created exactly for this purpose - you can take inspiration from `template-event-enter` test.
-- You can keep running tests - they run in watch mode. First time all runs, but afterwards, only ones you modified will re-run after changes are saved.
-- If visual test is expected to change snapshot, copy it's new version from `__screenshots__` and replace one in `__snapshots__` folder. If it's first time running the test, file will be created automatically.
+- Failed tests generate image in `__screenshots__`, to show state in which it failed.
+- Keep CLI with tests running. Only changed tests will re-run, making experience quicker.
 
 #### Running tests
 
