@@ -1,6 +1,5 @@
 // TODO: Replace with Vitest Visual Regression once implemented: https://github.com/vitest-dev/vitest/pull/8041
 import { server } from '@vitest/browser/context'
-import { Buffer } from 'buffer'
 
 const { readFile, writeFile } = server.commands
 
