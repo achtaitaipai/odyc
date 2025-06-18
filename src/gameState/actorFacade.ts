@@ -56,6 +56,14 @@ export class ActorFacade<T extends string> {
 		this.#setActor('visible', value)
 	}
 
+	get foreground() {
+		return this.#getActor()?.foreground ?? false
+	}
+
+	set foreground(value: ActorState<T>['foreground']) {
+		this.#setActor('foreground', value)
+	}
+
 	get end() {
 		return this.#getActor()?.end ?? null
 	}

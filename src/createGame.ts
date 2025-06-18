@@ -30,10 +30,7 @@ export const createGame = <T extends string>(
 	const renderGame = debounce(() => {
 		gameFilter?.setUniforms(gameState.filterUniforms.get())
 		camera.update(gameState.player.position, gameState.gameMap.dimensions)
-		renderer.render(
-			[...gameState.actors.get(), gameState.player.facade],
-			camera,
-		)
+		renderer.render(gameState.player, gameState.actors.get(), camera)
 		gameState.actors.handleScreenEvents(camera)
 		gameFilter?.render()
 	}, 60)
@@ -52,7 +49,10 @@ export const createGame = <T extends string>(
 			if (input === 'ACTION') messageBox.next()
 		} else if (dialog.isOpen) {
 			if (input === 'ACTION') dialog.next()
-		} else if (input !== 'ACTION') gameLoop.update(input)
+		} else {
+			if (input !== 'ACTION') gameLoop.update(input)
+			gameState.player.dispatchOnInput(input)
+		}
 	})
 
 	gameState.subscribe(renderGame)

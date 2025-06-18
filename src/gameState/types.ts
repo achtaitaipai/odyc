@@ -27,6 +27,7 @@ export type ActorState<T extends string> = {
 	solid: boolean
 	visible: boolean
 	isOnScreen: boolean
+	foreground: boolean
 	end: boolean | string | string[] | null
 	position: [number, number]
 	onCollide?: (target: ActorFacade<T>) => any

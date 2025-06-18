@@ -1,9 +1,12 @@
+import { Input } from '../inputs.js'
 import { createObservable, Observable } from '../lib/observer.js'
 import { Position, Tile } from '../types.js'
 
 export type PlayerParams = {
 	sprite?: Tile
 	position?: Position
+	onTurn?: (player: Player['facade']) => any
+	onInput?: (input: Input) => any
 }
 
 export class Player {
@@ -11,13 +14,18 @@ export class Player {
 	#savedPosition: Position
 	#sprite: Tile | null
 	#position: Position
+	#onTurn?: (target: Player['facade']) => any
+	#onInput?: (input: Input) => any
 	#observable: Observable
+	#direction: Position = [0, 0]
 
 	constructor(params: PlayerParams) {
 		this.#savedSprite = params.sprite ?? null
 		this.#savedPosition = params.position ?? [0, 0]
 		this.#sprite = params.sprite ?? null
 		this.#position = params.position ?? [0, 0]
+		this.#onTurn = params.onTurn
+		this.#onInput = params.onInput
 		this.#observable = createObservable()
 	}
 
@@ -34,6 +42,14 @@ export class Player {
 		this.#sprite = this.#savedSprite
 		this.#position = [...this.#savedPosition]
 		this.#observable.notify()
+	}
+
+	dispatchOnTurn() {
+		this.#onTurn?.(this.facade)
+  }
+
+  dispatchOnInput(input: Input) {
+		this.#onInput?.(input)
 	}
 
 	get sprite() {
@@ -54,6 +70,27 @@ export class Player {
 		this.#observable.notify()
 	}
 
+	get direction() {
+		return this.#direction
+	}
+
+	setDirection(input: Input) {
+		switch (input) {
+			case 'LEFT':
+				this.#direction = [-1, 0]
+				break
+			case 'UP':
+				this.#direction = [0, -1]
+				break
+			case 'RIGHT':
+				this.#direction = [1, 0]
+				break
+			case 'DOWN':
+				this.#direction = [0, 1]
+				break
+		}
+	}
+
 	get facade() {
 		const self = this
 		return {
@@ -68,6 +105,9 @@ export class Player {
 			},
 			set position(value: Position) {
 				self.position = value
+			},
+			get direction() {
+				return self.direction
 			},
 		}
 	}

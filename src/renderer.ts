@@ -1,5 +1,8 @@
 import { Camera } from './camera'
+import { Player } from './gameState/player'
+import { ActorState } from './gameState/types'
 import {
+	compareVectors,
 	createGridFromString,
 	getColorFrompalette as getColorFromPalette,
 } from './lib'
@@ -74,19 +77,26 @@ class Renderer {
 		this.canvas.style.setProperty('top', `${top}px`)
 	}
 
-	render(items: Drawable[], camera: Camera) {
+	render<T extends string>(
+		player: Player,
+		actors: ActorState<T>[],
+		camera: Camera,
+	) {
 		this.clear()
-		const [cameraX, cameraY] = camera.position
 
-		for (const item of items) {
-			if (item.sprite === undefined || item.sprite === null) continue
-			if (item.visible === false) continue
-			const [tileX, tileY] = item.position
-			const screenPosX = (tileX - cameraX) * this.cellWidth
-			const screenPosY = (tileY - cameraY) * this.cellHeight
-			if (camera.isOnScreen(item.position))
-				this.drawTile(item.sprite, screenPosX, screenPosY)
+		let playerIsDraw = false
+		for (const actor of actors) {
+			if (
+				actor.foreground &&
+				actor.position[0] === player.position[0] &&
+				actor.position[1] === player.position[1]
+			) {
+				this.#drawTile(player, camera)
+				this.#drawTile(actor, camera)
+				playerIsDraw = true
+			} else this.#drawTile(actor, camera)
 		}
+		if (!playerIsDraw) this.#drawTile(player, camera)
 	}
 
 	clear() {
@@ -104,7 +114,18 @@ class Renderer {
 		)
 	}
 
-	drawTile(tile: Tile, screenPosX: number, screenPosY: number) {
+	#drawTile(item: Drawable, camera: Camera) {
+		if (
+			item.sprite === undefined ||
+			item.sprite === null ||
+			item.visible === false ||
+			!camera.isOnScreen(item.position)
+		)
+			return
+		const [tileX, tileY] = item.position
+		const [cameraX, cameraY] = camera.position
+		const screenPosX = (tileX - cameraX) * this.cellWidth
+		const screenPosY = (tileY - cameraY) * this.cellHeight
 		if (
 			screenPosX + this.cellWidth < 0 ||
 			screenPosY + this.cellHeight < 0 ||
@@ -113,8 +134,10 @@ class Renderer {
 		)
 			return
 
-		if (typeof tile === 'number' || tile.length === 1) {
-			const color = getColorFromPalette(tile, this.colors)
+		const sprite = item.sprite
+
+		if (typeof sprite === 'number' || sprite.length === 1) {
+			const color = getColorFromPalette(sprite, this.colors)
 			if (!color) return
 			this.ctx.fillStyle = color
 			this.ctx.fillRect(
@@ -125,7 +148,7 @@ class Renderer {
 			)
 			return
 		}
-		const grid = createGridFromString(tile)
+		const grid = createGridFromString(sprite)
 		for (let y = 0; y < this.cellHeight; y++) {
 			for (let x = 0; x < this.cellWidth; x++) {
 				const char = grid[y]?.charAt(x)
