@@ -8,6 +8,8 @@ import {
 } from './lib'
 import { Position, Tile } from './types.js'
 
+const RENDERER_CANVAS_ID = 'odyc-renderer-canvas'
+
 export type Drawable = {
 	sprite?: Tile | null
 	position: Position
@@ -42,7 +44,7 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		this.canvas = getCanvas({ id: 'odyc-renderer-canvas' })
+		this.canvas.show()
 		this.canvas.setSize(
 			this.cellWidth * options.screenWidth * this.#zoom,
 			this.cellHeight * options.screenHeight * this.#zoom,
