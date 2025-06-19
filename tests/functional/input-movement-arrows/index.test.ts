@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { init } from './index'
 import { userEvent } from '@vitest/browser/context'
 
-test('player can move', async () => {
+test('player can move with arrows', async () => {
 	const { game, state } = init()
 
 	expect(game.player.position[0]).toBe(1)
