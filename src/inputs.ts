@@ -34,6 +34,7 @@ class InputsHandler {
 		touchEventElement.style.setProperty('height', '100vh')
 		touchEventElement.style.setProperty('overflow', 'hidden')
 		touchEventElement.style.setProperty('touch-action', 'none')
+		touchEventElement.style.setProperty('z-index', '999999999')
 		document.body.appendChild(touchEventElement)
 		document.body.style.setProperty('margin', '0')
 
