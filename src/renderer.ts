@@ -1,9 +1,8 @@
 import { Camera } from './camera'
+import { Canvas } from './canvas'
 import { Player } from './gameState/player'
 import { ActorState } from './gameState/types'
-import { Canvas } from './canvas'
 import {
-	compareVectors,
 	createGridFromString,
 	getColorFrompalette as getColorFromPalette,
 } from './lib'
