@@ -4,6 +4,7 @@ import { Input } from './inputs'
 import { TextFx } from './lib'
 import { RendererParams } from './renderer'
 
+const PROMPT_CANVAS_ID = 'odyc-prompt-canvas'
 const CANVAS_SIZE = 384
 const OPTIONS_BY_LINE = 2
 const MAX_CHARS_PER_LINE = 28
@@ -37,7 +38,7 @@ export class Prompt {
 		this.#contentColor = this.#getColor(params.dialogColor)
 		this.#borderColor = this.#getColor(params.dialogBorder)
 
-		this.#canvas = getCanvas({ id: 'odyc-prompt-canvas', zIndex: 10 })
+		this.#canvas = getCanvas({ id: PROMPT_CANVAS_ID, zIndex: 10 })
 		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()

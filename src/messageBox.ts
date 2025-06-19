@@ -6,7 +6,10 @@ import {
 	TextFx,
 } from './lib'
 import { RendererParams } from './renderer'
+
+const MESSAGE_CANVAS_ID = 'odyc-message-canvas'
 const ANIMATION_INTERVAL_MS = 30
+
 export type MessageBoxParams = {
 	messageBackground: string | number
 	messageColor: string | number
@@ -56,7 +59,7 @@ export class MessageBox {
 		)
 		this.#animationIntervalMs = params.messageInternvalMs
 
-		this.#canvas = getCanvas({ id: 'odyc-message-canvas', zIndex: 10 })
+		this.#canvas = getCanvas({ id: MESSAGE_CANVAS_ID, zIndex: 10 })
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()
 		this.#canvas.setSize(this.#canvasSize, this.#canvasSize)

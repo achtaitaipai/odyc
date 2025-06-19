@@ -44,6 +44,7 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
+		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID })
 		this.canvas.show()
 		this.canvas.setSize(
 			this.cellWidth * options.screenWidth * this.#zoom,

@@ -10,6 +10,8 @@ export type DialogParams = {
 	colors: RendererParams['colors']
 }
 
+const DIALOG_CANVAS_ID = 'odyc-dialog-canvas'
+
 const CANVAS_SIZE = 384
 const ANIMATION_INTERVAL_MS = 30
 const MAX_LINES = 2
@@ -60,7 +62,7 @@ export class Dialog {
 		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
 		this.#animationIntervalMs = params.dialogInternvalMs
 
-		this.#canvas = getCanvas({ id: 'odyc-dialog-canvas', zIndex: 10 })
+		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })
 		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()
