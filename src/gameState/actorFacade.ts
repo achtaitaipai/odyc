@@ -48,6 +48,14 @@ export class ActorFacade<T extends string> {
 		this.#setActor('dialog', value)
 	}
 
+	get voice() {
+		return this.#getActor()?.voice ?? null
+	}
+
+	set voice(value: ActorState<T>['voice']) {
+		this.#setActor('voice', value)
+	}
+
 	get visible() {
 		return this.#getActor()?.visible ?? false
 	}

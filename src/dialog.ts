@@ -1,12 +1,14 @@
-import { Char, getColorFrompalette, TextFx } from './lib'
+import { VoiceConfig } from './gameState/types.js'
+import { Char, TextFx } from './lib'
 import { RendererParams } from './renderer'
+import { SoundPlayer } from './sound.js'
 
 export type DialogParams = {
 	dialogBackground: string | number
 	dialogColor: string | number
 	dialogBorder: string | number
-	dialogInternvalMs?: number
 	colors: RendererParams['colors']
+	soundPlayer?: SoundPlayer
 }
 
 const CANVAS_SIZE = 384
@@ -36,6 +38,11 @@ export class Dialog {
 	#lastFrameTime = 0
 
 	#textFx: TextFx
+	#soundPlayer?: SoundPlayer
+	#currentVoiceOverride?: VoiceConfig
+	#dialogSeed?: number
+	#currentDialog?: string
+	#currentLineIndex = 0
 
 	isOpen = false
 
@@ -44,8 +51,6 @@ export class Dialog {
 	#contentColor: string
 	#borderColor: string
 
-	#animationIntervalMs?: number
-
 	#boxHeight: number
 	#boxWidth: number
 	#boxX: number
@@ -53,13 +58,10 @@ export class Dialog {
 
 	constructor(params: DialogParams) {
 		this.#configColors = params.colors
-		this.#backgroundColor = getColorFrompalette(
-			params.dialogBackground,
-			params.colors,
-		)
-		this.#contentColor = getColorFrompalette(params.dialogColor, params.colors)
-		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
-		this.#animationIntervalMs = params.dialogInternvalMs
+		this.#backgroundColor = this.#getColor(params.dialogBackground)
+		this.#contentColor = this.#getColor(params.dialogColor)
+		this.#borderColor = this.#getColor(params.dialogBorder)
+		this.#soundPlayer = params.soundPlayer
 
 		this.#canvas = document.createElement('canvas')
 		this.#canvas.style.setProperty('position', 'absolute')
@@ -85,12 +87,23 @@ export class Dialog {
 		this.#textFx = new TextFx('|', this.#contentColor, params.colors)
 	}
 
-	async open(text: string) {
-		if (text.length <= 0) return
+	async open(
+		text: string,
+		defaultVoice?: VoiceConfig | null,
+		voiceOverride?: VoiceConfig,
+	) {
 		this.isOpen = true
 		this.#canvas.style.setProperty('display', 'block')
+		this.#currentVoiceOverride = voiceOverride || defaultVoice || undefined
+		this.#dialogSeed = undefined // Reset dialog seed for new dialog
+		this.#currentDialog = text
+		this.#currentLineIndex = 0
 
-		this.#remainingLines = this.#textFx.parseText(text, MAX_CHARS_PER_LINE)
+		const textToProcess = this.#getCurrentText()
+		this.#remainingLines = this.#textFx.parseText(
+			textToProcess,
+			MAX_CHARS_PER_LINE,
+		)
 		this.#currentLineQueue = this.#remainingLines.shift()
 		this.#displayedLines = new Array(MAX_LINES).fill(null).map((_) => [])
 
@@ -124,11 +137,7 @@ export class Dialog {
 
 	#update = (time: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (
-			time - this.#lastFrameTime <
-			(this.#animationIntervalMs || ANIMATION_INTERVAL_MS)
-		)
-			return
+		if (time - this.#lastFrameTime < ANIMATION_INTERVAL_MS) return
 		this.#lastFrameTime = time
 		if (
 			this.#currentLineQueue?.length === 0 &&
@@ -140,7 +149,51 @@ export class Dialog {
 
 		let newChar = this.#currentLineQueue?.shift()
 
-		if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
+		if (newChar) {
+			this.#displayedLines[this.#lineCursor]?.push(newChar)
+			// Play MIDI-style voice sound for non-space characters - only if voice is explicitly defined
+			const voiceConfig = Array.isArray(this.#currentVoiceOverride)
+				? this.#currentVoiceOverride
+				: [this.#currentVoiceOverride]
+			if (
+				this.#soundPlayer &&
+				voiceConfig &&
+				voiceConfig[0] &&
+				newChar.value !== ' '
+			) {
+				const [template, seed] = voiceConfig
+
+				let finalTemplate = template
+				let characterSeed = seed ?? 0
+
+				if (template === 'RANDOM') {
+					// RANDOM: new random seed for each character
+					finalTemplate = 'HUMAN'
+					characterSeed = Math.floor(Math.random() * 1000)
+				} else if (seed === null) {
+					// seed=null: random seed per dialog (not per character)
+					characterSeed =
+						this.#dialogSeed ??
+						(this.#dialogSeed = Math.floor(Math.random() * 1000))
+				}
+
+				// Play voice sample with appropriate variation
+				const velocity = 0.8 + Math.random() * 0.4 // 0.8-1.2 volume variation
+
+				// Determine if we should use variation
+				let useVariation = false
+				if (template === 'RANDOM') {
+					// RANDOM: each character gets random variation
+					useVariation = true
+				} else if (seed === null) {
+					// seed=null: use random variation within template
+					useVariation = true
+				}
+
+				// Play voice sample
+				this.#soundPlayer.playVoiceSample(finalTemplate, velocity, useVariation)
+			}
+		}
 		this.#render(time)
 	}
 
@@ -150,6 +203,8 @@ export class Dialog {
 		this.#lineCursor = 0
 		this.#resolvePromise?.()
 		this.#animationId && cancelAnimationFrame(this.#animationId)
+
+		// No cleanup needed for individual sounds
 	}
 
 	#resizeCanvas = () => {
@@ -184,6 +239,21 @@ export class Dialog {
 		)
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)
+	}
+
+	#getColor(color: string | number) {
+		if (typeof color === 'string') return color
+		return this.#configColors[color] ?? 'black'
+	}
+
+	#getCurrentText(): string {
+		if (typeof this.#currentDialog === 'string') {
+			return this.#currentDialog
+		}
+		if (Array.isArray(this.#currentDialog)) {
+			return this.#currentDialog[this.#currentLineIndex]?.[1] ?? ''
+		}
+		return ''
 	}
 }
 
