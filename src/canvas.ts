@@ -1,3 +1,5 @@
+import { createSingleton } from './lib'
+
 type CanvasParams = { id: string; zIndex?: number }
 
 export class Canvas {
@@ -60,9 +62,6 @@ export class Canvas {
 	}
 }
 
-const canvases = new Map<string, Canvas>()
+const get = createSingleton((params: CanvasParams) => new Canvas(params))
 
-export const getCanvas = (params: CanvasParams) => {
-	if (!canvases.has(params.id)) canvases.set(params.id, new Canvas(params))
-	return canvases.get(params.id)!
-}
+export const getCanvas = (params: CanvasParams) => get(params.id, params)

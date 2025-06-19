@@ -26,6 +26,7 @@ class InputsHandler {
 		this.onInput = onInput
 
 		const touchEventElement = document.createElement('div')
+		touchEventElement.classList.add('odyc-touchEvent')
 		touchEventElement.style.setProperty('position', 'absolute')
 		touchEventElement.style.setProperty('left', '0')
 		touchEventElement.style.setProperty('height', '0')
