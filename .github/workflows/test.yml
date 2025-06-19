@@ -22,7 +22,7 @@ jobs:
 
       - name: Install browser
         run: npx playwright install
-        
+
       - name: Show Playwright version
         run: npx playwright -V
 
