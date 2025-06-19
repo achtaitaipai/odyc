@@ -14,6 +14,8 @@
 		"dev": "tsup --watch",
 		"lint": "tsc",
 		"format": "prettier . --write",
+		"format:check": "prettier . --check",
+		
 		"build": "tsup",
 		"test": "vitest",
 		"test:once": "vitest run",
