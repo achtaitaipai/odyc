@@ -1,6 +1,6 @@
-import { RendererParams } from '../../renderer'
-import { getColorFrompalette } from '../string'
-import { characters } from './font'
+import { RendererParams } from '../renderer'
+import { characters, FONT_SIZE } from './font'
+import { getColorFrompalette } from './string'
 
 const EFFECTS = {
 	'~': 'waveY',
@@ -10,8 +10,6 @@ const EFFECTS = {
 	'^': 'shakeY',
 	'°': 'blink',
 } as const
-
-const FONT_SIZE = 8
 
 type TokenType = 'char' | 'color' | 'effect' | 'separator'
 
