@@ -5,6 +5,8 @@ import {
 	Uniforms,
 } from './shaders/filterSettings'
 
+const FILTER_CANVAS_ID = 'odyc-filter-canvas'
+
 export class Filter {
 	canvas: Canvas
 	#settings: ReturnType<typeof getFilterSettings>
@@ -30,7 +32,8 @@ export class Filter {
 			}
 
 		this.#textureSource = target
-		this.canvas = getCanvas({ id: 'odyc-filter-canvas' })
+		this.canvas = getCanvas({ id: FILTER_CANVAS_ID })
+		this.canvas.show()
 		this.canvas.setSize(this.#textureSource.width, this.#textureSource.height)
 
 		const gl = this.canvas.getWebglCtx()
@@ -224,6 +227,9 @@ export const initFilter = (
 	target: HTMLCanvasElement,
 	options?: FilterParams,
 ) => {
-	if (!options) return null
+	if (!options) {
+		getCanvas({ id: FILTER_CANVAS_ID }).hide()
+		return null
+	}
 	return new Filter(target, options)
 }
