@@ -1,4 +1,4 @@
-import { Canvas } from './canvas'
+import { Canvas, getCanvas } from './canvas'
 import { DialogParams } from './dialog'
 import { Input } from './inputs'
 import { TextFx } from './lib'
@@ -37,7 +37,7 @@ export class Prompt {
 		this.#contentColor = this.#getColor(params.dialogColor)
 		this.#borderColor = this.#getColor(params.dialogBorder)
 
-		this.#canvas = new Canvas({ id: 'odyc-prompt-canvas', zIndex: 10 })
+		this.#canvas = getCanvas({ id: 'odyc-prompt-canvas', zIndex: 10 })
 		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()

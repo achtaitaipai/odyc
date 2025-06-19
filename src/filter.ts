@@ -1,4 +1,4 @@
-import { Canvas } from './canvas'
+import { Canvas, getCanvas } from './canvas'
 import {
 	FilterParams,
 	getFilterSettings,
@@ -30,7 +30,7 @@ export class Filter {
 			}
 
 		this.#textureSource = target
-		this.canvas = new Canvas({ id: 'odyc-filter-canvas' })
+		this.canvas = getCanvas({ id: 'odyc-filter-canvas' })
 		this.canvas.setSize(this.#textureSource.width, this.#textureSource.height)
 
 		const gl = this.canvas.getWebglCtx()

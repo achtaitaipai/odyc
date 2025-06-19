@@ -1,4 +1,4 @@
-import { Canvas } from './canvas'
+import { Canvas, getCanvas } from './canvas'
 import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
@@ -60,7 +60,7 @@ export class Dialog {
 		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
 		this.#animationIntervalMs = params.dialogInternvalMs
 
-		this.#canvas = new Canvas({ id: 'odyc-dialog-canvas', zIndex: 10 })
+		this.#canvas = getCanvas({ id: 'odyc-dialog-canvas', zIndex: 10 })
 		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()

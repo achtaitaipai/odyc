@@ -1,5 +1,5 @@
 import { Camera } from './camera'
-import { Canvas } from './canvas'
+import { Canvas, getCanvas } from './canvas'
 import { Player } from './gameState/player'
 import { ActorState } from './gameState/types'
 import {
@@ -42,7 +42,7 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		this.canvas = new Canvas({ id: 'odyc-renderer-canvas' })
+		this.canvas = getCanvas({ id: 'odyc-renderer-canvas' })
 		this.canvas.setSize(
 			this.cellWidth * options.screenWidth * this.#zoom,
 			this.cellHeight * options.screenHeight * this.#zoom,

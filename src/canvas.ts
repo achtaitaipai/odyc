@@ -1,7 +1,9 @@
+type CanvasParams = { id: string; zIndex?: number }
+
 export class Canvas {
 	element: HTMLCanvasElement
 
-	constructor({ id, zIndex }: { id: string; zIndex?: number }) {
+	constructor({ id, zIndex }: CanvasParams) {
 		this.element = document.createElement('canvas')
 		this.element.style.setProperty('position', 'absolute')
 		this.element.style.setProperty('image-rendering', 'pixelated')
@@ -56,4 +58,11 @@ export class Canvas {
 		this.element.style.setProperty('left', `${left}px`)
 		this.element.style.setProperty('top', `${top}px`)
 	}
+}
+
+const canvases = new Map<string, Canvas>()
+
+export const getCanvas = (params: CanvasParams) => {
+	if (!canvases.has(params.id)) canvases.set(params.id, new Canvas(params))
+	return canvases.get(params.id)!
 }

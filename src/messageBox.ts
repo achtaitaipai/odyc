@@ -1,4 +1,4 @@
-import { Canvas } from './canvas'
+import { Canvas, getCanvas } from './canvas'
 import {
 	Char,
 	getColorFrompalette,
@@ -56,7 +56,7 @@ export class MessageBox {
 		)
 		this.#animationIntervalMs = params.messageInternvalMs
 
-		this.#canvas = new Canvas({ id: 'odyc-message-canvas', zIndex: 10 })
+		this.#canvas = getCanvas({ id: 'odyc-message-canvas', zIndex: 10 })
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()
 		this.#canvas.setSize(this.#canvasSize, this.#canvasSize)
