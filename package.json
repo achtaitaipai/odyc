@@ -17,7 +17,7 @@
 		"build": "tsup",
 		"test": "vitest",
 		"test:once": "vitest run",
-		"prepublishOnly": "npm run lint && npm run build",
+		"prepublishOnly": "npm run lint && npm run build && npm run test:once",
 		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
 		"publish:latest": "npm version patch && npm publish --access public --tag latest",
 		"release": "npm run lint && npm version patch  && git add . && git commit -m 'build: release' && git push --follow-tags"
