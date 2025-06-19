@@ -55,10 +55,10 @@ export const defaultConfig: Config<string> = {
 	background: 1,
 	volume: 0.5,
 	controls: {
-		LEFT: 'ArrowLeft',
-		RIGHT: 'ArrowRight',
-		UP: 'ArrowUp',
-		DOWN: 'ArrowDown',
+		LEFT: ['KeyA', 'ArrowLeft'],
+		RIGHT: ['KeyD', 'ArrowRight'],
+		UP: ['KeyW', 'ArrowUp'],
+		DOWN: ['KeyS', 'ArrowDown'],
 		ACTION: ['Enter', 'Space'],
 	},
 }
