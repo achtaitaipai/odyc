@@ -6,7 +6,7 @@ import { initFilter } from './filter.js'
 import { initGameApi } from './gameApi.js'
 import { initGameLoop } from './gameLoop.js'
 import { initGameState } from './gameState/index.js'
-import { initInputsHandler } from './inputs.js'
+import { getInputsHandler } from './inputs.js'
 import { debounce } from './lib'
 import { initMessageBox } from './messageBox.js'
 import { initPrompt } from './prompt.js'
@@ -24,7 +24,7 @@ export const createGame = <T extends string>(
 	const dialog = initDialog(config)
 	const prompt = initPrompt(config)
 	const messageBox = initMessageBox(config)
-	const gameFilter = initFilter(renderer.canvas, config.filter)
+	const gameFilter = initFilter(renderer.canvas.element, config.filter)
 	const ender = initEnder({ gameState, messageBox, camera })
 
 	const renderGame = debounce(() => {
@@ -42,7 +42,7 @@ export const createGame = <T extends string>(
 		ender,
 	})
 
-	initInputsHandler(config, (input) => {
+	getInputsHandler(config, (input) => {
 		if (prompt.isOpen) {
 			prompt.input(input)
 		} else if (messageBox.isOpen) {

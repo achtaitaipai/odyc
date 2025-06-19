@@ -1,3 +1,4 @@
+import { Canvas, getCanvas } from './canvas'
 import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
@@ -8,6 +9,8 @@ export type DialogParams = {
 	dialogInternvalMs?: number
 	colors: RendererParams['colors']
 }
+
+const DIALOG_CANVAS_ID = 'odyc-dialog-canvas'
 
 const CANVAS_SIZE = 384
 const ANIMATION_INTERVAL_MS = 30
@@ -20,7 +23,7 @@ const FONT_SIZE = 8
 const BOX_OUTLINE = 2
 
 export class Dialog {
-	#canvas: HTMLCanvasElement
+	#canvas: Canvas
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: () => void
 
@@ -39,7 +42,6 @@ export class Dialog {
 
 	isOpen = false
 
-	#configColors: RendererParams['colors']
 	#backgroundColor: string
 	#contentColor: string
 	#borderColor: string
@@ -52,7 +54,6 @@ export class Dialog {
 	#boxY: number
 
 	constructor(params: DialogParams) {
-		this.#configColors = params.colors
 		this.#backgroundColor = getColorFrompalette(
 			params.dialogBackground,
 			params.colors,
@@ -61,26 +62,16 @@ export class Dialog {
 		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
 		this.#animationIntervalMs = params.dialogInternvalMs
 
-		this.#canvas = document.createElement('canvas')
-		this.#canvas.style.setProperty('position', 'absolute')
-		this.#canvas.style.setProperty('box-sizing', 'border-box')
-		this.#canvas.style.setProperty('display', 'none')
-		this.#canvas.style.setProperty('image-rendering', 'pixelated')
-		this.#ctx = this.#canvas.getContext('2d')!
-		this.#canvas.width = CANVAS_SIZE
-		this.#canvas.height = CANVAS_SIZE
-		this.#canvas.classList.add('odyc-dialog-canvas')
-
-		this.#resizeCanvas()
-		document.body.append(this.#canvas)
-		window.addEventListener('resize', this.#resizeCanvas)
+		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })
+		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
+		this.#canvas.hide()
+		this.#ctx = this.#canvas.get2dCtx()
 
 		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
 		this.#boxHeight =
 			MAX_LINES * FONT_SIZE + PADDING_Y * 2 + LINE_GAP * (MAX_LINES - 1)
-		this.#boxX = (this.#canvas.width - this.#boxWidth) * 0.5
-		this.#boxY =
-			this.#canvas.height - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)
+		this.#boxX = (CANVAS_SIZE - this.#boxWidth) * 0.5
+		this.#boxY = CANVAS_SIZE - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)
 
 		this.#textFx = new TextFx('|', this.#contentColor, params.colors)
 	}
@@ -88,7 +79,7 @@ export class Dialog {
 	async open(text: string) {
 		if (text.length <= 0) return
 		this.isOpen = true
-		this.#canvas.style.setProperty('display', 'block')
+		this.#canvas.show()
 
 		this.#remainingLines = this.#textFx.parseText(text, MAX_CHARS_PER_LINE)
 		this.#currentLineQueue = this.#remainingLines.shift()
@@ -146,20 +137,10 @@ export class Dialog {
 
 	#close() {
 		this.isOpen = false
-		this.#canvas.style.setProperty('display', 'none')
+		this.#canvas.hide()
 		this.#lineCursor = 0
 		this.#resolvePromise?.()
 		this.#animationId && cancelAnimationFrame(this.#animationId)
-	}
-
-	#resizeCanvas = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		const left = (window.innerWidth - sideSize) * 0.5
-		const top = (window.innerHeight - sideSize) * 0.5
-		this.#canvas.style.setProperty('width', `${sideSize}px`)
-		this.#canvas.style.setProperty('height', `${sideSize}px`)
-		this.#canvas.style.setProperty('left', `${left}px`)
-		this.#canvas.style.setProperty('top', `${top}px`)
 	}
 
 	#render = (time: number) => {
@@ -174,7 +155,7 @@ export class Dialog {
 	}
 
 	#drawBox() {
-		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
+		this.#ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
 		this.#ctx.fillStyle = this.#borderColor
 		this.#ctx.fillRect(
 			this.#boxX - BOX_OUTLINE,

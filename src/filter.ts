@@ -1,11 +1,14 @@
+import { Canvas, getCanvas } from './canvas'
 import {
 	FilterParams,
 	getFilterSettings,
 	Uniforms,
 } from './shaders/filterSettings'
 
+const FILTER_CANVAS_ID = 'odyc-filter-canvas'
+
 export class Filter {
-	canvas: HTMLCanvasElement
+	canvas: Canvas
 	#settings: ReturnType<typeof getFilterSettings>
 	#uniforms: Uniforms = {}
 	#textureSource: HTMLCanvasElement
@@ -29,17 +32,9 @@ export class Filter {
 			}
 
 		this.#textureSource = target
-		this.canvas = document.createElement('canvas')
-		this.canvas.width = this.#textureSource.width
-		this.canvas.height = this.#textureSource.height
+		this.canvas = getCanvas({ id: FILTER_CANVAS_ID })
 
-		this.canvas.style.setProperty('position', 'absolute')
-		this.canvas.style.setProperty('image-rendering', 'pixelated')
-		this.canvas.classList.add('odyc-filter-canvas')
-
-		window.addEventListener('resize', this.#setSize)
-
-		const gl = this.canvas.getContext('webgl', { preserveDrawingBuffer: true })
+		const gl = this.canvas.getWebglCtx()
 		if (!gl) throw new Error('WebGL not supported')
 		this.#gl = gl
 
@@ -61,19 +56,27 @@ export class Filter {
 
 		this.#quad = this.#createQuad()
 		this.#texture = this.#createTexture()
-		this.#setSize()
-		this.#textureSource.after(this.canvas)
 		this.#textureSource.style.setProperty('display', 'none')
 	}
 
 	render() {
-		this.#setUniform('size', [this.canvas.width, this.canvas.height])
+		this.canvas.show()
+		this.canvas.setSize(this.#textureSource.width, this.#textureSource.height)
+		this.#setUniform('size', [
+			this.canvas.element.width,
+			this.canvas.element.height,
+		])
 		if (this.#uniforms) {
 			Object.entries(this.#uniforms).forEach(([key, value]) => {
 				this.#setUniform(key, value)
 			})
 		}
-		this.#gl.viewport(0, 0, this.canvas.width, this.canvas.height)
+		this.#gl.viewport(
+			0,
+			0,
+			this.canvas.element.width,
+			this.canvas.element.height,
+		)
 		this.#gl.clearColor(0, 0, 0, 1)
 		this.#gl.clear(this.#gl.COLOR_BUFFER_BIT)
 		this.#updateTexture()
@@ -96,27 +99,6 @@ export class Filter {
 		}
 	}
 
-	#setSize = () => {
-		const orientation =
-			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		let width =
-			orientation === 'horizontal'
-				? sideSize
-				: (sideSize / this.canvas.height) * this.canvas.width
-		let height =
-			orientation === 'vertical'
-				? sideSize
-				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (window.innerWidth - width) * 0.5
-		const top = (window.innerHeight - height) * 0.5
-
-		this.canvas.style.setProperty('width', `${width}px`)
-		this.canvas.style.setProperty('height', `${height}px`)
-		this.canvas.style.setProperty('left', `${left}px`)
-		this.canvas.style.setProperty('top', `${top}px`)
-		this.render()
-	}
 	#compileShader(
 		type:
 			| (typeof WebGLRenderingContext)['FRAGMENT_SHADER']
@@ -245,6 +227,9 @@ export const initFilter = (
 	target: HTMLCanvasElement,
 	options?: FilterParams,
 ) => {
-	if (!options) return null
+	if (!options) {
+		getCanvas({ id: FILTER_CANVAS_ID }).hide()
+		return null
+	}
 	return new Filter(target, options)
 }

@@ -5,7 +5,7 @@ import {
 	TEMPLATES as SOUNDTEMPLATES,
 	type Sound,
 } from 'pfxr'
-import { isUrl } from './lib'
+import { createSingleton, isUrl } from './lib'
 export type SoundPlayerParams = {
 	volume: number
 }
@@ -23,11 +23,14 @@ export class SoundPlayer {
 	#gainNode: GainNode
 	#playing = false
 
-	constructor(params: SoundPlayerParams) {
+	constructor() {
 		this.#audioContext = new AudioContext()
 		this.#gainNode = this.#audioContext.createGain()
-		this.#gainNode.gain.value = params.volume
 		this.#gainNode.connect(this.#audioContext.destination)
+	}
+
+	set volume(value: number) {
+		this.#gainNode.gain.value = value
 	}
 
 	async play(...args: PlaySoundArgs) {
@@ -52,8 +55,13 @@ export class SoundPlayer {
 	}
 }
 
-export const initSoundPlayer = (params: SoundPlayerParams) =>
-	new SoundPlayer(params)
+const getSingleton = createSingleton(() => new SoundPlayer())
+
+export const initSoundPlayer = (params: SoundPlayerParams) => {
+	const soundPlayer = getSingleton(null)
+	soundPlayer.volume = params.volume
+	return soundPlayer
+}
 
 type CreateSoundArgs =
 	| [key: SoundTemplateKey]

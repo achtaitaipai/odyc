@@ -1,3 +1,5 @@
+import { createSingleton } from './lib'
+
 const TIMEBETWEENKEYS = 200
 const TIMEBETWEENTOUCH = 200
 const MINSWIPEDIST = 30
@@ -9,23 +11,22 @@ export type InputsHandlerParams = {
 }
 
 class InputsHandler {
-	controls: [Input, string | string[]][]
+	controls: [Input, string | string[]][] = []
 	lastKeysEvents: Map<string, number> = new Map()
-	onInput: (input: Input) => void
+	onInput?: (input: Input) => void
 	lastPointerEvent = 0
 	oldTouchX?: number
 	oldTouchY?: number
 	pointerId?: number
 	isSliding = false
 
-	constructor(params: InputsHandlerParams, onInput: (input: Input) => void) {
-		this.controls = Object.entries(params.controls) as [
-			Input,
-			string | string[],
-		][]
-		this.onInput = onInput
+	static get touchEventElement() {
+		return
+	}
 
+	constructor() {
 		const touchEventElement = document.createElement('div')
+		touchEventElement.classList.add('odyc-touchEvent')
 		touchEventElement.style.setProperty('position', 'absolute')
 		touchEventElement.style.setProperty('left', '0')
 		touchEventElement.style.setProperty('height', '0')
@@ -44,6 +45,20 @@ class InputsHandler {
 		touchEventElement.addEventListener('pointermove', this.handleTouchMove)
 	}
 
+	init(params: InputsHandlerParams, onInput: (input: Input) => void) {
+		this.lastKeysEvents.clear()
+		this.lastPointerEvent = 0
+		this.oldTouchX = undefined
+		this.oldTouchY = undefined
+		this.pointerId = undefined
+		this.isSliding = false
+		this.controls = Object.entries(params.controls) as [
+			Input,
+			string | string[],
+		][]
+		this.onInput = onInput
+	}
+
 	handleTouch = (e: PointerEvent) => {
 		if (e.pointerType === 'mouse') return
 		this.pointerId = e.pointerId
@@ -54,7 +69,7 @@ class InputsHandler {
 	handleTouchUp = (e: PointerEvent) => {
 		if (this.pointerId !== e.pointerId) return
 		this.pointerId = undefined
-		if (!this.isSliding) this.onInput('ACTION')
+		if (!this.isSliding) this.onInput?.('ACTION')
 		this.isSliding = false
 	}
 
@@ -89,10 +104,10 @@ class InputsHandler {
 		this.isSliding = true
 		if (Math.abs(diffY) > Math.abs(diffX)) {
 			const direction = Math.sign(diffY)
-			this.onInput(direction < 0 ? 'UP' : 'DOWN')
+			this.onInput?.(direction < 0 ? 'UP' : 'DOWN')
 		} else {
 			const direction = Math.sign(diffX)
-			this.onInput(direction < 0 ? 'LEFT' : 'RIGHT')
+			this.onInput?.(direction < 0 ? 'LEFT' : 'RIGHT')
 		}
 	}
 
@@ -106,11 +121,17 @@ class InputsHandler {
 		const last = this.lastKeysEvents.get(e.code)
 		if (e.repeat && last && now - last < TIMEBETWEENKEYS) return
 		this.lastKeysEvents.set(e.code, now)
-		this.onInput(input)
+		this.onInput?.(input)
 	}
 }
 
-export const initInputsHandler = (
+const getSingleton = createSingleton(() => new InputsHandler())
+
+export const getInputsHandler = (
 	params: InputsHandlerParams,
 	onInput: (input: Input) => void,
-) => new InputsHandler(params, onInput)
+) => {
+	const inputsHandler = getSingleton(null)
+	inputsHandler.init(params, onInput)
+	return inputsHandler
+}

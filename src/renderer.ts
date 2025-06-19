@@ -1,12 +1,14 @@
 import { Camera } from './camera'
+import { Canvas, getCanvas } from './canvas'
 import { Player } from './gameState/player'
 import { ActorState } from './gameState/types'
 import {
-	compareVectors,
 	createGridFromString,
 	getColorFrompalette as getColorFromPalette,
 } from './lib'
 import { Position, Tile } from './types.js'
+
+const RENDERER_CANVAS_ID = 'odyc-renderer-canvas'
 
 export type Drawable = {
 	sprite?: Tile | null
@@ -24,7 +26,7 @@ export type RendererParams = {
 }
 
 class Renderer {
-	canvas: HTMLCanvasElement
+	canvas: Canvas
 	#zoom = 24
 	screenWidth: number
 	screenHeight: number
@@ -42,39 +44,10 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		this.canvas = document.createElement('canvas')
-		this.canvas.width = this.cellWidth * options.screenWidth * this.#zoom
-		this.canvas.height = this.cellHeight * options.screenHeight * this.#zoom
+		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID })
+		this.canvas.show()
 
-		this.canvas.style.setProperty('position', 'absolute')
-		this.canvas.style.setProperty('image-rendering', 'pixelated')
-		this.canvas.classList.add('odyc-renderer-canvas')
-		const ctx = this.canvas.getContext('2d')
-		if (!ctx) throw new Error('failled to access context of the canvas')
-		this.ctx = ctx
-		this.#setSize()
-		document.body.append(this.canvas)
-
-		window.addEventListener('resize', this.#setSize)
-	}
-	#setSize = () => {
-		const orientation =
-			this.canvas.width < this.canvas.height ? 'vertical' : 'horizontal'
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		let width =
-			orientation === 'horizontal'
-				? sideSize
-				: (sideSize / this.canvas.height) * this.canvas.width
-		let height =
-			orientation === 'vertical'
-				? sideSize
-				: (sideSize / this.canvas.width) * this.canvas.height
-		const left = (window.innerWidth - width) * 0.5
-		const top = (window.innerHeight - height) * 0.5
-		this.canvas.style.setProperty('width', `${width}px`)
-		this.canvas.style.setProperty('height', `${height}px`)
-		this.canvas.style.setProperty('left', `${left}px`)
-		this.canvas.style.setProperty('top', `${top}px`)
+		this.ctx = this.canvas.get2dCtx()
 	}
 
 	render<T extends string>(
@@ -100,7 +73,10 @@ class Renderer {
 	}
 
 	clear() {
-		this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+		this.canvas.setSize(
+			this.cellWidth * this.screenWidth * this.#zoom,
+			this.cellHeight * this.screenHeight * this.#zoom,
+		)
 		if (this.background === undefined) return
 		if (typeof this.background === 'number')
 			this.ctx.fillStyle =
