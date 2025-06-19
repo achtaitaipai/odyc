@@ -46,10 +46,6 @@ class Renderer {
 
 		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID })
 		this.canvas.show()
-		this.canvas.setSize(
-			this.cellWidth * options.screenWidth * this.#zoom,
-			this.cellHeight * options.screenHeight * this.#zoom,
-		)
 
 		this.ctx = this.canvas.get2dCtx()
 	}
@@ -77,7 +73,10 @@ class Renderer {
 	}
 
 	clear() {
-		this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+		this.canvas.setSize(
+			this.cellWidth * this.screenWidth * this.#zoom,
+			this.cellHeight * this.screenHeight * this.#zoom,
+		)
 		if (this.background === undefined) return
 		if (typeof this.background === 'number')
 			this.ctx.fillStyle =

@@ -33,8 +33,6 @@ export class Filter {
 
 		this.#textureSource = target
 		this.canvas = getCanvas({ id: FILTER_CANVAS_ID })
-		this.canvas.show()
-		this.canvas.setSize(this.#textureSource.width, this.#textureSource.height)
 
 		const gl = this.canvas.getWebglCtx()
 		if (!gl) throw new Error('WebGL not supported')
@@ -62,6 +60,8 @@ export class Filter {
 	}
 
 	render() {
+		this.canvas.show()
+		this.canvas.setSize(this.#textureSource.width, this.#textureSource.height)
 		this.#setUniform('size', [
 			this.canvas.element.width,
 			this.canvas.element.height,
