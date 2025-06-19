@@ -1,3 +1,5 @@
+import { createSingleton } from './lib'
+
 const TIMEBETWEENKEYS = 200
 const TIMEBETWEENTOUCH = 200
 const MINSWIPEDIST = 30
@@ -7,6 +9,21 @@ export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
 export type InputsHandlerParams = {
 	controls: Record<Input, string | string[]>
 }
+
+const getTouchEventElement = createSingleton(() => {
+	const touchEventElement = document.createElement('div')
+	touchEventElement.classList.add('odyc-touch-event')
+	touchEventElement.style.setProperty('position', 'absolute')
+	touchEventElement.style.setProperty('left', '0')
+	touchEventElement.style.setProperty('height', '0')
+	touchEventElement.style.setProperty('width', '100vw')
+	touchEventElement.style.setProperty('height', '100vh')
+	touchEventElement.style.setProperty('overflow', 'hidden')
+	touchEventElement.style.setProperty('touch-action', 'none')
+	document.body.appendChild(touchEventElement)
+	document.body.style.setProperty('margin', '0')
+	return touchEventElement
+})
 
 class InputsHandler {
 	controls: [Input, string | string[]][]
@@ -18,6 +35,10 @@ class InputsHandler {
 	pointerId?: number
 	isSliding = false
 
+	static get touchEventElement() {
+		return
+	}
+
 	constructor(params: InputsHandlerParams, onInput: (input: Input) => void) {
 		this.controls = Object.entries(params.controls) as [
 			Input,
@@ -25,17 +46,7 @@ class InputsHandler {
 		][]
 		this.onInput = onInput
 
-		const touchEventElement = document.createElement('div')
-		touchEventElement.classList.add('odyc-touchEvent')
-		touchEventElement.style.setProperty('position', 'absolute')
-		touchEventElement.style.setProperty('left', '0')
-		touchEventElement.style.setProperty('height', '0')
-		touchEventElement.style.setProperty('width', '100vw')
-		touchEventElement.style.setProperty('height', '100vh')
-		touchEventElement.style.setProperty('overflow', 'hidden')
-		touchEventElement.style.setProperty('touch-action', 'none')
-		document.body.appendChild(touchEventElement)
-		document.body.style.setProperty('margin', '0')
+		const touchEventElement = getTouchEventElement(null)
 
 		document.addEventListener('keydown', this.handleKeydown)
 		touchEventElement.addEventListener('pointerdown', this.handleTouch)

@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { init } from './index'
 
-test('createGame does not create multiple canvases when called multiple times', async () => {
+test('createGame does not create multiple htmlElements when called multiple times', async () => {
 	init()
 	const rendererCanvases = document.querySelectorAll('.odyc-renderer-canvas')
 	expect(rendererCanvases.length).toBe(1)
@@ -17,4 +17,7 @@ test('createGame does not create multiple canvases when called multiple times', 
 
 	const filterCanvases = document.querySelectorAll('.odyc-filter-canvas')
 	expect(filterCanvases.length).toBe(1)
+
+	const touchEventWrapper = document.querySelectorAll('.odyc-touch-event')
+	expect(touchEventWrapper.length).toBe(1)
 })
