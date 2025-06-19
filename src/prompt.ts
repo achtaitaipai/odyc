@@ -1,3 +1,4 @@
+import { Canvas } from './canvas'
 import { DialogParams } from './dialog'
 import { Input } from './inputs'
 import { TextFx } from './lib'
@@ -17,7 +18,7 @@ export interface MenuOption {
 }
 
 export class Prompt {
-	#canvas: HTMLCanvasElement
+	#canvas: Canvas
 	#ctx: CanvasRenderingContext2D
 	#resolvePromise?: (index: number) => void
 
@@ -36,24 +37,15 @@ export class Prompt {
 		this.#contentColor = this.#getColor(params.dialogColor)
 		this.#borderColor = this.#getColor(params.dialogBorder)
 
-		this.#canvas = document.createElement('canvas')
-		this.#canvas.style.setProperty('position', 'absolute')
-		this.#canvas.style.setProperty('box-sizing', 'border-box')
-		this.#canvas.style.setProperty('display', 'none')
-		this.#canvas.style.setProperty('image-rendering', 'pixelated')
-		this.#ctx = this.#canvas.getContext('2d')!
-		this.#canvas.width = CANVAS_SIZE
-		this.#canvas.height = CANVAS_SIZE
-		this.#canvas.classList.add('odyc-prompt-canvas')
-
-		this.#resizeCanvas()
-		document.body.append(this.#canvas)
-		window.addEventListener('resize', this.#resizeCanvas)
+		this.#canvas = new Canvas({ id: 'odyc-prompt-canvas', zIndex: 10 })
+		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
+		this.#canvas.hide()
+		this.#ctx = this.#canvas.get2dCtx()
 	}
 
 	get #rect() {
 		const width = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
-		const left = (this.#canvas.width - width) * 0.5
+		const left = (CANVAS_SIZE - width) * 0.5
 		const top = Math.floor(CANVAS_SIZE / 15)
 		const max_lines = Math.max(
 			Math.ceil(this.#options.length / OPTIONS_BY_LINE),
@@ -85,7 +77,7 @@ export class Prompt {
 		if (!options.length) return -1
 		this.#index = 0
 		this.isOpen = true
-		this.#canvas.style.setProperty('display', 'block')
+		this.#canvas.show()
 		this.#options = options
 
 		this.#render()
@@ -122,7 +114,7 @@ export class Prompt {
 
 	#close() {
 		this.isOpen = false
-		this.#canvas.style.setProperty('display', 'none')
+		this.#canvas.hide()
 		this.#resolvePromise?.(this.#index)
 	}
 
@@ -164,18 +156,8 @@ export class Prompt {
 		}
 	}
 
-	#resizeCanvas = () => {
-		const sideSize = Math.min(window.innerWidth, window.innerHeight)
-		const left = (window.innerWidth - sideSize) * 0.5
-		const top = (window.innerHeight - sideSize) * 0.5
-		this.#canvas.style.setProperty('width', `${sideSize}px`)
-		this.#canvas.style.setProperty('height', `${sideSize}px`)
-		this.#canvas.style.setProperty('left', `${left}px`)
-		this.#canvas.style.setProperty('top', `${top}px`)
-	}
-
 	#drawBox() {
-		this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height)
+		this.#ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
 		this.#ctx.fillStyle = this.#borderColor
 		const { left, top, height, width } = this.#rect
 		this.#ctx.fillRect(
