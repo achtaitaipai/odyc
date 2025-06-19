@@ -42,7 +42,8 @@ class Renderer {
 		this.cellWidth = options.cellWidth
 		this.cellHeight = options.cellHeight
 		this.colors = options.colors
-		this.background = options.background
+		if (options.background)
+			this.background = getColorFromPalette(options.background, this.colors)
 
 		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID })
 		this.canvas.show()
