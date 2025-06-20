@@ -57,6 +57,9 @@ export const initGameApi = <T extends string>(
 		get turn() {
 			return gameState.turn.value
 		},
+		clear: (color?: number | string) => {
+			clearPreviousGame(color)
+		},
 	}
 	setClearGame(renderer, dialog, messageBox, prompt, gameApi)
 	return gameApi
