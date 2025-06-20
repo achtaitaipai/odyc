@@ -1,10 +1,6 @@
 import { Camera } from '../camera'
-import {
-	compareVectors,
-	createGridFromString,
-	createObservable,
-	Observable,
-} from '../lib'
+import { vec2 } from '../helpers'
+import { createGridFromString, createObservable, Observable } from '../lib'
 import { Unwrap } from '../types'
 import { ActorFacade } from './actorFacade'
 import { GameMap } from './gameMap'
@@ -54,7 +50,7 @@ export class Actors<T extends string> {
 	) {
 		for (let index = 0; index < this.#values.length; index++) {
 			const actor = this.#values[index]
-			if (actor && actor.position && compareVectors(actor.position, [x, y])) {
+			if (actor && actor.position && vec2(actor.position).equals([x, y])) {
 				const newValue = Object.assign({}, actor, params)
 				this.#values[index] = newValue
 				break
@@ -67,7 +63,7 @@ export class Actors<T extends string> {
 		const template = this.#getTemplateParams(this.#templates, symbol)
 		if (!template) return
 		this.#values = [
-			...this.#values.filter((el) => !compareVectors([x, y], el.position)),
+			...this.#values.filter((el) => !vec2([x, y]).equals(el.position)),
 			this.#createActorFromTemplate(x, y, symbol, template),
 		]
 
@@ -80,7 +76,7 @@ export class Actors<T extends string> {
 
 	clearCell(x: number, y: number) {
 		this.#values = this.#values.filter(
-			(el) => !compareVectors(el.position, [x, y]),
+			(el) => !vec2(el.position).equals([x, y]),
 		)
 		this.#observable.notify()
 	}

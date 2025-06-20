@@ -2,8 +2,8 @@ import { Dialog } from './dialog.js'
 import { Ender } from './ender.js'
 import { ActorFacade } from './gameState/actorFacade.js'
 import { GameState } from './gameState/index.js'
+import { vec2 } from './helpers'
 import { Input } from './inputs.js'
-import { addVectors } from './lib/vector.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
 import { Position } from './types.js'
 
@@ -32,30 +32,30 @@ class GameLoop<T extends string> {
 
 		this.#gameState.player.setDirection(input)
 
-		const from = this.#gameState.player.position
-		const to = addVectors(from, directions[input])
+		const from = vec2(this.#gameState.player.position)
+		const to = from.add(directions[input])
 
-		if (this.#isCellOnworld(to)) {
-			const actor = this.#gameState.actors.getCell(...to)
+		if (this.#isCellOnworld(to.value)) {
+			const actor = this.#gameState.actors.getCell(...to.value)
 
 			if (!actor.solid) {
-				await this.#gameState.actors.getEvent(...from, 'onLeave')?.()
-				this.#gameState.player.position = to
+				await this.#gameState.actors.getEvent(...from.value, 'onLeave')?.()
+				this.#gameState.player.position = to.value
 			}
 
 			this.#playSound(actor)
 			await this.#openDialog(actor)
 
 			if (actor.solid)
-				await this.#gameState.actors.getEvent(...to, 'onCollide')?.()
-			else await this.#gameState.actors.getEvent(...to, 'onEnter')?.()
+				await this.#gameState.actors.getEvent(...to.value, 'onCollide')?.()
+			else await this.#gameState.actors.getEvent(...to.value, 'onEnter')?.()
 		}
 		for (const actor of this.#gameState.actors.get()) {
 			await this.#gameState.actors.getEvent(...actor.position, 'onTurn')?.()
 		}
 		this.#gameState.player.dispatchOnTurn()
 		if (!this.#ender.ending) this.#gameState.turn.next()
-		await this.#end(this.#gameState.actors.getCell(...to))
+		await this.#end(this.#gameState.actors.getCell(...to.value))
 	}
 
 	#playSound(actor: ActorFacade<T>) {

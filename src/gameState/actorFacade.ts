@@ -1,4 +1,4 @@
-import { compareVectors } from '../lib'
+import { vec2 } from '../helpers'
 import { Position } from '../types'
 import { Actors } from './actors'
 import { ActorState } from './types'
@@ -87,7 +87,7 @@ export class ActorFacade<T extends string> {
 	#getActor() {
 		return this.#actors
 			.get()
-			.find((el) => compareVectors(el.position, this.#position))
+			.find((el) => vec2(el.position).equals(this.#position))
 	}
 
 	#setActor<U extends keyof ActorState<T>>(key: U, value: ActorState<T>[U]) {
