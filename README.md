@@ -7,6 +7,32 @@ Everything is built through code, but without unnecessary complexity: your entir
 
 ## Contributing
 
+We welcome contributions to Odyc.js! Whether you're fixing bugs or adding features your help is appreciated.
+
+### Getting Started
+
+1. **Fork and clone** the repository
+2. **Install dependencies**: `npm install`
+3. **Install browser dependencies**: `npx playwright install`
+4. **Build the library**: `npm run build`
+5. **Run tests**: `npm run test`
+
+### Development Workflow
+
+- **Development mode**: `npm run dev` (watches for changes and rebuilds)
+- **Type checking**: `npm run lint`
+- **Format code**: `npm run format`
+- **Run all checks**: `npm run prepublishOnly` (lint + build + test)
+
+### Submitting Changes
+
+1. **Create a branch** for your feature or fix
+2. **Make your changes** following existing patterns
+3. **Add tests** for new functionality
+4. **Ensure all tests pass**: `npm run test:once`
+5. **Check code quality**: `npm run lint && npm run format:check`
+6. **Submit a pull request** with a clear description of your changes
+
 ### Tests
 
 #### Writing tests
