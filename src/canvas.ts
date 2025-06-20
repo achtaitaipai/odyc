@@ -36,7 +36,9 @@ export class Canvas {
 	}
 
 	getWebglCtx() {
-		const ctx = this.element.getContext('webgl', { preserveDrawingBuffer: true })
+		const ctx = this.element.getContext('webgl', {
+			preserveDrawingBuffer: true,
+		})
 		if (!ctx) throw new Error('failled to access context of the canvas')
 		return ctx
 	}

@@ -33,4 +33,3 @@ test('save method exists and is callable', () => {
 	expect(() => screenshot.save).not.toThrow()
 	expect(typeof screenshot.save).toBe('function')
 })
-
