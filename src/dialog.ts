@@ -1,4 +1,16 @@
 import { Canvas, getCanvas } from './canvas'
+import {
+	DIALOG_ANIMATION_INTERVAL_MS,
+	DIALOG_BOX_OUTLINE,
+	DIALOG_CANVAS_ID,
+	DIALOG_CANVAS_SIZE,
+	DIALOG_FONT_SIZE,
+	DIALOG_LINE_GAP,
+	DIALOG_MAX_CHARS_PER_LINE,
+	DIALOG_MAX_LINES,
+	DIALOG_PADDING_X,
+	DIALOG_PADDING_Y,
+} from './consts'
 import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
@@ -9,18 +21,6 @@ export type DialogParams = {
 	dialogInternvalMs?: number
 	colors: RendererParams['colors']
 }
-
-const DIALOG_CANVAS_ID = 'odyc-dialog-canvas'
-
-const CANVAS_SIZE = 384
-const ANIMATION_INTERVAL_MS = 30
-const MAX_LINES = 2
-const MAX_CHARS_PER_LINE = 28
-const LINE_GAP = 10
-const PADDING_X = 8
-const PADDING_Y = 12
-const FONT_SIZE = 8
-const BOX_OUTLINE = 2
 
 export class Dialog {
 	#canvas: Canvas
@@ -63,15 +63,18 @@ export class Dialog {
 		this.#animationIntervalMs = params.dialogInternvalMs
 
 		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })
-		this.#canvas.setSize(CANVAS_SIZE, CANVAS_SIZE)
+		this.#canvas.setSize(DIALOG_CANVAS_SIZE, DIALOG_CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()
 
-		this.#boxWidth = MAX_CHARS_PER_LINE * 8 + PADDING_X * 2
+		this.#boxWidth = DIALOG_MAX_CHARS_PER_LINE * 8 + DIALOG_PADDING_X * 2
 		this.#boxHeight =
-			MAX_LINES * FONT_SIZE + PADDING_Y * 2 + LINE_GAP * (MAX_LINES - 1)
-		this.#boxX = (CANVAS_SIZE - this.#boxWidth) * 0.5
-		this.#boxY = CANVAS_SIZE - this.#boxHeight - Math.floor(CANVAS_SIZE / 15)
+			DIALOG_MAX_LINES * DIALOG_FONT_SIZE +
+			DIALOG_PADDING_Y * 2 +
+			DIALOG_LINE_GAP * (DIALOG_MAX_LINES - 1)
+		this.#boxX = (DIALOG_CANVAS_SIZE - this.#boxWidth) * 0.5
+		this.#boxY =
+			DIALOG_CANVAS_SIZE - this.#boxHeight - Math.floor(DIALOG_CANVAS_SIZE / 15)
 
 		this.#textFx = new TextFx('|', this.#contentColor, params.colors)
 	}
@@ -81,9 +84,12 @@ export class Dialog {
 		this.isOpen = true
 		this.#canvas.show()
 
-		this.#remainingLines = this.#textFx.parseText(text, MAX_CHARS_PER_LINE)
+		this.#remainingLines = this.#textFx.parseText(
+			text,
+			DIALOG_MAX_CHARS_PER_LINE,
+		)
 		this.#currentLineQueue = this.#remainingLines.shift()
-		this.#displayedLines = new Array(MAX_LINES).fill(null).map((_) => [])
+		this.#displayedLines = new Array(DIALOG_MAX_LINES).fill(null).map((_) => [])
 
 		this.#animationId = requestAnimationFrame(this.#update)
 
@@ -96,7 +102,7 @@ export class Dialog {
 		// If there are still characters left to type in the current line, do nothing
 		if (
 			(this.#currentLineQueue && this.#currentLineQueue.length > 0) ||
-			this.#lineCursor < MAX_LINES - 1
+			this.#lineCursor < DIALOG_MAX_LINES - 1
 		)
 			return
 
@@ -117,13 +123,13 @@ export class Dialog {
 		this.#animationId = requestAnimationFrame(this.#update)
 		if (
 			time - this.#lastFrameTime <
-			(this.#animationIntervalMs || ANIMATION_INTERVAL_MS)
+			(this.#animationIntervalMs || DIALOG_ANIMATION_INTERVAL_MS)
 		)
 			return
 		this.#lastFrameTime = time
 		if (
 			this.#currentLineQueue?.length === 0 &&
-			this.#lineCursor < MAX_LINES - 1
+			this.#lineCursor < DIALOG_MAX_LINES - 1
 		) {
 			this.#lineCursor++
 			this.#currentLineQueue = this.#remainingLines?.shift()
@@ -145,23 +151,23 @@ export class Dialog {
 
 	#render = (time: number) => {
 		this.#drawBox()
-		const posX = this.#boxX + PADDING_X
+		const posX = this.#boxX + DIALOG_PADDING_X
 		for (let y = 0; y < this.#displayedLines.length; y++) {
 			const line = this.#displayedLines[y]
 			if (!line) continue
-			const posY = this.#boxY + PADDING_Y + 8 * y + y * LINE_GAP
+			const posY = this.#boxY + DIALOG_PADDING_Y + 8 * y + y * DIALOG_LINE_GAP
 			this.#textFx.draw(this.#ctx, line, posX, posY, time)
 		}
 	}
 
 	#drawBox() {
-		this.#ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
+		this.#ctx.clearRect(0, 0, DIALOG_CANVAS_SIZE, DIALOG_CANVAS_SIZE)
 		this.#ctx.fillStyle = this.#borderColor
 		this.#ctx.fillRect(
-			this.#boxX - BOX_OUTLINE,
-			this.#boxY - BOX_OUTLINE,
-			this.#boxWidth + BOX_OUTLINE * 2,
-			this.#boxHeight + BOX_OUTLINE * 2,
+			this.#boxX - DIALOG_BOX_OUTLINE,
+			this.#boxY - DIALOG_BOX_OUTLINE,
+			this.#boxWidth + DIALOG_BOX_OUTLINE * 2,
+			this.#boxHeight + DIALOG_BOX_OUTLINE * 2,
 		)
 		this.#ctx.fillStyle = this.#backgroundColor
 		this.#ctx.fillRect(this.#boxX, this.#boxY, this.#boxWidth, this.#boxHeight)

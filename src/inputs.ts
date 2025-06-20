@@ -1,8 +1,9 @@
+import {
+	INPUT_MIN_SWIPE_DIST,
+	INPUT_TIME_BETWEEN_KEYS,
+	INPUT_TIME_BETWEEN_TOUCH,
+} from './consts'
 import { createSingleton } from './lib'
-
-const TIMEBETWEENKEYS = 200
-const TIMEBETWEENTOUCH = 200
-const MINSWIPEDIST = 30
 
 export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
 
@@ -95,8 +96,12 @@ class InputsHandler {
 		const diffY = y - this.oldTouchY
 		const now = e.timeStamp
 
-		if (Math.abs(diffX) < MINSWIPEDIST && Math.abs(diffY) < MINSWIPEDIST) return
-		if (now - this.lastPointerEvent < TIMEBETWEENTOUCH) return
+		if (
+			Math.abs(diffX) < INPUT_MIN_SWIPE_DIST &&
+			Math.abs(diffY) < INPUT_MIN_SWIPE_DIST
+		)
+			return
+		if (now - this.lastPointerEvent < INPUT_TIME_BETWEEN_TOUCH) return
 
 		this.lastPointerEvent = now
 		this.oldTouchX = x
@@ -120,7 +125,7 @@ class InputsHandler {
 		const [input] = entrie
 		const now = e.timeStamp
 		const last = this.lastKeysEvents.get(e.code)
-		if (e.repeat && last && now - last < TIMEBETWEENKEYS) return
+		if (e.repeat && last && now - last < INPUT_TIME_BETWEEN_KEYS) return
 		this.lastKeysEvents.set(e.code, now)
 		this.onInput?.(input)
 	}

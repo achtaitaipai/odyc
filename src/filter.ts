@@ -1,11 +1,10 @@
 import { Canvas, getCanvas } from './canvas'
+import { FILTER_CANVAS_ID } from './consts'
 import {
 	FilterParams,
 	getFilterSettings,
 	Uniforms,
 } from './shaders/filterSettings'
-
-const FILTER_CANVAS_ID = 'odyc-filter-canvas'
 
 export class Filter {
 	canvas: Canvas

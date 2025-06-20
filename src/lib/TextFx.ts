@@ -1,5 +1,6 @@
+import { FONT_SIZE } from '../consts'
 import { RendererParams } from '../renderer'
-import { characters, FONT_SIZE } from './font'
+import { characters } from './font'
 import { getColorFrompalette } from './string'
 
 const EFFECTS = {

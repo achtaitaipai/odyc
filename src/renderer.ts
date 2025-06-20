@@ -1,5 +1,6 @@
 import { Camera } from './camera'
 import { Canvas, getCanvas } from './canvas'
+import { RENDERER_CANVAS_ID } from './consts'
 import { Player } from './gameState/player'
 import { ActorState } from './gameState/types'
 import {
@@ -7,8 +8,6 @@ import {
 	getColorFrompalette as getColorFromPalette,
 } from './lib'
 import { Position, Tile } from './types.js'
-
-const RENDERER_CANVAS_ID = 'odyc-renderer-canvas'
 
 export type Drawable = {
 	sprite?: Tile | null

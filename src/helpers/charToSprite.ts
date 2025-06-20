@@ -1,4 +1,5 @@
-import { characters, FONT_SIZE } from '../lib'
+import { FONT_SIZE } from '../consts'
+import { characters } from '../lib'
 
 export function charToSprite(char: string, color?: string) {
 	const charCode = char.charCodeAt(0)

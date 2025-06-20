@@ -1,4 +1,5 @@
 import { Canvas, getCanvas } from './canvas'
+import { MESSAGE_ANIMATION_INTERVAL_MS, MESSAGE_CANVAS_ID } from './consts'
 import {
 	Char,
 	getColorFrompalette,
@@ -6,9 +7,6 @@ import {
 	TextFx,
 } from './lib'
 import { RendererParams } from './renderer'
-
-const MESSAGE_CANVAS_ID = 'odyc-message-canvas'
-const ANIMATION_INTERVAL_MS = 30
 
 export type MessageBoxParams = {
 	messageBackground: string | number
@@ -99,7 +97,7 @@ export class MessageBox {
 		this.#animationId = requestAnimationFrame(this.#update)
 		if (
 			time - this.#lastFrameTime <
-			(this.#animationIntervalMs || ANIMATION_INTERVAL_MS)
+			(this.#animationIntervalMs || MESSAGE_ANIMATION_INTERVAL_MS)
 		)
 			return
 		this.#render(time)

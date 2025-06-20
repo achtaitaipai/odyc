@@ -1,5 +1,4 @@
 // https://github.com/dhepper/font8x8
-export const FONT_SIZE = 8
 
 //U+0000 - U+007F
 export const basicLatin = [
