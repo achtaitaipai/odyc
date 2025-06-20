@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { charToSprite } from '../../../dist'
 
-test('add to cell', async () => {
+test('converts characters to sprites correctly', async () => {
 	'0123456789abcdefghijklmnopqrstuvwsyzABCDEFGHIJKLMNOPQRSTUVWSYZ'
 		.split('')
 		.forEach((c) => {
