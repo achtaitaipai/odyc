@@ -1,7 +1,14 @@
-import { expect, test } from 'vitest'
-import { makeScreenshot } from '../../../dist'
+import { expect, it } from 'vitest'
+import { createGame, makeScreenshot } from '../../../dist'
 
-test('creates instance with correct methods', () => {
+it('throws error if createGame is not called', () => {
+	expect(() => makeScreenshot()).toThrow(
+		'No visible canvas frames found for screenshot',
+	)
+})
+
+it('creates instance with correct methods', () => {
+	createGame()
 	const screenshot = makeScreenshot()
 
 	expect(screenshot).toBeDefined()
@@ -10,7 +17,8 @@ test('creates instance with correct methods', () => {
 	expect(typeof screenshot.dataUrl).toBe('string')
 })
 
-test('dataUrl returns valid data URL', () => {
+it('dataUrl returns valid data URL', () => {
+	createGame()
 	const screenshot = makeScreenshot()
 	const dataUrl = screenshot.dataUrl
 
@@ -18,7 +26,8 @@ test('dataUrl returns valid data URL', () => {
 	expect(dataUrl.length).toBeGreaterThan(100)
 })
 
-test('update method works', () => {
+it('update method works', () => {
+	createGame()
 	const screenshot = makeScreenshot()
 
 	expect(() => screenshot.update()).not.toThrow()
@@ -27,7 +36,8 @@ test('update method works', () => {
 	expect(updatedDataUrl).toMatch(/^data:image\/png;base64,/)
 })
 
-test('save method exists and is callable', () => {
+it('save method exists and is callable', () => {
+	createGame()
 	const screenshot = makeScreenshot()
 
 	expect(() => screenshot.save).not.toThrow()
