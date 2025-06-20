@@ -1,7 +1,7 @@
 import { FONT_SIZE } from '../consts'
 import { characters } from '../lib'
 
-export function charToSprite(char: string, color?: string) {
+export function charToSprite(char: string, color: string | number = 0) {
 	const charCode = char.charCodeAt(0)
 	const charSet = characters.find(
 		(el) => charCode >= el.start && charCode < el.start + el.characters.length,
