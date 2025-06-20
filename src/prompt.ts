@@ -106,14 +106,14 @@ export class Prompt {
 				y = Math.min(y + 1, height - 1)
 				break
 			case 'ACTION':
-				this.#close()
+				this.close()
 				return
 		}
 		this.#index = Math.min(y * OPTIONS_BY_LINE + x, this.#options.length - 1)
 		this.#render()
 	}
 
-	#close() {
+	close() {
 		this.isOpen = false
 		this.#canvas.hide()
 		this.#resolvePromise?.(this.#index)

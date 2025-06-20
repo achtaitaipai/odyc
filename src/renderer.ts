@@ -42,8 +42,7 @@ class Renderer {
 		this.cellWidth = options.cellWidth
 		this.cellHeight = options.cellHeight
 		this.colors = options.colors
-		if (options.background)
-			this.background = getColorFromPalette(options.background, this.colors)
+		this.background = options.background
 
 		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID })
 		this.canvas.show()
@@ -73,16 +72,17 @@ class Renderer {
 		if (!playerIsDraw) this.#drawTile(player, camera)
 	}
 
-	clear() {
+	clear(color?: number | string) {
 		this.canvas.setSize(
 			this.cellWidth * this.screenWidth * this.#zoom,
 			this.cellHeight * this.screenHeight * this.#zoom,
 		)
-		if (this.background === undefined) return
+		const background = color ?? this.background
+		if (background === undefined || null) return
 		if (typeof this.background === 'number')
 			this.ctx.fillStyle =
 				this.colors[this.background] ?? this.colors[0] ?? 'black'
-		else this.ctx.fillStyle = this.background
+		else this.ctx.fillStyle = getColorFromPalette(background, this.colors)
 		this.ctx.fillRect(
 			0,
 			0,
@@ -145,3 +145,4 @@ class Renderer {
 }
 
 export const initRenderer = (options: RendererParams) => new Renderer(options)
+export type { Renderer }

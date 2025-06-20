@@ -1,13 +1,15 @@
+import { clearPreviousGame, setClearGame } from './clearGame.js'
 import { Dialog } from './dialog.js'
 import type { Ender } from './ender.js'
-import { Filter } from './filter.js'
 import { GameState } from './gameState/index.js'
 import { ActorState } from './gameState/types.js'
 import { MessageBox } from './messageBox.js'
 import { MenuOption, Prompt } from './prompt.js'
+import { Renderer } from './renderer.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { PlaySoundArgs, SoundPlayer } from './sound.js'
 import { Position, Unwrap } from './types.js'
+
 export const initGameApi = <T extends string>(
 	gameState: GameState<T>,
 	dialog: Dialog,
@@ -15,6 +17,7 @@ export const initGameApi = <T extends string>(
 	soundPlayer: SoundPlayer,
 	ender: Ender,
 	messageBox: MessageBox,
+	renderer: Renderer,
 ) => {
 	const gameApi = {
 		player: gameState.player.facade,
@@ -55,5 +58,6 @@ export const initGameApi = <T extends string>(
 			return gameState.turn.value
 		},
 	}
+	setClearGame(renderer, dialog, messageBox, prompt, gameApi)
 	return gameApi
 }

@@ -1,4 +1,5 @@
 import { initCamera } from './camera.js'
+import { clearPreviousGame } from './clearGame.js'
 import { Config, defaultConfig } from './config.js'
 import { initDialog } from './dialog.js'
 import { initEnder } from './ender.js'
@@ -13,9 +14,12 @@ import { initPrompt } from './prompt.js'
 import { initRenderer } from './renderer.js'
 import { initSoundPlayer } from './sound.js'
 
+let clearPrevious: (() => void) | null
+
 export const createGame = <T extends string>(
 	userConfig?: Partial<Config<T>>,
 ) => {
+	clearPrevious?.()
 	const config: Config<T> = Object.assign({}, defaultConfig, userConfig)
 	const gameState = initGameState(config)
 	const soundPlayer = initSoundPlayer(config)
@@ -57,6 +61,8 @@ export const createGame = <T extends string>(
 
 	gameState.subscribe(renderGame)
 
+	clearPreviousGame()
+
 	if (config.title) messageBox.open(config.title)
 
 	renderGame()
@@ -68,5 +74,6 @@ export const createGame = <T extends string>(
 		soundPlayer,
 		ender,
 		messageBox,
+		renderer,
 	)
 }

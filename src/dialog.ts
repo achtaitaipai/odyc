@@ -109,7 +109,7 @@ export class Dialog {
 
 		// If there are no more lines to display, close the dialog
 		if (this.#currentLineQueue === undefined) {
-			this.#close()
+			this.close()
 		}
 	}
 
@@ -135,7 +135,7 @@ export class Dialog {
 		this.#render(time)
 	}
 
-	#close() {
+	close() {
 		this.isOpen = false
 		this.#canvas.hide()
 		this.#lineCursor = 0
