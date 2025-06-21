@@ -1,6 +1,6 @@
 {
 	"name": "odyc",
-	"version": "0.0.115",
+	"version": "0.0.116",
 	"description": "A tiny JavaScript library to create narrative games with pixels, sounds, and text.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
