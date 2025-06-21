@@ -20,8 +20,7 @@
 		"test:once": "vitest run",
 		"prepublishOnly": "npm run lint && npm run build && npm run test:once",
 		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
-		"publish:latest": "npm version patch && npm publish --access public --tag latest",
-		"release": "npm run lint && npm version patch  && git add . && git commit -m 'build: release' && git push --follow-tags"
+		"release": "npm run prepublishOnly && npm version patch && npm publish --access public && git push --follow-tags && gh release create v$(node -p \"require('./package.json').version\") --generate-notes"
 	},
 	"devDependencies": {
 		"@vitest/browser": "^3.2.4",
