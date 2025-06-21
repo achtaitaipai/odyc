@@ -7,13 +7,16 @@ export type PlayerParams = {
 	position?: Position
 	onTurn?: (player: Player['facade']) => any
 	onInput?: (input: Input) => any
+	visible?: boolean
 }
 
 export class Player {
 	#savedSprite: Tile | null
 	#savedPosition: Position
+	#savedVisible: boolean
 	#sprite: Tile | null
 	#position: Position
+	#visible: boolean
 	#onTurn?: (target: Player['facade']) => any
 	#onInput?: (input: Input) => any
 	#observable: Observable
@@ -22,8 +25,10 @@ export class Player {
 	constructor(params: PlayerParams) {
 		this.#savedSprite = params.sprite ?? null
 		this.#savedPosition = params.position ?? [0, 0]
+		this.#savedVisible = params.visible ?? true
 		this.#sprite = params.sprite ?? null
 		this.#position = params.position ?? [0, 0]
+		this.#visible = params.visible ?? true
 		this.#onTurn = params.onTurn
 		this.#onInput = params.onInput
 		this.#observable = createObservable()
@@ -36,11 +41,13 @@ export class Player {
 	saveCurrentState() {
 		this.#savedSprite = this.#sprite
 		this.#savedPosition = [...this.#position]
+		this.#savedVisible = this.visible
 	}
 
 	restoreSavedState() {
 		this.#sprite = this.#savedSprite
 		this.#position = [...this.#savedPosition]
+		this.#visible = this.#savedVisible
 		this.#observable.notify()
 	}
 
@@ -50,6 +57,15 @@ export class Player {
 
 	dispatchOnInput(input: Input) {
 		this.#onInput?.(input)
+	}
+
+	get visible() {
+		return this.#visible
+	}
+
+	set visible(value: boolean) {
+		this.#visible = value
+		this.#observable.notify()
 	}
 
 	get sprite() {
@@ -108,6 +124,12 @@ export class Player {
 			},
 			get direction() {
 				return self.direction
+			},
+			get visible() {
+				return self.visible
+			},
+			set visible(value: boolean) {
+				self.visible = value
 			},
 		}
 	}

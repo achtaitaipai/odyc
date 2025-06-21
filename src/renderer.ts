@@ -63,7 +63,10 @@ class Renderer {
 				actor.position[0] === player.position[0] &&
 				actor.position[1] === player.position[1]
 			) {
-				this.#drawTile(player, camera)
+				if (player.visible) {
+					this.#drawTile(player, camera)
+				}
+
 				this.#drawTile(actor, camera)
 				playerIsDraw = true
 			} else this.#drawTile(actor, camera)
