@@ -35,9 +35,7 @@ export const createGame = <T extends string>(
 		gameFilter?.setUniforms(gameState.filterUniforms.get())
 		camera.update(gameState.player.position, gameState.gameMap.dimensions)
 
-		if (gameState.player.visible) {
-			renderer.render(gameState.player, gameState.actors.get(), camera)
-		}
+		renderer.render(gameState.player, gameState.actors.get(), camera)
 
 		gameState.actors.handleScreenEvents(camera)
 		gameFilter?.render()

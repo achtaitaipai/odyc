@@ -5,14 +5,12 @@ import { createGame } from '../../../dist/index'
 export const init = () => {
 	const game = createGame({
 		map: ``,
-		background: "black",
+		background: 'black',
 		screenWidth: 1,
 		screenHeight: 1,
 		cellWidth: 11,
 		cellHeight: 11,
-		colors: [
-		"white"
-		],
+		colors: ['white'],
 		player: {
 			visible: true,
 			sprite: `
