@@ -6,3 +6,5 @@ example
 # Tests (Vitest visual on failure)
 __screenshots__
 .github/snapshots/
+
+CLAUDE.md
