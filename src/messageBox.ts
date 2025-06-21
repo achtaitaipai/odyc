@@ -8,8 +8,13 @@ import {
 } from './lib'
 import { RendererParams } from './renderer'
 
+/**
+ * Message box configuration parameters
+ */
 export type MessageBoxParams = {
+	/** Background color for message box (color index or CSS color) */
 	messageBackground: string | number
+	/** Text color for message content (color index or CSS color) */
 	messageColor: string | number
 	messageInternvalMs?: number
 	colors: RendererParams['colors']

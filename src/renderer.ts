@@ -15,12 +15,21 @@ export type Drawable = {
 	visible?: boolean | null
 }
 
+/**
+ * Renderer configuration parameters
+ */
 export type RendererParams = {
+	/** Width of each cell/sprite in pixels */
 	cellWidth: number
+	/** Height of each cell/sprite in pixels */
 	cellHeight: number
+	/** Screen width measured in cells */
 	screenWidth: number
+	/** Screen height measured in cells */
 	screenHeight: number
+	/** Color palette array - supports up to 62 colors */
 	colors: string[]
+	/** Background color (color index or CSS color) */
 	background?: string | number
 }
 

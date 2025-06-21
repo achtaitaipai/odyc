@@ -2,11 +2,33 @@ import { Input } from '../inputs.js'
 import { createObservable, Observable } from '../lib/observer.js'
 import { Position, Tile } from '../types.js'
 
+/**
+ * Player configuration parameters
+ * @example
+ * ```typescript
+ * const playerConfig = {
+ *   sprite: 0, // Use color index 0
+ *   position: [2, 3], // Start at coordinates x=2, y=3
+ *   visible: true,
+ *   onInput: (input) => {
+ *     if (input === 'ACTION') console.log('Player pressed action!');
+ *   },
+ *   onTurn: (player) => {
+ *     // Custom logic executed each turn
+ *   }
+ * }
+ * ```
+ */
 export type PlayerParams = {
+	/** Player sprite - can be a color index (0-9), single character, or multi-line pixel art string */
 	sprite?: Tile
+	/** Starting position as [x, y] coordinates on the game grid */
 	position?: Position
+	/** Callback executed at the end of each turn, receives player facade */
 	onTurn?: (player: Player['facade']) => any
+	/** Callback executed when player receives input, receives the input type */
 	onInput?: (input: Input) => any
+	/** Whether the player sprite is visible on screen (default: true) */
 	visible?: boolean
 }
 

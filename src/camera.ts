@@ -1,11 +1,18 @@
+import { GameStateParams } from './gameState/types.js'
+import { RendererParams } from './renderer.js'
 import { Position } from './types.js'
 
+/**
+ * Camera configuration parameters
+ */
 export type CameraParams = {
+	/** Camera width constraint */
 	cameraWidth?: number
+	/** Camera height constraint */
 	cameraHeight?: number
-	screenWidth: number
-	screenHeight: number
-	map: string
+	screenWidth: RendererParams['screenWidth']
+	screenHeight: RendererParams['screenHeight']
+	map: GameStateParams<string>['map']
 }
 type Rect = {
 	left: number

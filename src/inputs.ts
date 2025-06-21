@@ -7,7 +7,11 @@ import { createSingleton } from './lib'
 
 export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
 
+/**
+ * Input handler configuration parameters
+ */
 export type InputsHandlerParams = {
+	/** Key bindings for each input action - maps input types to keyboard event codes */
 	controls: Record<Input, string | string[]>
 }
 

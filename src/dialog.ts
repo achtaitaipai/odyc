@@ -14,10 +14,17 @@ import {
 import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
+/**
+ * Dialog configuration parameters
+ */
 export type DialogParams = {
+	/** Background color for dialog box (color index or CSS color) */
 	dialogBackground: string | number
+	/** Text color for dialog content (color index or CSS color) */
 	dialogColor: string | number
+	/** Border color for dialog box outline (color index or CSS color) */
 	dialogBorder: string | number
+	/** Text animation speed in milliseconds between character reveals */
 	dialogInternvalMs?: number
 	colors: RendererParams['colors']
 }

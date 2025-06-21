@@ -6,7 +6,11 @@ import {
 	type Sound,
 } from 'pfxr'
 import { createSingleton, isUrl } from './lib'
+/**
+ * Sound player configuration parameters
+ */
 export type SoundPlayerParams = {
+	/** Master volume level from 0.0 (silent) to 1.0 (full volume) */
 	volume: number
 }
 

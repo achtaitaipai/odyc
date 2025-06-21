@@ -7,12 +7,35 @@ import { MessageBoxParams } from './messageBox.js'
 import { DialogParams } from './dialog.js'
 import { FilterParams } from './shaders/filterSettings.js'
 
+/**
+ * Game configuration object for Odyc.js games.
+ * All properties are optional and will use sensible defaults if not provided.
+ * 
+ * @template T - String literal type for actor template keys used in the map
+ * @example
+ * ```typescript
+ * const config = {
+ *   player: { sprite: 0, position: [2, 3] },
+ *   templates: {
+ *     x: { solid: true, sprite: 4, onCollide: (target) => target.remove() }
+ *   },
+ *   map: `
+ *     ........
+ *     ..x.....
+ *     ........
+ *   `,
+ *   colors: ['#000', '#fff', '#f00'],
+ *   filter: { name: 'crt' }
+ * }
+ * ```
+ */
 export type Config<T extends string> = RendererParams &
 	InputsHandlerParams &
 	SoundPlayerParams &
 	CameraParams &
 	MessageBoxParams &
 	DialogParams & { filter?: FilterParams } & GameStateParams<T> & {
+		/** Game title displayed at the start of the game */
 		title?: string | string[]
 	}
 

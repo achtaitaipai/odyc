@@ -4,6 +4,9 @@ import fractalShader from './fractal.frag.glsl'
 import crtShader from './crt.frag.glsl'
 import neonShader from './neon.frag.glsl'
 
+/**
+ * Shader uniform values (scalars, vec2, vec3, vec4)
+ */
 export type Uniforms = Record<
 	string,
 	| number
@@ -58,6 +61,40 @@ type CustomFilterSettings = {
 	settings?: Uniforms
 }
 
+/**
+ * Visual filter configuration - supports built-in filters or custom shaders.
+ * 
+ * Built-in filters:
+ * - 'fractal': Creates a polygon of n sides for each pixel with configurable rotation and scale
+ * - 'crt': Simulates old CRT monitor with scanlines and screen curvature
+ * - 'neon': Adds glowing neon-like effect with bloom
+ * 
+ * @example
+ * ```typescript
+ * // Built-in filter
+ * const fractalFilter = {
+ *   name: 'fractal',
+ *   settings: {
+ *     sideCount: 6, // Hexagon
+ *     scale: 0.8,
+ *     rotation: 45
+ *   }
+ * }
+ * 
+ * // Custom shader filter
+ * const customFilter = {
+ *   fragment: `
+ *     precision mediump float;
+ *     uniform sampler2D u_texture;
+ *     varying vec2 v_texcoord;
+ *     void main() {
+ *       gl_FragColor = texture2D(u_texture, v_texcoord) * 0.8;
+ *     }
+ *   `,
+ *   settings: { customParam: 1.0 }
+ * }
+ * ```
+ */
 export type FilterParams =
 	| {
 			[K in FilterKey]: FilterSettingsOf<K>
