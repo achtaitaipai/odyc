@@ -1,11 +1,6 @@
 import { Screenshot } from '../lib'
 
-export function makeScreenshot() {
+export function makeScreenshot(filename: string) {
 	const screenshot = new Screenshot()
-	return {
-		save: screenshot.save,
-		get dataUrl() {
-			return screenshot.dataUrl
-		},
-	}
+	screenshot.save(filename)
 }
