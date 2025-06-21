@@ -16,7 +16,6 @@ export type MessageBoxParams = {
 	messageBackground: string | number
 	/** Text color for message content (color index or CSS color) */
 	messageColor: string | number
-	messageInternvalMs?: number
 	colors: RendererParams['colors']
 }
 
@@ -32,7 +31,6 @@ export class MessageBox {
 	#maxLines: number
 	#cursor = 0
 
-	#animationIntervalMs?: number
 
 	#animationId?: number
 	#lastFrameTime = 0
@@ -60,7 +58,6 @@ export class MessageBox {
 		this.#maxLines = Math.floor(
 			this.#canvasSize / (8 + this.#spaceBetweenLines),
 		)
-		this.#animationIntervalMs = params.messageInternvalMs
 
 		this.#canvas = getCanvas({ id: MESSAGE_CANVAS_ID, zIndex: 10 })
 		this.#canvas.hide()
@@ -102,7 +99,7 @@ export class MessageBox {
 		this.#animationId = requestAnimationFrame(this.#update)
 		if (
 			time - this.#lastFrameTime <
-			(this.#animationIntervalMs || MESSAGE_ANIMATION_INTERVAL_MS)
+			MESSAGE_ANIMATION_INTERVAL_MS
 		)
 			return
 		this.#render(time)
