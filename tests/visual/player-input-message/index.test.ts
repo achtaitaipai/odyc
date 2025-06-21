@@ -19,7 +19,7 @@ test('message shows after input', async () => {
 	await userEvent.keyboard('[ArrowDown]')
 	screenshot = await page.screenshot({ base64: true, save: false })
 	await expect(screenshot).toMatchImageSnapshot('game')
-	
+
 	// Trigger message
 	await userEvent.keyboard('[Space]')
 	screenshot = await page.screenshot({ base64: true, save: false })
