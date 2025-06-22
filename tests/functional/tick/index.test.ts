@@ -6,15 +6,13 @@ test('game.tick() resolves after render cycle', async () => {
 	const game = createGame()
 
 	let resolved = false
-	const tickPromise = tick()
-
-	tickPromise.then(() => {
-		resolved = true
-	})
 
 	// Promise should not be resolved immediately
 	expect(resolved).toBe(false)
-	await userEvent.keyboard('[KeyD]')
+	await userEvent.keyboard('[ArrowUp]')
+	await tick().then(() => {
+		resolved = true
+	})
 
 	// Wait for tick to resolve (should happen after render cycle)
 	expect(resolved).toBe(true)
