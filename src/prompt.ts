@@ -12,7 +12,7 @@ import {
 } from './consts'
 import { DialogParams } from './dialog'
 import { Input } from './inputs'
-import { TextFx } from './lib'
+import { resolveTick, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 export interface MenuOption {
@@ -85,6 +85,7 @@ export class Prompt {
 		this.#options = options
 
 		this.#render()
+		resolveTick()
 
 		return new Promise<number>((res) => {
 			this.#resolvePromise = (index: number) => res(index)
@@ -123,6 +124,7 @@ export class Prompt {
 		this.isOpen = false
 		this.#canvas.hide()
 		this.#resolvePromise?.(this.#index)
+		resolveTick()
 	}
 
 	#render() {

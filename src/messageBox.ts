@@ -1,6 +1,6 @@
 import { Canvas, getCanvas } from './canvas'
 import { TEXT_ANIMATION_INTERVAL_MS, MESSAGE_CANVAS_ID } from './consts'
-import { Char, getColorFrompalette, TextFx } from './lib'
+import { Char, getColorFrompalette, resolveTick, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 /**
@@ -18,7 +18,7 @@ export class MessageBox {
 	#canvas: Canvas
 	#ctx: CanvasRenderingContext2D
 	isOpen = false
-	#resolePromise?: () => void
+	#resolvePromise?: () => void
 
 	#texts: string[] = []
 	#displayedLines: Char[][] = []
@@ -72,8 +72,9 @@ export class MessageBox {
 			this.#maxCharsPerLine,
 		)
 		this.#canvas.show()
-		this.#animationId = requestAnimationFrame(this.#update)
-		return new Promise<void>((res) => (this.#resolePromise = () => res()))
+		this.#update()
+		resolveTick()
+		return new Promise<void>((res) => (this.#resolvePromise = () => res()))
 	}
 
 	next() {
@@ -89,7 +90,8 @@ export class MessageBox {
 		}
 	}
 
-	#update = (time: number) => {
+	#update = () => {
+		const time = performance.now()
 		this.#animationId = requestAnimationFrame(this.#update)
 		if (time - this.#lastFrameTime < TEXT_ANIMATION_INTERVAL_MS) return
 		this.#render(time)
@@ -122,7 +124,8 @@ export class MessageBox {
 		this.isOpen = false
 		if (this.#animationId) cancelAnimationFrame(this.#animationId)
 		this.#canvas.hide()
-		this.#resolePromise?.()
+		this.#resolvePromise?.()
+		resolveTick()
 	}
 }
 
