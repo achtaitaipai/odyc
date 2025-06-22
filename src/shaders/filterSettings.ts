@@ -63,12 +63,12 @@ type CustomFilterSettings = {
 
 /**
  * Visual filter configuration - supports built-in filters or custom shaders.
- * 
+ *
  * Built-in filters:
  * - 'fractal': Creates a polygon of n sides for each pixel with configurable rotation and scale
  * - 'crt': Simulates old CRT monitor with scanlines and screen curvature
  * - 'neon': Adds glowing neon-like effect with bloom
- * 
+ *
  * @example
  * ```typescript
  * // Built-in filter
@@ -80,7 +80,7 @@ type CustomFilterSettings = {
  *     rotation: 45
  *   }
  * }
- * 
+ *
  * // Custom shader filter
  * const customFilter = {
  *   fragment: `

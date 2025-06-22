@@ -1,11 +1,6 @@
 import { Canvas, getCanvas } from './canvas'
-import { MESSAGE_ANIMATION_INTERVAL_MS, MESSAGE_CANVAS_ID } from './consts'
-import {
-	Char,
-	getColorFrompalette,
-	getColorFrompalette as getColorFromPalette,
-	TextFx,
-} from './lib'
+import { TEXT_ANIMATION_INTERVAL_MS, MESSAGE_CANVAS_ID } from './consts'
+import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 /**
@@ -31,7 +26,6 @@ export class MessageBox {
 	#maxLines: number
 	#cursor = 0
 
-
 	#animationId?: number
 	#lastFrameTime = 0
 
@@ -47,7 +41,7 @@ export class MessageBox {
 
 	constructor(params: MessageBoxParams) {
 		this.#configColors = params.colors
-		this.#backgroundColor = getColorFromPalette(
+		this.#backgroundColor = getColorFrompalette(
 			params.messageBackground,
 			params.colors,
 		)
@@ -97,11 +91,7 @@ export class MessageBox {
 
 	#update = (time: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (
-			time - this.#lastFrameTime <
-			MESSAGE_ANIMATION_INTERVAL_MS
-		)
-			return
+		if (time - this.#lastFrameTime < TEXT_ANIMATION_INTERVAL_MS) return
 		this.#render(time)
 	}
 
