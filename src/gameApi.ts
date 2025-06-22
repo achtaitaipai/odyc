@@ -60,7 +60,11 @@ export const initGameApi = <T extends string>(
 		clear: (color?: number | string) => {
 			clearPreviousGame(color)
 		},
+		onRender: (callback: () => void) => {
+			renderer.subscribe(callback)
+		},
 	}
 	setClearGame(renderer, dialog, messageBox, prompt, gameApi)
+
 	return gameApi
 }

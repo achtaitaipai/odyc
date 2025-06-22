@@ -5,7 +5,9 @@ import { Player } from './gameState/player'
 import { ActorState } from './gameState/types'
 import {
 	createGridFromString,
+	createObservable,
 	getColorFrompalette as getColorFromPalette,
+	Observable,
 } from './lib'
 import { Position, Tile } from './types.js'
 
@@ -35,6 +37,7 @@ export type RendererParams = {
 
 class Renderer {
 	canvas: Canvas
+	#observable: Observable
 	#zoom = 24
 	screenWidth: number
 	screenHeight: number
@@ -56,6 +59,12 @@ class Renderer {
 		this.canvas.show()
 
 		this.ctx = this.canvas.get2dCtx()
+
+		this.#observable = createObservable()
+	}
+
+	subscribe(callback: () => void) {
+		this.#observable.subscribe(callback)
 	}
 
 	render<T extends string>(
@@ -81,6 +90,8 @@ class Renderer {
 			} else this.#drawTile(actor, camera)
 		}
 		if (!playerIsDraw) this.#drawTile(player, camera)
+
+		this.#observable.notify()
 	}
 
 	clear(color?: number | string) {
@@ -100,6 +111,8 @@ class Renderer {
 			this.screenWidth * this.cellWidth * this.#zoom,
 			this.screenHeight * this.cellHeight * this.#zoom,
 		)
+
+		this.#observable.notify()
 	}
 
 	#drawTile(item: Drawable, camera: Camera) {

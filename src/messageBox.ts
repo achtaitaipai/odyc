@@ -31,7 +31,6 @@ export class MessageBox {
 	#maxLines: number
 	#cursor = 0
 
-
 	#animationId?: number
 	#lastFrameTime = 0
 
@@ -97,11 +96,7 @@ export class MessageBox {
 
 	#update = (time: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (
-			time - this.#lastFrameTime <
-			MESSAGE_ANIMATION_INTERVAL_MS
-		)
-			return
+		if (time - this.#lastFrameTime < MESSAGE_ANIMATION_INTERVAL_MS) return
 		this.#render(time)
 	}
 
