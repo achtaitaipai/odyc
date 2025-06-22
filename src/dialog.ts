@@ -1,6 +1,5 @@
 import { Canvas, getCanvas } from './canvas'
 import {
-	DIALOG_SPEED_NORMAL,
 	DIALOG_BOX_OUTLINE,
 	DIALOG_CANVAS_ID,
 	DIALOG_CANVAS_SIZE,
@@ -10,6 +9,7 @@ import {
 	DIALOG_MAX_LINES,
 	DIALOG_PADDING_X,
 	DIALOG_PADDING_Y,
+	DIALOG_SPEED,
 	TEXT_ANIMATION_INTERVAL_MS,
 } from './consts'
 import { Char, getColorFrompalette, TextFx } from './lib'
@@ -26,7 +26,7 @@ export type DialogParams = {
 	/** Border color for dialog box outline (color index or CSS color) */
 	dialogBorder: string | number
 	/** Text animation speed in milliseconds between character reveals */
-	characterInternvalMs?: number
+	dialogSpeed: keyof typeof DIALOG_SPEED
 	colors: RendererParams['colors']
 }
 
@@ -55,7 +55,7 @@ export class Dialog {
 	#contentColor: string
 	#borderColor: string
 
-	#animationIntervalMs?: number
+	#charactersIntervalMs: number
 
 	#boxHeight: number
 	#boxWidth: number
@@ -69,7 +69,7 @@ export class Dialog {
 		)
 		this.#contentColor = getColorFrompalette(params.dialogColor, params.colors)
 		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
-		this.#animationIntervalMs = params.characterInternvalMs
+		this.#charactersIntervalMs = DIALOG_SPEED[params.dialogSpeed]
 
 		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })
 		this.#canvas.setSize(DIALOG_CANVAS_SIZE, DIALOG_CANVAS_SIZE)
@@ -134,10 +134,7 @@ export class Dialog {
 		if (time - this.#lastAnimationTime < TEXT_ANIMATION_INTERVAL_MS) return
 		this.#lastAnimationTime = time
 
-		if (
-			time - this.#lastCharTime >=
-			(this.#animationIntervalMs || DIALOG_SPEED_NORMAL)
-		) {
+		if (time - this.#lastCharTime >= this.#charactersIntervalMs) {
 			this.#lastCharTime = time
 			if (
 				this.#currentLineQueue?.length === 0 &&

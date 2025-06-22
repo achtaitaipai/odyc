@@ -71,6 +71,7 @@ export const defaultConfig: Config<string> = {
 	dialogBackground: 0,
 	dialogColor: 1,
 	dialogBorder: 1,
+	dialogSpeed: 'NORMAL',
 	screenWidth: 8,
 	screenHeight: 8,
 	cellWidth: 8,

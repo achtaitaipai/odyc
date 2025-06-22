@@ -13,9 +13,12 @@ export const DIALOG_PADDING_X = 8
 export const DIALOG_PADDING_Y = 12
 export const DIALOG_FONT_SIZE = 8
 export const DIALOG_BOX_OUTLINE = 2
-export const DIALOG_SPEED_NORMAL = 30
-export const DIALOG_SPEED_FAST = 15
-export const DIALOG_SPEED_SLOW = 60
+
+export const DIALOG_SPEED = {
+	SLOW: 60,
+	NORMAL: 30,
+	FAST: 15,
+}
 
 export const FILTER_CANVAS_ID = 'odyc-filter-canvas'
 

@@ -1,7 +1,6 @@
 const state = {}
 
 import { createGame } from '../../../dist/index'
-import { DIALOG_SPEED_SLOW } from '../../../src/consts'
 
 export const init = () => {
 	const game = createGame({
