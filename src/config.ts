@@ -10,7 +10,7 @@ import { FilterParams } from './shaders/filterSettings.js'
 /**
  * Game configuration object for Odyc.js games.
  * All properties are optional and will use sensible defaults if not provided.
- *
+ * 
  * @template T - String literal type for actor template keys used in the map
  * @example
  * ```typescript
