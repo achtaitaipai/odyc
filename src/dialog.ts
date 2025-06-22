@@ -1,6 +1,6 @@
 import { Canvas, getCanvas } from './canvas'
 import {
-	DIALOG_ANIMATION_INTERVAL_MS,
+	DIALOG_SPEED_NORMAL,
 	DIALOG_BOX_OUTLINE,
 	DIALOG_CANVAS_ID,
 	DIALOG_CANVAS_SIZE,
@@ -130,7 +130,7 @@ export class Dialog {
 		this.#animationId = requestAnimationFrame(this.#update)
 		if (
 			time - this.#lastFrameTime <
-			(this.#animationIntervalMs || DIALOG_ANIMATION_INTERVAL_MS)
+			(this.#animationIntervalMs || DIALOG_SPEED_NORMAL)
 		)
 			return
 		this.#lastFrameTime = time
