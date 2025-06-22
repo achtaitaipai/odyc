@@ -25,7 +25,7 @@ export type DialogParams = {
 	dialogColor: string | number
 	/** Border color for dialog box outline (color index or CSS color) */
 	dialogBorder: string | number
-	/** Text animation speed in milliseconds between character reveals */
+	/** Dialog typing speed ('SLOW', 'NORMAL', 'FAST') */
 	dialogSpeed: keyof typeof DIALOG_SPEED
 	colors: RendererParams['colors']
 }
