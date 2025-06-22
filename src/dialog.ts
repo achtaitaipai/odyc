@@ -12,7 +12,7 @@ import {
 	DIALOG_SPEED,
 	TEXT_ANIMATION_INTERVAL_MS,
 } from './consts'
-import { Char, getColorFrompalette, TextFx } from './lib'
+import { Char, getColorFrompalette, resolveTick, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 /**
@@ -100,7 +100,8 @@ export class Dialog {
 		this.#currentLineQueue = this.#remainingLines.shift()
 		this.#displayedLines = new Array(DIALOG_MAX_LINES).fill(null).map((_) => [])
 
-		this.#animationId = requestAnimationFrame(this.#update)
+		this.#update()
+		resolveTick()
 
 		return new Promise<void>((res) => {
 			this.#resolvePromise = () => res()
@@ -128,7 +129,8 @@ export class Dialog {
 		}
 	}
 
-	#update = (time: number) => {
+	#update = () => {
+		const time = performance.now()
 		this.#animationId = requestAnimationFrame(this.#update)
 
 		if (time - this.#lastAnimationTime < TEXT_ANIMATION_INTERVAL_MS) return
@@ -157,6 +159,7 @@ export class Dialog {
 		this.#lineCursor = 0
 		this.#resolvePromise?.()
 		this.#animationId && cancelAnimationFrame(this.#animationId)
+		resolveTick()
 	}
 
 	#render = (time: number) => {
