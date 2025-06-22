@@ -7,7 +7,7 @@ import { PlayerParams } from './player.js'
 /**
  * Actor templates that define behavior for game entities.
  * Each template corresponds to a character used in the game map string.
- * 
+ *
  * @template T - String literal type for template keys (map characters)
  * @example
  * ```typescript
@@ -40,7 +40,7 @@ export type Templates<T extends string = string> = {
 /**
  * Template defining actor behavior and properties.
  * All properties are optional and define how actors behave in the game.
- * 
+ *
  * @template T - String literal type for template key
  * @example
  * ```typescript

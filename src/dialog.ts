@@ -1,6 +1,5 @@
 import { Canvas, getCanvas } from './canvas'
 import {
-	DIALOG_ANIMATION_INTERVAL_MS,
 	DIALOG_BOX_OUTLINE,
 	DIALOG_CANVAS_ID,
 	DIALOG_CANVAS_SIZE,
@@ -10,6 +9,8 @@ import {
 	DIALOG_MAX_LINES,
 	DIALOG_PADDING_X,
 	DIALOG_PADDING_Y,
+	DIALOG_SPEED,
+	TEXT_ANIMATION_INTERVAL_MS,
 } from './consts'
 import { Char, getColorFrompalette, TextFx } from './lib'
 import { RendererParams } from './renderer'
@@ -25,7 +26,7 @@ export type DialogParams = {
 	/** Border color for dialog box outline (color index or CSS color) */
 	dialogBorder: string | number
 	/** Text animation speed in milliseconds between character reveals */
-	dialogInternvalMs?: number
+	dialogSpeed: keyof typeof DIALOG_SPEED
 	colors: RendererParams['colors']
 }
 
@@ -43,7 +44,8 @@ export class Dialog {
 	#displayedLines: Char[][] = []
 	#lineCursor = 0
 	#animationId?: number
-	#lastFrameTime = 0
+	#lastCharTime = 0
+	#lastAnimationTime = 0
 
 	#textFx: TextFx
 
@@ -53,7 +55,7 @@ export class Dialog {
 	#contentColor: string
 	#borderColor: string
 
-	#animationIntervalMs?: number
+	#charactersIntervalMs: number
 
 	#boxHeight: number
 	#boxWidth: number
@@ -67,7 +69,7 @@ export class Dialog {
 		)
 		this.#contentColor = getColorFrompalette(params.dialogColor, params.colors)
 		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
-		this.#animationIntervalMs = params.dialogInternvalMs
+		this.#charactersIntervalMs = DIALOG_SPEED[params.dialogSpeed]
 
 		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })
 		this.#canvas.setSize(DIALOG_CANVAS_SIZE, DIALOG_CANVAS_SIZE)
@@ -128,23 +130,24 @@ export class Dialog {
 
 	#update = (time: number) => {
 		this.#animationId = requestAnimationFrame(this.#update)
-		if (
-			time - this.#lastFrameTime <
-			(this.#animationIntervalMs || DIALOG_ANIMATION_INTERVAL_MS)
-		)
-			return
-		this.#lastFrameTime = time
-		if (
-			this.#currentLineQueue?.length === 0 &&
-			this.#lineCursor < DIALOG_MAX_LINES - 1
-		) {
-			this.#lineCursor++
-			this.#currentLineQueue = this.#remainingLines?.shift()
+
+		if (time - this.#lastAnimationTime < TEXT_ANIMATION_INTERVAL_MS) return
+		this.#lastAnimationTime = time
+
+		if (time - this.#lastCharTime >= this.#charactersIntervalMs) {
+			this.#lastCharTime = time
+			if (
+				this.#currentLineQueue?.length === 0 &&
+				this.#lineCursor < DIALOG_MAX_LINES - 1
+			) {
+				this.#lineCursor++
+				this.#currentLineQueue = this.#remainingLines?.shift()
+			}
+
+			let newChar = this.#currentLineQueue?.shift()
+
+			if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
 		}
-
-		let newChar = this.#currentLineQueue?.shift()
-
-		if (newChar) this.#displayedLines[this.#lineCursor]?.push(newChar)
 		this.#render(time)
 	}
 
