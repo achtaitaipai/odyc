@@ -13,6 +13,7 @@ import { initMessageBox } from './messageBox.js'
 import { initPrompt } from './prompt.js'
 import { initRenderer } from './renderer.js'
 import { initSoundPlayer } from './sound.js'
+import { resolveTick } from './lib/index.js'
 
 let clearPrevious: (() => void) | null
 
@@ -36,9 +37,11 @@ export const createGame = <T extends string>(
 		camera.update(gameState.player.position, gameState.gameMap.dimensions)
 
 		renderer.render(gameState.player, gameState.actors.get(), camera)
+		gameFilter?.render()
 
 		gameState.actors.handleScreenEvents(camera)
-		gameFilter?.render()
+
+		resolveTick()
 	}, 60)
 
 	const gameLoop = initGameLoop({
