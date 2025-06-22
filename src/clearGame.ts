@@ -1,5 +1,6 @@
 import { Dialog } from './dialog'
 import { initGameApi } from './gameApi'
+import { resolveTick } from './lib'
 import { MessageBox } from './messageBox'
 import { Prompt } from './prompt'
 import { Renderer } from './renderer'
@@ -24,4 +25,5 @@ export function setClearGame<T extends string>(
 export function clearPreviousGame(color?: number | string) {
 	currentClearGameMethod?.(color)
 	currentClearGameMethod = null
+	resolveTick()
 }
