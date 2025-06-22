@@ -1,5 +1,8 @@
 export const FONT_SIZE = 8
 
+// Animation frame timing (should be <= than dialog speed)
+export const TEXT_ANIMATION_INTERVAL_MS = 15
+
 export const DIALOG_CANVAS_ID = 'odyc-dialog-canvas'
 export const DIALOG_CANVAS_SIZE = 384
 export const DIALOG_ANIMATION_INTERVAL_MS = 30
@@ -21,7 +24,6 @@ export const INPUT_TIME_BETWEEN_TOUCH = 200
 export const INPUT_MIN_SWIPE_DIST = 30
 
 export const MESSAGE_CANVAS_ID = 'odyc-message-canvas'
-export const MESSAGE_ANIMATION_INTERVAL_MS = 30
 
 export const PROMPT_CANVAS_ID = 'odyc-prompt-canvas'
 export const PROMPT_CANVAS_SIZE = 384
