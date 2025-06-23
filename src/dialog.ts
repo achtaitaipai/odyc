@@ -63,10 +63,7 @@ export class Dialog {
 	#boxY: number
 
 	constructor(params: DialogParams) {
-		this.#backgroundColor = resolveColor(
-			params.dialogBackground,
-			params.colors,
-		)
+		this.#backgroundColor = resolveColor(params.dialogBackground, params.colors)
 		this.#contentColor = resolveColor(params.dialogColor, params.colors)
 		this.#borderColor = resolveColor(params.dialogBorder, params.colors)
 		this.#charactersIntervalMs = DIALOG_SPEED[params.dialogSpeed]

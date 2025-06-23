@@ -52,10 +52,7 @@ export const isUrl = (str: string) => {
 	}
 }
 
-export const resolveColor = (
-	text: string | number,
-	palette: string[],
-) => {
+export const resolveColor = (text: string | number, palette: string[]) => {
 	text = `${text}`
 	if (text.length > 1) return text
 	const charIndex = COLORS_CHARSET.findIndex((ch) => ch === text)
