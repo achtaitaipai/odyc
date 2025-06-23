@@ -1,9 +1,12 @@
 import { COLORS_CHARSET } from '../consts'
 import { createGridFromString, getGridSize } from '../lib'
 
-export function mergeSprites(...sprites: string[]) {
-	if (sprites.length === 0) return ''
-	const grids = sprites.map(createGridFromString)
+export function mergeSprites(
+	...sprites: (string | false | null | undefined)[]
+) {
+	const validSprites = sprites.filter((el) => typeof el === 'string')
+	if (validSprites.length === 0) return ''
+	const grids = validSprites.map(createGridFromString)
 	const dimensions = grids.map(getGridSize)
 	const width = Math.max(...dimensions.map((el) => el[0]))
 	const height = Math.max(...dimensions.map((el) => el[1]))

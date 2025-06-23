@@ -55,6 +55,15 @@ describe('mergeSprites', () => {
 		const expected = '01\n24'
 		expect(mergeSprites('', sprite1, '', sprite2, '')).toBe(expected)
 	})
+	test('handles falsy values (false, null, undefined)', () => {
+		const sprite1 = '01\n23'
+		const sprite2 = '..\n.4'
+		const expected = '01\n24'
+		expect(mergeSprites(false, sprite1, null, sprite2, undefined)).toBe(expected)
+	})
+	test('returns empty string when all arguments are falsy', () => {
+		expect(mergeSprites(false, null, undefined)).toBe('')
+	})
 	test('handles sprites with different line lengths', () => {
 		const base = '000\n00\n0'
 		const overlay = '.1\n.\n..2'
