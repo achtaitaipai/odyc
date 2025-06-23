@@ -1,6 +1,6 @@
 import { Canvas, getCanvas } from './canvas'
 import { TEXT_ANIMATION_INTERVAL_MS, MESSAGE_CANVAS_ID } from './consts'
-import { Char, getColorFrompalette, resolveTick, TextFx } from './lib'
+import { Char, resolveColor, resolveTick, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 /**
@@ -41,11 +41,11 @@ export class MessageBox {
 
 	constructor(params: MessageBoxParams) {
 		this.#configColors = params.colors
-		this.#backgroundColor = getColorFrompalette(
+		this.#backgroundColor = resolveColor(
 			params.messageBackground,
 			params.colors,
 		)
-		this.#contentColor = getColorFrompalette(params.messageColor, params.colors)
+		this.#contentColor = resolveColor(params.messageColor, params.colors)
 		this.#maxCharsPerLine = Math.floor(
 			(this.#canvasSize - 2 * this.#paddingX) / 8,
 		)

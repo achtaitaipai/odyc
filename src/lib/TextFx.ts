@@ -1,7 +1,7 @@
 import { FONT_SIZE } from '../consts'
 import { RendererParams } from '../renderer'
 import { characters } from './font'
-import { getColorFrompalette } from './string'
+import { resolveColor } from './string'
 
 const EFFECTS = {
 	'~': 'waveY',
@@ -103,7 +103,7 @@ export class TextFx {
 			let posX = x + charIndex * FONT_SIZE
 			let posY = y
 			const charColor = char.color
-				? getColorFrompalette(char.color, this.#colors)
+				? resolveColor(char.color, this.#colors)
 				: null
 			if (charColor) ctx.fillStyle = charColor
 			else ctx.fillStyle = this.#defaultColor

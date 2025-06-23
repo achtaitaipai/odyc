@@ -39,3 +39,6 @@ export const PROMPT_FONT_SIZE = 8
 export const PROMPT_BOX_OUTLINE = 2
 
 export const RENDERER_CANVAS_ID = 'odyc-renderer-canvas'
+
+export const COLORS_CHARSET =
+	'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')

@@ -12,7 +12,7 @@ import {
 	DIALOG_SPEED,
 	TEXT_ANIMATION_INTERVAL_MS,
 } from './consts'
-import { Char, getColorFrompalette, resolveTick, TextFx } from './lib'
+import { Char, resolveColor, resolveTick, TextFx } from './lib'
 import { RendererParams } from './renderer'
 
 /**
@@ -63,12 +63,12 @@ export class Dialog {
 	#boxY: number
 
 	constructor(params: DialogParams) {
-		this.#backgroundColor = getColorFrompalette(
+		this.#backgroundColor = resolveColor(
 			params.dialogBackground,
 			params.colors,
 		)
-		this.#contentColor = getColorFrompalette(params.dialogColor, params.colors)
-		this.#borderColor = getColorFrompalette(params.dialogBorder, params.colors)
+		this.#contentColor = resolveColor(params.dialogColor, params.colors)
+		this.#borderColor = resolveColor(params.dialogBorder, params.colors)
 		this.#charactersIntervalMs = DIALOG_SPEED[params.dialogSpeed]
 
 		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })

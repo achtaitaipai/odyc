@@ -5,7 +5,7 @@ import { Player } from './gameState/player'
 import { ActorState } from './gameState/types'
 import {
 	createGridFromString,
-	getColorFrompalette as getColorFromPalette,
+	resolveColor as getColorFromPalette,
 } from './lib'
 import { Position, Tile } from './types.js'
 

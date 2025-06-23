@@ -1,3 +1,4 @@
+import { COLORS_CHARSET } from '../consts.js'
 import { Position } from '../types.js'
 
 export const createGridFromString = (template: string) => {
@@ -51,17 +52,14 @@ export const isUrl = (str: string) => {
 	}
 }
 
-const charset =
-	'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-
-export const getColorFrompalette = (
+export const resolveColor = (
 	text: string | number,
 	palette: string[],
 ) => {
 	text = `${text}`
 	if (text.length > 1) return text
-	if (!charset.includes(text)) return 'transparent'
-	const charIndex = charset.findIndex((ch) => ch === text)
+	const charIndex = COLORS_CHARSET.findIndex((ch) => ch === text)
+	if (charIndex === -1 || charIndex >= palette.length) return 'transparent'
 	const color = palette[charIndex]
 	return color ?? 'transparent'
 }
