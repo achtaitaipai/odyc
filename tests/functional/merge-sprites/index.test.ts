@@ -59,7 +59,9 @@ describe('mergeSprites', () => {
 		const sprite1 = '01\n23'
 		const sprite2 = '..\n.4'
 		const expected = '01\n24'
-		expect(mergeSprites(false, sprite1, null, sprite2, undefined)).toBe(expected)
+		expect(mergeSprites(false, sprite1, null, sprite2, undefined)).toBe(
+			expected,
+		)
 	})
 	test('returns empty string when all arguments are falsy', () => {
 		expect(mergeSprites(false, null, undefined)).toBe('')
