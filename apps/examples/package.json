@@ -7,12 +7,14 @@
 		"dev": "vite",
 		"lint": "tsc",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"create-example": "node scripts/create-example.js"
 	},
 	"dependencies": {
 		"odyc": "*"
 	},
 	"devDependencies": {
+		"globby": "^14.1.0",
 		"typescript": "~5.8.3",
 		"vite": "^6.3.5"
 	}
