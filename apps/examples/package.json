@@ -10,7 +10,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"odyc": "0.0.118"
+		"odyc": "*"
 	},
 	"devDependencies": {
 		"typescript": "~5.8.3",

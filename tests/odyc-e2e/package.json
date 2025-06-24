@@ -9,7 +9,7 @@
 		"test:once": "vitest run"
 	},
 	"dependencies": {
-		"odyc": "0.0.118"
+		"odyc": "*"
 	},
 	"devDependencies": {
 		"@vitest/browser": "^3.2.4",
