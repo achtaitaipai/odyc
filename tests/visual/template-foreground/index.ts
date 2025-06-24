@@ -7,9 +7,10 @@ export const init = () => {
 		templates: {
 			'.': { sprite: '0.', foreground: true },
 		},
+		colors: ['red', 'blue'],
 		map: '.',
 		player: {
-			sprite: '3',
+			sprite: '1',
 		},
 		screenWidth: 1,
 		screenHeight: 1,

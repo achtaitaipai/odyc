@@ -1,12 +1,13 @@
-// TODO: Replace with Vitest Visual Regression once implemented: https://github.com/vitest-dev/vitest/pull/8041
 import { server } from '@vitest/browser/context'
 import { Buffer } from 'buffer'
+import { expect } from 'vitest'
 
 // @ts-ignore Prevent Vitest exception with buffers
 window.Buffer = Buffer
 
 const { readFile, writeFile } = server.commands
 
+// TODO: Replace with Vitest Visual Regression once implemented: https://github.com/vitest-dev/vitest/pull/8041
 // TODO: Avoid "any" here; dont know TypeScript enough to type it properly
 export const registerImageSnapshot = (expect: any) => {
 	expect.extend({
@@ -55,4 +56,28 @@ export const registerImageSnapshot = (expect: any) => {
 			}
 		},
 	})
+}
+
+const DEFAULT_TIMEOUT = 3000 // ms
+const DEFAULT_SLEEP = 250 // ms
+export const assertEventuelly = async (
+	condition: () => void | Promise<void>,
+	timeout = DEFAULT_TIMEOUT,
+	sleep = DEFAULT_SLEEP,
+) => {
+	const timeStart = Date.now()
+	let lastError: any | undefined
+
+	do {
+		await new Promise((resolve) => setTimeout(resolve, sleep))
+
+		try {
+			await condition()
+			return
+		} catch (err: any) {
+			lastError = err
+		}
+	} while (Date.now() - timeStart < timeout)
+
+	expect(lastError, lastError?.message ?? lastError?.toString()).toBeUndefined()
 }
