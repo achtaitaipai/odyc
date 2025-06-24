@@ -5,14 +5,6 @@ Everything is built through code, but without unnecessary complexity: your entir
 
 🔗 **Get started** → [https://odyc.dev](https://odyc.dev)
 
-## Project Structure
-
-This is a monorepo with the following structure:
-
-- **packages/odyc/** - The main library package
-- **apps/examples/** - Development and demo applications
-- **tests/odyc-e2e/** - End-to-end testing suite
-
 ## Contributing
 
 We welcome contributions to Odyc.js! Whether you're fixing bugs or adding features your help is appreciated.
@@ -27,20 +19,9 @@ We welcome contributions to Odyc.js! Whether you're fixing bugs or adding featur
 
 ### Development Workflow
 
-#### Monorepo Commands (from root)
-
-- **Build library**: `npm run build`
-- **Type check all workspaces**: `npm run lint`
-- **Run e2e tests**: `npm run test` (watch mode) or `npm run test:once`
-- **Format code**: `npm run format`
-- **Check formatting**: `npm run format:check`
-
-#### Library Package Commands (from packages/odyc/)
-
 - **Development mode**: `npm run dev` (watches for changes and rebuilds)
 - **Type checking**: `npm run lint`
-- **Build library**: `npm run build`
-- **Run unit tests**: `npm run test` (watch mode) or `npm run test:once`
+- **Format code**: `npm run format`
 - **Run all checks**: `npm run prepublishOnly` (lint + build + test)
 
 ### Submitting Changes
@@ -54,20 +35,18 @@ We welcome contributions to Odyc.js! Whether you're fixing bugs or adding featur
 
 ### Tests
 
-Tests are located in the `tests/odyc-e2e/` workspace and use Vitest with Playwright for browser testing.
-
 #### Writing tests
 
-1. Decide if test is `visual` or `functional`, and based on that, enter correct directory in `./tests/odyc-e2e/`.
+1. Decide if test is `visual` or `functional`, and based on that, enter correct directory in `./tests/`.
 
 > Visual is test that ensures pixels on screen has correct color. Functional is test that ensures state of game (like player position)
 
 2. Copy any existing test, ideally similar to yours, as a "template". Make sure to update:
 
 - Test directory name
-- Test test description in `test()` parameter in `index.test.ts`
+- Test test description in `test()` parameter in `index.test.js`
 - Test code itself (assertions)
-- Test game code in `index.ts`
+- Test game code in `index.js`
 
 3. Run test to ensure it passes (explained in section below)
 
