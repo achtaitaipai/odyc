@@ -1,0 +1,42 @@
+{
+	"name": "odyc",
+	"version": "0.0.118",
+	"description": "A tiny JavaScript library to create narrative games with pixels, sounds, and text.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"files": [
+		"dist/index.js",
+		"dist/index.global.js",
+		"dist/index.d.ts"
+	],
+	"scripts": {
+		"dev": "tsup --watch",
+		"lint": "tsc",
+		"build": "tsup",
+		"test": "vitest",
+		"test:once": "vitest run",
+		"prepublishOnly": "npm run lint && npm run build && npm run test:once",
+		"publish:next": "npm version prerelease --preid=next && npm publish --access public --tag next",
+		"release": "npm run prepublishOnly && npm version patch && npm publish --access public && git push --follow-tags && gh release create v$(node -p \"require('./package.json').version\") --generate-notes"
+	},
+	"devDependencies": {
+		"@vitest/browser": "^3.2.4",
+		"buffer": "^6.0.3",
+		"pfxr": "^1.0.8",
+		"playwright": "^1.53.0",
+		"tsup": "^8.0.2",
+		"typescript": "^5.5.4",
+		"vitest": "^3.2.4"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/achtaitaipai/odyc"
+	},
+	"bugs": {
+		"url": "https://github.com/achtaitaipai/odyc/issues"
+	},
+	"author": "Charles Cailleteau",
+	"homepage": "https://odyc.dev"
+}
