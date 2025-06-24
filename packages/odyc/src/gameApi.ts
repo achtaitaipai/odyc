@@ -34,6 +34,8 @@ export const initGameApi = <T extends string>(
 			symbol: T,
 			params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
 		) => gameState.actors.setAll(symbol, params),
+		clearCell: (x: number, y: number) =>
+			gameState.actors.getCell(x, y).remove(),
 		openDialog: (text: string) => dialog.open(text),
 		prompt: (...options: string[]) => prompt.open(...options),
 		openMenu: (options: MenuOption) => prompt.openMenu(options),
