@@ -1,8 +1,9 @@
 import { page } from '@vitest/browser/context'
 import { expect, test } from 'vitest'
 import { createGame } from '../../../dist'
-import { registerImageSnapshot } from '../../toMatchImageSnapshot'
+import { registerImageSnapshot } from '../../helpers'
 
+// TODO: Rewrite in future to test exact state, but without depending on time
 test('dialog speed produces different visual states', async () => {
 	registerImageSnapshot(expect)
 
@@ -13,20 +14,12 @@ test('dialog speed produces different visual states', async () => {
 	game1.openDialog(testMessage)
 	await new Promise((resolve) => setTimeout(resolve, 500))
 	const slowScreenshot = await page.screenshot({ base64: true, save: false })
-	// Try-catch prevents test failure from snapshot mismatch - we only care about speed differences
-	try {
-		await expect(slowScreenshot).toMatchImageSnapshot('slow')
-	} catch (error) {}
 
 	// Test NORMAL speed
 	const game2 = createGame({ dialogSpeed: 'NORMAL' })
 	game2.openDialog(testMessage)
 	await new Promise((resolve) => setTimeout(resolve, 500))
 	const normalScreenshot = await page.screenshot({ base64: true, save: false })
-	// Try-catch prevents test failure from snapshot mismatch - we only care about speed differences
-	try {
-		await expect(normalScreenshot).toMatchImageSnapshot('normal')
-	} catch (error) {}
 
 	// FAST speed (15ms) completes too quickly to test meaningfully with 500ms delay
 	// Main assertion: verify SLOW and NORMAL speeds produce different visual states

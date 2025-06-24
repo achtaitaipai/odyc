@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { init } from './index'
 import { page } from '@vitest/browser/context'
-import { registerImageSnapshot } from '../../toMatchImageSnapshot'
+import { registerImageSnapshot } from '../../helpers'
 
 test('template is not rendered when visible is false', async () => {
 	registerImageSnapshot(expect)
