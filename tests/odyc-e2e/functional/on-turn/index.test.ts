@@ -1,8 +1,6 @@
 import { expect, test, describe, vi } from 'vitest'
-import { init } from './index'
-import { createGame, tick } from 'odyc'
+import { createGame } from 'odyc'
 import { userEvent } from '@vitest/browser/context'
-import { sleep } from '../../helpers'
 
 describe('onTurn events', () => {
 	test('should call onTurn for existing actors only once per turn', async () => {
