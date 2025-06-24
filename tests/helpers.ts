@@ -1,5 +1,6 @@
 import { server } from '@vitest/browser/context'
 import { Buffer } from 'buffer'
+import { expect } from 'vitest'
 
 // @ts-ignore Prevent Vitest exception with buffers
 window.Buffer = Buffer
@@ -65,7 +66,7 @@ export const assertEventuelly = async (
 	sleep = DEFAULT_SLEEP,
 ) => {
 	const timeStart = Date.now()
-	let lastError: unknown | undefined
+	let lastError: any | undefined
 
 	do {
 		await new Promise((resolve) => setTimeout(resolve, sleep))
@@ -73,10 +74,10 @@ export const assertEventuelly = async (
 		try {
 			await condition()
 			return
-		} catch (err: unknown) {
+		} catch (err: any) {
 			lastError = err
 		}
 	} while (Date.now() - timeStart < timeout)
 
-	expect(lastError).toBeUndefined()
+	expect(lastError, lastError?.message ?? lastError?.toString()).toBeUndefined()
 }
