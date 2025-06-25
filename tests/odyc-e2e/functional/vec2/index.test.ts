@@ -140,6 +140,83 @@ describe('Vec2 class and vec2 helper', () => {
 		})
 	})
 
+	describe('manhattanDistance', () => {
+		it('should calculate Manhattan distance between two vectors', () => {
+			const v1 = vec2([0, 0])
+			const v2 = vec2([3, 4])
+			const distance = v1.manhattanDistance(v2)
+
+			expect(distance).toBe(7) // |3-0| + |4-0| = 3 + 4 = 7
+		})
+
+		it('should calculate Manhattan distance with array input', () => {
+			const v = vec2([0, 0])
+			const distance = v.manhattanDistance([3, 4])
+
+			expect(distance).toBe(7)
+		})
+
+		it('should return 0 for same point', () => {
+			const v = vec2([3, 4])
+			const distance = v.manhattanDistance([3, 4])
+
+			expect(distance).toBe(0)
+		})
+
+		it('should be symmetric', () => {
+			const v1 = vec2([1, 2])
+			const v2 = vec2([4, 6])
+
+			expect(v1.manhattanDistance(v2)).toBe(v2.manhattanDistance(v1))
+		})
+
+		it('should handle negative coordinates', () => {
+			const v1 = vec2([-2, -3])
+			const v2 = vec2([1, 2])
+			const distance = v1.manhattanDistance(v2)
+
+			expect(distance).toBe(8) // |1-(-2)| + |2-(-3)| = 3 + 5 = 8
+		})
+
+		it('should handle mixed positive/negative coordinates', () => {
+			const v1 = vec2([-1, 3])
+			const v2 = vec2([2, -1])
+			const distance = v1.manhattanDistance(v2)
+
+			expect(distance).toBe(7) // |2-(-1)| + |-1-3| = 3 + 4 = 7
+		})
+
+		it('should differ from Euclidean distance', () => {
+			const v1 = vec2([0, 0])
+			const v2 = vec2([3, 4])
+			
+			const manhattanDist = v1.manhattanDistance(v2) // 7
+			const euclideanDist = v1.distance(v2) // 5
+			
+			expect(manhattanDist).toBe(7)
+			expect(euclideanDist).toBe(5)
+			expect(manhattanDist).toBeGreaterThan(euclideanDist)
+		})
+
+		it('should equal Euclidean distance for axis-aligned movement', () => {
+			// When moving only horizontally or vertically, Manhattan = Euclidean
+			const v1 = vec2([0, 0])
+			const v2 = vec2([5, 0]) // Only horizontal movement
+			const v3 = vec2([0, 3]) // Only vertical movement
+			
+			expect(v1.manhattanDistance(v2)).toBe(v1.distance(v2))
+			expect(v1.manhattanDistance(v3)).toBe(v1.distance(v3))
+		})
+
+		it('should work with floating point coordinates', () => {
+			const v1 = vec2([0.5, 1.5])
+			const v2 = vec2([2.5, 3.5])
+			const distance = v1.manhattanDistance(v2)
+
+			expect(distance).toBe(4) // |2.5-0.5| + |3.5-1.5| = 2 + 2 = 4
+		})
+	})
+
 	describe('direction', () => {
 		it('should return direction for positive values', () => {
 			const v = vec2([5, 3])
