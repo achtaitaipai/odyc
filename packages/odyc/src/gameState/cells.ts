@@ -2,25 +2,25 @@ import { Camera } from '../camera'
 import { vec2 } from '../helpers'
 import { createGridFromString, createObservable, Observable } from '../lib'
 import { Unwrap } from '../types'
-import { ActorFacade } from './actorFacade'
+import { CellFacade } from './cellFacade'
 import { GameMap } from './gameMap'
-import { ActorState, Template, Templates } from './types'
+import { CellState, Template, Templates } from './types'
 
-type ActorsParams<T extends string> = {
+type CellsParams<T extends string> = {
 	templates: Templates<T>
 }
-export class Actors<T extends string> {
-	#values: ActorState<T>[] = []
+export class Cells<T extends string> {
+	#values: CellState<T>[] = []
 	#gameMap: GameMap
 	#templates: Templates<T>
 	#observable: Observable
 
-	constructor(params: ActorsParams<T>, gameMap: GameMap) {
+	constructor(params: CellsParams<T>, gameMap: GameMap) {
 		this.#gameMap = gameMap
 		this.#templates = params.templates
 		this.#observable = createObservable()
-		this.initActors()
-		gameMap.subscribe(() => this.initActors())
+		this.initCells()
+		gameMap.subscribe(() => this.initCells())
 	}
 
 	subscribe(callback: () => void) {
@@ -30,14 +30,14 @@ export class Actors<T extends string> {
 	getAll(symbol: T) {
 		return this.#values
 			.filter((el) => el.symbol === symbol)
-			.map((el) => new ActorFacade(el.position, this))
+			.map((el) => new CellFacade(el.position, this))
 	}
 
-	setAll(symbol: T, params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>) {
+	setAll(symbol: T, params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>) {
 		for (let index = 0; index < this.#values.length; index++) {
-			const actor = this.#values[index]
-			if (actor?.symbol !== symbol) continue
-			const newValue = Object.assign({}, actor, params)
+			const cell = this.#values[index]
+			if (cell?.symbol !== symbol) continue
+			const newValue = Object.assign({}, cell, params)
 			this.#values[index] = newValue
 		}
 		this.#observable.notify()
@@ -46,12 +46,12 @@ export class Actors<T extends string> {
 	setCell(
 		x: number,
 		y: number,
-		params: Unwrap<Partial<Omit<ActorState<T>, 'symbol'>>>,
+		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
 	) {
 		for (let index = 0; index < this.#values.length; index++) {
-			const actor = this.#values[index]
-			if (actor && actor.position && vec2(actor.position).equals([x, y])) {
-				const newValue = Object.assign({}, actor, params)
+			const cell = this.#values[index]
+			if (cell && cell.position && vec2(cell.position).equals([x, y])) {
+				const newValue = Object.assign({}, cell, params)
 				this.#values[index] = newValue
 				break
 			}
@@ -64,14 +64,14 @@ export class Actors<T extends string> {
 		if (!template) return
 		this.#values = [
 			...this.#values.filter((el) => !vec2([x, y]).equals(el.position)),
-			this.#createActorFromTemplate(x, y, symbol, template),
+			this.#createCellFromTemplate(x, y, symbol, template),
 		]
 
 		this.#observable.notify()
 	}
 
 	getCell(x: number, y: number) {
-		return new ActorFacade([x, y], this)
+		return new CellFacade([x, y], this)
 	}
 
 	clearCell(x: number, y: number) {
@@ -106,18 +106,18 @@ export class Actors<T extends string> {
 		const screenLeaveEventsQueue: ((() => void) | undefined)[] = []
 		const screenEnterEventsQueue: ((() => void) | undefined)[] = []
 		for (let index = 0; index < this.#values.length; index++) {
-			const actor = this.#values[index]
-			if (!actor) continue
-			const isOnScreen = camera.isOnScreen(actor.position)
-			if (actor.isOnScreen === isOnScreen) continue
+			const cell = this.#values[index]
+			if (!cell) continue
+			const isOnScreen = camera.isOnScreen(cell.position)
+			if (cell.isOnScreen === isOnScreen) continue
 			this.#values[index]!.isOnScreen = isOnScreen
 			if (!isOnScreen)
 				screenLeaveEventsQueue.push(
-					this.getEvent(...actor.position, 'onScreenLeave'),
+					this.getEvent(...cell.position, 'onScreenLeave'),
 				)
 			else
 				screenEnterEventsQueue.push(
-					this.getEvent(...actor.position, 'onScreenEnter'),
+					this.getEvent(...cell.position, 'onScreenEnter'),
 				)
 		}
 		screenLeaveEventsQueue.forEach((el) => {
@@ -128,35 +128,35 @@ export class Actors<T extends string> {
 		})
 	}
 
-	initActors() {
-		this.#values = this.#createActors(
+	initCells() {
+		this.#values = this.#createCells(
 			createGridFromString(this.#gameMap.map),
 			this.#templates,
 		)
 	}
 
-	#createActors(mapGrid: string[], templates: Templates<T>) {
-		const actors: ActorState<T>[] = []
+	#createCells(mapGrid: string[], templates: Templates<T>) {
+		const cells: CellState<T>[] = []
 		for (let y = 0; y < mapGrid.length; y++) {
 			const row = mapGrid[y]
 			if (!row) continue
 			for (let x = 0; x < row.length; x++) {
-				const actorSymbol = row[x] as T | undefined
-				if (!actorSymbol) continue
-				const template = this.#getTemplateParams(templates, actorSymbol)
+				const cellSymbol = row[x] as T | undefined
+				if (!cellSymbol) continue
+				const template = this.#getTemplateParams(templates, cellSymbol)
 				if (!template) continue
-				actors.push(this.#createActorFromTemplate(x, y, actorSymbol, template))
+				cells.push(this.#createCellFromTemplate(x, y, cellSymbol, template))
 			}
 		}
-		return actors
+		return cells
 	}
 
-	#createActorFromTemplate<T extends string>(
+	#createCellFromTemplate<T extends string>(
 		x: number,
 		y: number,
 		symbol: T,
 		template: Template<T>,
-	): ActorState<T> {
+	): CellState<T> {
 		return {
 			symbol: symbol,
 			sprite: template.sprite ?? null,

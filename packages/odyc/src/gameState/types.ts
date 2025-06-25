@@ -1,11 +1,11 @@
 import { FilterParams } from '../shaders/filterSettings.js'
 import { PlaySoundArgs } from '../sound.js'
 import { Tile, UnTuplify } from '../types.js'
-import { ActorFacade } from './actorFacade.js'
+import { CellFacade } from './cellFacade.js'
 import { PlayerParams } from './player.js'
 
 /**
- * Actor templates that define behavior for game entities.
+ * Cell templates that define behavior for game entities.
  * Each template corresponds to a character used in the game map string.
  *
  * @template T - String literal type for template keys (map characters)
@@ -38,8 +38,8 @@ export type Templates<T extends string = string> = {
 }
 
 /**
- * Template defining actor behavior and properties.
- * All properties are optional and define how actors behave in the game.
+ * Template defining cell behavior and properties.
+ * All properties are optional and define how cells behave in the game.
  *
  * @template T - String literal type for template key
  * @example
@@ -48,9 +48,9 @@ export type Templates<T extends string = string> = {
  *   solid: true,
  *   sprite: 5,
  *   dialog: 'A locked door',
- *   onEnter: (actor) => {
+ *   onEnter: (cell) => {
  *     if (hasKey()) {
- *       actor.remove();
+ *       cell.remove();
  *       showMessage('Door unlocked!');
  *     }
  *   }
@@ -58,17 +58,17 @@ export type Templates<T extends string = string> = {
  * ```
  */
 export type Template<T extends string = string> = Partial<
-	Omit<ActorState<T>, 'position' | 'symbol' | 'isOnScreen'>
+	Omit<CellState<T>, 'position' | 'symbol' | 'isOnScreen'>
 >
 
 /**
  * Game state configuration parameters
- * @template T - String literal type for actor template keys
+ * @template T - String literal type for cell template keys
  */
 export type GameStateParams<T extends string> = {
 	/** Player configuration */
 	player: PlayerParams
-	/** Actor templates that define game entities */
+	/** Cell templates that define game entities */
 	templates: Templates<T>
 	/** String representation of the game map */
 	map: string
@@ -76,34 +76,34 @@ export type GameStateParams<T extends string> = {
 	filter?: FilterParams
 }
 
-export type ActorState<T extends string> = {
+export type CellState<T extends string> = {
 	symbol: T
 	/** Visual representation - color index, character, or pixel art string */
 	sprite: Tile | null
 	/** Sound effect to play on interaction */
 	sound: UnTuplify<PlaySoundArgs> | null
-	/** Text displayed when player interacts with this actor */
+	/** Text displayed when player interacts with this cell */
 	dialog: string | null
-	/** Whether this actor blocks movement */
+	/** Whether this cell blocks movement */
 	solid: boolean
-	/** Whether this actor's sprite is rendered */
+	/** Whether this cell's sprite is rendered */
 	visible: boolean
 	isOnScreen: boolean
-	/** Whether this actor renders in front of the player */
+	/** Whether this cell renders in front of the player */
 	foreground: boolean
 	/** Game ending condition - true ends game, string/array shows ending message */
 	end: boolean | string | string[] | null
 	position: [number, number]
-	/** Called when player tries to move into this actor's position */
-	onCollide?: (target: ActorFacade<T>) => any
-	/** Called when player moves into this actor's position */
-	onEnter?: (target: ActorFacade<T>) => any
-	/** Called when player leaves this actor's position */
-	onLeave?: (target: ActorFacade<T>) => any
-	/** Called when this actor becomes visible on screen */
-	onScreenEnter?: (target: ActorFacade<T>) => any
-	/** Called when this actor goes off screen */
-	onScreenLeave?: (target: ActorFacade<T>) => any
+	/** Called when player tries to move into this cell's position */
+	onCollide?: (target: CellFacade<T>) => any
+	/** Called when player moves into this cell's position */
+	onEnter?: (target: CellFacade<T>) => any
+	/** Called when player leaves this cell's position */
+	onLeave?: (target: CellFacade<T>) => any
+	/** Called when this cell becomes visible on screen */
+	onScreenEnter?: (target: CellFacade<T>) => any
+	/** Called when this cell goes off screen */
+	onScreenLeave?: (target: CellFacade<T>) => any
 	/** Called at the end of each game turn */
-	onTurn?: (target: ActorFacade<T>) => any
+	onTurn?: (target: CellFacade<T>) => any
 }

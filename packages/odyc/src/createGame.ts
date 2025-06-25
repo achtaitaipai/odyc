@@ -36,10 +36,10 @@ export const createGame = <T extends string>(
 		gameFilter?.setUniforms(gameState.filterUniforms.get())
 		camera.update(gameState.player.position, gameState.gameMap.dimensions)
 
-		renderer.render(gameState.player, gameState.actors.get(), camera)
+		renderer.render(gameState.player, gameState.cells.get(), camera)
 		gameFilter?.render()
 
-		gameState.actors.handleScreenEvents(camera)
+		gameState.cells.handleScreenEvents(camera)
 
 		resolveTick()
 	}, 60)

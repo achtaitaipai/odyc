@@ -2,7 +2,7 @@ import { Camera } from './camera'
 import { Canvas, getCanvas } from './canvas'
 import { RENDERER_CANVAS_ID } from './consts'
 import { Player } from './gameState/player'
-import { ActorState } from './gameState/types'
+import { CellState } from './gameState/types'
 import {
 	createGridFromString,
 	resolveColor as getColorFromPalette,
@@ -60,25 +60,25 @@ class Renderer {
 
 	render<T extends string>(
 		player: Player,
-		actors: ActorState<T>[],
+		cells: CellState<T>[],
 		camera: Camera,
 	) {
 		this.clear()
 
 		let playerIsDraw = false
-		for (const actor of actors) {
+		for (const cell of cells) {
 			if (
-				actor.foreground &&
-				actor.position[0] === player.position[0] &&
-				actor.position[1] === player.position[1]
+				cell.foreground &&
+				cell.position[0] === player.position[0] &&
+				cell.position[1] === player.position[1]
 			) {
 				if (player.visible) {
 					this.#drawTile(player, camera)
 				}
 
-				this.#drawTile(actor, camera)
+				this.#drawTile(cell, camera)
 				playerIsDraw = true
-			} else this.#drawTile(actor, camera)
+			} else this.#drawTile(cell, camera)
 		}
 		if (!playerIsDraw) this.#drawTile(player, camera)
 	}

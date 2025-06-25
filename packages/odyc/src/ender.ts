@@ -25,7 +25,7 @@ export const initEnder = <T extends string>({
 			camera.reset()
 			gameState.turn.reset()
 			gameState.player.restoreSavedState()
-			gameState.actors.initActors()
+			gameState.cells.initCells()
 		},
 		get ending() {
 			return ending
