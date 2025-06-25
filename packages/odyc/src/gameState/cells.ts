@@ -1,7 +1,7 @@
 import { Camera } from '../camera'
 import { vec2 } from '../helpers'
 import { createGridFromString, createObservable, Observable } from '../lib'
-import { Unwrap } from '../types'
+import { Position, Unwrap } from '../types'
 import { CellFacade } from './cellFacade'
 import { GameMap } from './gameMap'
 import { CellQuery, CellState, Template, Templates } from './types'
@@ -71,7 +71,7 @@ export class Cells<T extends string> {
 	}
 
 	setCellAt(x: number, y: number, symbol: T) {
-		const template = this.#getTemplateParams(this.#templates, symbol)
+		const template = this.#getTemplateParams(this.#templates, symbol, [x, y])
 		if (!template) return
 		this.#values = [
 			...this.#values.filter((el) => !vec2([x, y]).equals(el.position)),
@@ -164,7 +164,7 @@ export class Cells<T extends string> {
 			for (let x = 0; x < row.length; x++) {
 				const cellSymbol = row[x] as T | undefined
 				if (!cellSymbol) continue
-				const template = this.#getTemplateParams(templates, cellSymbol)
+				const template = this.#getTemplateParams(templates, cellSymbol, [x, y])
 				if (!template) continue
 				cells.push(this.#createCellFromTemplate(x, y, cellSymbol, template))
 			}
@@ -201,9 +201,12 @@ export class Cells<T extends string> {
 	#getTemplateParams<T extends string>(
 		templates: Templates<T>,
 		symbol: T,
+		position: Position,
 	): Template<T> | undefined {
 		const templateSrc = templates[symbol]
 		if (!templateSrc) return
-		return typeof templateSrc === 'function' ? templateSrc() : templateSrc
+		return typeof templateSrc === 'function'
+			? templateSrc(position)
+			: templateSrc
 	}
 }

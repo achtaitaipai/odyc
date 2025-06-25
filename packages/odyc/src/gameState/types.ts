@@ -1,6 +1,6 @@
 import { FilterParams } from '../shaders/filterSettings.js'
 import { PlaySoundArgs } from '../sound.js'
-import { Tile, UnTuplify } from '../types.js'
+import { Position, Tile, UnTuplify } from '../types.js'
 import { CellFacade } from './cellFacade.js'
 import { PlayerParams } from './player.js'
 
@@ -34,7 +34,7 @@ import { PlayerParams } from './player.js'
  */
 export type Templates<T extends string = string> = {
 	/** Template can be a function that returns a template (for dynamic behavior) or a static template object */
-	[K in T]: (() => Template<K>) | Template<K>
+	[K in T]: ((position: Position) => Template<K>) | Template<K>
 }
 
 /**
