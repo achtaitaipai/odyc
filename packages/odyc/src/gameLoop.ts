@@ -1,6 +1,6 @@
 import { Dialog } from './dialog.js'
 import { Ender } from './ender.js'
-import { ActorFacade } from './gameState/actorFacade.js'
+import { CellFacade } from './gameState/cellFacade.js'
 import { GameState } from './gameState/index.js'
 import { vec2 } from './helpers'
 import { Input } from './inputs.js'
@@ -35,46 +35,46 @@ class GameLoop<T extends string> {
 		const from = vec2(this.#gameState.player.position)
 		const to = from.add(directions[input])
 
-		const onTurnEvents = this.#gameState.actors
+		const onTurnEvents = this.#gameState.cells
 			.get()
-			.map((el) => this.#gameState.actors.getEvent(...el.position, 'onTurn'))
+			.map((el) => this.#gameState.cells.getEvent(...el.position, 'onTurn'))
 
 		if (this.#isCellOnworld(to.value)) {
-			const actor = this.#gameState.actors.getCell(...to.value)
+			const cell = this.#gameState.cells.getCell(...to.value)
 
-			if (!actor.solid) {
-				await this.#gameState.actors.getEvent(...from.value, 'onLeave')?.()
+			if (!cell.solid) {
+				await this.#gameState.cells.getEvent(...from.value, 'onLeave')?.()
 				this.#gameState.player.position = to.value
 			}
 
-			this.#playSound(actor)
-			await this.#openDialog(actor)
+			this.#playSound(cell)
+			await this.#openDialog(cell)
 
-			if (actor.solid)
-				await this.#gameState.actors.getEvent(...to.value, 'onCollide')?.()
-			else await this.#gameState.actors.getEvent(...to.value, 'onEnter')?.()
+			if (cell.solid)
+				await this.#gameState.cells.getEvent(...to.value, 'onCollide')?.()
+			else await this.#gameState.cells.getEvent(...to.value, 'onEnter')?.()
 		}
 		for (const event of onTurnEvents) {
 			await event?.()
 		}
 		this.#gameState.player.dispatchOnTurn()
 		if (!this.#ender.ending) this.#gameState.turn.next()
-		await this.#end(this.#gameState.actors.getCell(...to.value))
+		await this.#end(this.#gameState.cells.getCell(...to.value))
 	}
 
-	#playSound(actor: ActorFacade<T>) {
-		const sound = actor.sound
+	#playSound(cell: CellFacade<T>) {
+		const sound = cell.sound
 		if (sound) {
 			const soundParams: PlaySoundArgs = Array.isArray(sound) ? sound : [sound]
 			this.#soundPlayer.play(...soundParams)
 		}
 	}
-	async #openDialog(actor: ActorFacade<T>) {
-		if (actor.dialog) await this.#dialog.open(actor.dialog)
+	async #openDialog(cell: CellFacade<T>) {
+		if (cell.dialog) await this.#dialog.open(cell.dialog)
 	}
 
-	async #end(actor: ActorFacade<T>) {
-		const endMessage = actor.end
+	async #end(cell: CellFacade<T>) {
+		const endMessage = cell.end
 		if (endMessage) {
 			if (typeof endMessage === 'string') await this.#ender.play(endMessage)
 			else if (typeof endMessage === 'boolean' && endMessage) this.#ender.play()

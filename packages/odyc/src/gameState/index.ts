@@ -1,5 +1,5 @@
 import { createObservable } from '../lib/observer.js'
-import { Actors } from './actors.js'
+import { Cells } from './cells.js'
 import { FilterUniforms } from './filterUniforms.js'
 import { GameMap } from './gameMap.js'
 import { Player } from './player.js'
@@ -9,7 +9,7 @@ import { GameStateParams } from './types.js'
 export type GameState<T extends string> = {
 	gameMap: GameMap
 	player: Player
-	actors: Actors<T>
+	cells: Cells<T>
 	filterUniforms: FilterUniforms
 	turn: Turn
 	subscribe: (callback: () => void) => void
@@ -21,7 +21,7 @@ export const initGameState = <U extends string>(
 	const gameMap = new GameMap(params.map)
 	const filterUniforms = new FilterUniforms(params.filter?.settings ?? {})
 	const player = new Player(params.player)
-	const actors = new Actors<U>(params, gameMap)
+	const cells = new Cells<U>(params, gameMap)
 	const turn = new Turn()
 
 	const observable = createObservable()
@@ -31,13 +31,13 @@ export const initGameState = <U extends string>(
 	player.subscribe(() => {
 		observable.notify()
 	})
-	actors.subscribe(() => {
+	cells.subscribe(() => {
 		observable.notify()
 	})
 
 	return {
 		player,
-		actors,
+		cells,
 		gameMap,
 		filterUniforms,
 		turn,
