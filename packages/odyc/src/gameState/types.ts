@@ -65,7 +65,7 @@ export type Template<T extends string = string> = Partial<
  * Game state configuration parameters
  * @template T - String literal type for cell template keys
  */
-export type GameStateParams<T extends string> = {
+export type GameStateParams<T extends string = string> = {
 	/** Player configuration */
 	player: PlayerParams
 	/** Cell templates that define game entities */

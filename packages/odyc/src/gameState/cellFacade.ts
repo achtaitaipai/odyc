@@ -3,7 +3,7 @@ import { Position } from '../types'
 import { Cells } from './cells'
 import { CellState } from './types'
 
-export class CellFacade<T extends string> {
+export class CellFacade<T extends string = string> {
 	#position: Position
 	#cells: Cells<T>
 

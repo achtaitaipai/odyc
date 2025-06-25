@@ -6,4 +6,4 @@ import { createSound } from './sound.js'
 export * from './helpers'
 export { createGame, createSound }
 
-export type { CellFacade as EventTarget, Template }
+export type { CellFacade as Cell, Template }
