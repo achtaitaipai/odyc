@@ -1,4 +1,4 @@
-import { charToSprite, createGame, type Cell, vec2 } from 'odyc'
+import { createGame, vec2, type Cell } from 'odyc'
 import { levels, sprites } from './assets'
 
 export function play(levelIndex: number) {
@@ -92,18 +92,18 @@ export function play(levelIndex: number) {
 		const dir = vec2(directions[target.symbol])
 		const pos = vec2(target.position)
 		let dest = pos.add(dir)
-		const nextCell = game.getCell(...dest.value)
+		const nextCell = game.getCellAt(...dest.value)
 
 		//bounce
 		if (nextCell.symbol !== null) {
 			const newSymbol = opposites[target.symbol]
-			game.addToCell(...pos.value, newSymbol as ShipSymbol)
+			game.setCellAt(...pos.value, newSymbol as ShipSymbol)
 			dest = pos
 		}
 		//go forward
 		else {
-			game.addToCell(...dest.value, target.symbol)
-			game.getCell(...pos.value).remove()
+			game.setCellAt(...dest.value, target.symbol)
+			game.getCellAt(...pos.value).remove()
 		}
 		//game over
 		if (
