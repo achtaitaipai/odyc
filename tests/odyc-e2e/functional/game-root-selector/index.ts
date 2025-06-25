@@ -3,14 +3,8 @@ import { createGame } from 'odyc'
 const state = {}
 
 export const init = () => {
-	const el = document.getElementById('game-root')
-
-	if (!el) {
-		throw new Error('Game root HTML element missing')
-	}
-
 	const game = createGame({
-		root: el,
+		root: '#game-root',
 		map: `.`,
 		screenWidth: 1,
 		screenHeight: 1,
