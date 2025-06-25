@@ -4,16 +4,16 @@ import { init } from './index'
 describe('clear cell', () => {
 	test('should remove actor from cell', () => {
 		const { game } = init()
-		expect(game.getCell(2, 0).symbol).toBe('x')
+		expect(game.getCellAt(2, 0).symbol).toBe('x')
 
-		game.clearCell(2, 0)
-		expect(game.getCell(2, 0).symbol).toBeNull()
+		game.clearCellAt(2, 0)
+		expect(game.getCellAt(2, 0).symbol).toBeNull()
 	})
 
 	test('should not throw when clearing empty cell', () => {
 		const { game } = init()
-		expect(game.getCell(0, 0).symbol).toBeNull()
+		expect(game.getCellAt(0, 0).symbol).toBeNull()
 
-		expect(() => game.clearCell(0, 0)).not.toThrow()
+		expect(() => game.clearCellAt(0, 0)).not.toThrow()
 	})
 })
