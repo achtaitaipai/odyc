@@ -1,4 +1,4 @@
-import { charToSprite, createGame, type EventTarget, vec2 } from 'odyc'
+import { charToSprite, createGame, type Cell, vec2 } from 'odyc'
 import { levels, sprites } from './assets'
 
 export function play(levelIndex: number) {
@@ -88,7 +88,7 @@ export function play(levelIndex: number) {
 		v: '^',
 	}
 
-	async function updateShip(target: EventTarget<ShipSymbol>) {
+	async function updateShip(target: Cell<ShipSymbol>) {
 		const dir = vec2(directions[target.symbol])
 		const pos = vec2(target.position)
 		let dest = pos.add(dir)
