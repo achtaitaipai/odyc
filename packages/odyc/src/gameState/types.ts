@@ -88,11 +88,13 @@ export type CellState<T extends string> = {
 	solid: boolean
 	/** Whether this cell's sprite is rendered */
 	visible: boolean
+	/** Whether this cell's sprite is rendered */
 	isOnScreen: boolean
 	/** Whether this cell renders in front of the player */
 	foreground: boolean
 	/** Game ending condition - true ends game, string/array shows ending message */
 	end: boolean | string | string[] | null
+	/** Cell position */
 	position: [number, number]
 	/** Called when player tries to move into this cell's position */
 	onCollide?: (target: CellFacade<T>) => any
@@ -107,3 +109,7 @@ export type CellState<T extends string> = {
 	/** Called at the end of each game turn */
 	onTurn?: (target: CellFacade<T>) => any
 }
+
+export type CellQuery<T extends string> = Partial<
+	Omit<CellFacade<T>, 'remove' | 'position'> & { x?: number; y?: number }
+>

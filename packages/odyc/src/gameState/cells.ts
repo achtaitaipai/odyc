@@ -4,7 +4,7 @@ import { createGridFromString, createObservable, Observable } from '../lib'
 import { Unwrap } from '../types'
 import { CellFacade } from './cellFacade'
 import { GameMap } from './gameMap'
-import { CellState, Template, Templates } from './types'
+import { CellQuery, CellState, Template, Templates } from './types'
 
 type CellsParams<T extends string> = {
 	templates: Templates<T>
@@ -79,6 +79,27 @@ export class Cells<T extends string> {
 		]
 
 		this.#observable.notify()
+	}
+
+	getCells(query: CellQuery<T>) {
+		return this.#values
+			.map((state) => new CellFacade(state.position, this))
+			.filter((cell) => {
+				if ('x' in query && query.x !== cell.position[0]) return false
+				if ('y' in query && query.y !== cell.position[1]) return false
+				if ('sprite' in query && query.sprite !== cell.sprite) return false
+				if ('solid' in query && query.solid !== cell.solid) return false
+				if ('symbol' in query && query.symbol !== cell.symbol) return false
+				if ('visible' in query && query.visible !== cell.visible) return false
+				if ('foreground' in query && query.foreground !== cell.foreground)
+					return false
+				if ('sound' in query && query.sound !== cell.sound) return false
+				if ('dialog' in query && query.dialog !== cell.dialog) return false
+				if ('end' in query && query.end !== cell.end) return false
+				if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
+					return false
+				return true
+			})
 	}
 
 	getEvent(
