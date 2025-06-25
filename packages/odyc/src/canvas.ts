@@ -1,17 +1,20 @@
 import { createSingleton } from './lib'
 
-type CanvasParams = { id: string; zIndex?: number }
+type CanvasParams = { id: string; zIndex?: number; root?: HTMLElement | string }
 
 export class Canvas {
 	element: HTMLCanvasElement
 
-	constructor({ id, zIndex }: CanvasParams) {
+	constructor({ id, zIndex, root = document.body }: CanvasParams) {
 		this.element = document.createElement('canvas')
 		this.element.style.setProperty('position', 'absolute')
 		this.element.style.setProperty('image-rendering', 'pixelated')
 		if (id) this.element.classList.add(id)
 		if (zIndex) this.element.style.setProperty('z-index', zIndex.toString())
-		document.body.append(this.element)
+
+		const element =
+			typeof root === 'string' ? document.querySelector(root) : root
+		element?.appendChild(this.element)
 		window.addEventListener('resize', this.#fitToScreen)
 	}
 
