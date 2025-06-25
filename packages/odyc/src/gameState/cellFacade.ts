@@ -81,7 +81,7 @@ export class CellFacade<T extends string = string> {
 	}
 
 	remove() {
-		this.#cells.clearCell(...this.#position)
+		this.#cells.clearCellAt(...this.#position)
 	}
 
 	#getProperties() {
@@ -91,6 +91,6 @@ export class CellFacade<T extends string = string> {
 	}
 
 	#setProperty<U extends keyof CellState<T>>(key: U, value: CellState<T>[U]) {
-		this.#cells.setCell(...this.#position, { [key]: value })
+		this.#cells.updateCellAt(...this.#position, { [key]: value })
 	}
 }

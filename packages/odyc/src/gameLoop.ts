@@ -40,7 +40,7 @@ class GameLoop<T extends string> {
 			.map((el) => this.#gameState.cells.getEvent(...el.position, 'onTurn'))
 
 		if (this.#isCellOnworld(to.value)) {
-			const cell = this.#gameState.cells.getCell(...to.value)
+			const cell = this.#gameState.cells.getCellAt(...to.value)
 
 			if (!cell.solid) {
 				await this.#gameState.cells.getEvent(...from.value, 'onLeave')?.()
@@ -59,7 +59,7 @@ class GameLoop<T extends string> {
 		}
 		this.#gameState.player.dispatchOnTurn()
 		if (!this.#ender.ending) this.#gameState.turn.next()
-		await this.#end(this.#gameState.cells.getCell(...to.value))
+		await this.#end(this.#gameState.cells.getCellAt(...to.value))
 	}
 
 	#playSound(cell: CellFacade<T>) {

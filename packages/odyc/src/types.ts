@@ -1,3 +1,10 @@
+import { CellFacade } from './gameState/cellFacade.js'
+import { Player } from './gameState/player.js'
+import { CellState } from './gameState/types.js'
+import { MenuOption } from './prompt.js'
+import { Uniforms } from './shaders/filterSettings.js'
+import { PlaySoundArgs } from './sound.js'
+
 export type Tile = string | number
 
 export type Position = [number, number]
@@ -7,3 +14,53 @@ export type Unwrap<T> = {
 } & {}
 
 export type UnTuplify<T> = T extends [infer U] ? U : T
+
+export interface GameApi<T extends string> {
+	/**
+	 * @deprecated use getCellAt instead
+	 */
+	getCell: (x: number, y: number) => CellFacade<T>
+	/**
+	 * @deprecated use setCellAt instead
+	 */
+	addToCell: (x: number, y: number, symbol: T) => void
+	/**
+	 * @deprecated use updateCellAt instead
+	 */
+	setCell: (
+		x: number,
+		y: number,
+		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
+	) => void
+	/**
+	 * @deprecated use clearCellAt instead
+	 */
+	clearCell: (x: number, y: number) => void
+
+	player: Player['facade']
+	getCellAt: (x: number, y: number) => CellFacade<T>
+	setCellAt: (x: number, y: number, symbol: T) => void
+	updateCellAt: (
+		x: number,
+		y: number,
+		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
+	) => void
+	clearCellAt: (x: number, y: number) => void
+	getAll: (symbol: T) => CellFacade<T>[]
+	setAll: (
+		symbol: T,
+		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
+	) => void
+	openDialog: (text: string) => Promise<void>
+	prompt: (...options: string[]) => Promise<number>
+	openMenu: (options: MenuOption) => Promise<void>
+	openMessage: (...args: string[]) => Promise<void> | undefined
+	playSound: (...args: PlaySoundArgs) => Promise<void>
+	end: (...messages: string[]) => void
+	loadMap: (map: string, playerPosition?: Position) => void
+	updateFilter: (uniforms: Uniforms) => void
+	width: number
+	height: number
+	turn: number
+	clear: (color?: number | string) => void
+}

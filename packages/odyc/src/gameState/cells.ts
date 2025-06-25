@@ -43,7 +43,18 @@ export class Cells<T extends string> {
 		this.#observable.notify()
 	}
 
-	setCell(
+	getCellAt(x: number, y: number) {
+		return new CellFacade([x, y], this)
+	}
+
+	clearCellAt(x: number, y: number) {
+		this.#values = this.#values.filter(
+			(el) => !vec2(el.position).equals([x, y]),
+		)
+		this.#observable.notify()
+	}
+
+	updateCellAt(
 		x: number,
 		y: number,
 		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
@@ -59,7 +70,7 @@ export class Cells<T extends string> {
 		this.#observable.notify()
 	}
 
-	addToCell(x: number, y: number, symbol: T) {
+	setCellAt(x: number, y: number, symbol: T) {
 		const template = this.#getTemplateParams(this.#templates, symbol)
 		if (!template) return
 		this.#values = [
@@ -67,17 +78,6 @@ export class Cells<T extends string> {
 			this.#createCellFromTemplate(x, y, symbol, template),
 		]
 
-		this.#observable.notify()
-	}
-
-	getCell(x: number, y: number) {
-		return new CellFacade([x, y], this)
-	}
-
-	clearCell(x: number, y: number) {
-		this.#values = this.#values.filter(
-			(el) => !vec2(el.position).equals([x, y]),
-		)
 		this.#observable.notify()
 	}
 
@@ -95,7 +95,7 @@ export class Cells<T extends string> {
 		const event = this.#values.find(
 			(el) => el.position[0] === x && el.position[1] === y,
 		)?.[eventKey]
-		if (event) return () => event(this.getCell(x, y))
+		if (event) return () => event(this.getCellAt(x, y))
 	}
 
 	get() {
