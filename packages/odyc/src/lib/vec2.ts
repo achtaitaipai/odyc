@@ -55,6 +55,11 @@ class Vec2 {
 		return vec.sub(this).length
 	}
 
+	manhattanDistance(...args: Vec2Like) {
+		const vec = this.#vec2LikeToVec2(...args)
+		return Math.abs(vec.x - this.x) + Math.abs(vec.y - this.y)
+	}
+
 	equals(...args: Vec2Like) {
 		const vec = this.#vec2LikeToVec2(...args)
 		return vec.x === this.x && vec.y === this.y
