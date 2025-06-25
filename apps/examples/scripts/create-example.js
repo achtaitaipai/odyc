@@ -184,4 +184,3 @@ async function createExample(name) {
 // Get name from command line arguments or prompt user
 const name = process.argv[2]
 createExample(name)
-
