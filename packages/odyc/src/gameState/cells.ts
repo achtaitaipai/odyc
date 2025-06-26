@@ -27,22 +27,6 @@ export class Cells<T extends string> {
 		this.#observable.subscribe(callback)
 	}
 
-	getAll(symbol: T) {
-		return this.#values
-			.filter((el) => el.symbol === symbol)
-			.map((el) => new CellFacade(el.position, this))
-	}
-
-	setAll(symbol: T, params: CellParams) {
-		for (let index = 0; index < this.#values.length; index++) {
-			const cell = this.#values[index]
-			if (cell?.symbol !== symbol) continue
-			const newValue = Object.assign({}, cell, params)
-			this.#values[index] = newValue
-		}
-		this.#observable.notify()
-	}
-
 	getCellAt(x: number, y: number) {
 		return new CellFacade([x, y], this)
 	}

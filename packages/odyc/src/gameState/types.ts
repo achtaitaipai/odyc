@@ -75,7 +75,7 @@ export type CellParams = Partial<
 /**
  * Query parameters for filtering cells.
  * Supports all updateable properties plus coordinate-based and symbol-based filtering.
- * 
+ *
  * @template T - String literal type for cell symbols
  */
 export type CellQuery<T extends string> = Partial<

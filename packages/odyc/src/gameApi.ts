@@ -23,8 +23,8 @@ export const initGameApi = <T extends string>(
 		addToCell: (x, y, symbol) => gameState.cells.setCellAt(x, y, symbol),
 		setCell: (x, y, params) => gameState.cells.updateCellAt(x, y, params),
 		clearCell: (x, y) => gameState.cells.getCellAt(x, y).remove(),
-		getAll: (symbol) => gameState.cells.getAll(symbol),
-		setAll: (symbol, params) => gameState.cells.setAll(symbol, params),
+		getAll: (symbol) => gameState.cells.getCells({ symbol }),
+		setAll: (symbol, params) => gameState.cells.updateCells({ symbol }, params),
 
 		player: gameState.player.facade,
 		getCellAt: (x, y) => gameState.cells.getCellAt(x, y),
