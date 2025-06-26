@@ -18,18 +18,23 @@ export const initGameApi = <T extends string>(
 	renderer: Renderer,
 ) => {
 	const gameApi: GameApi<T> = {
-		player: gameState.player.facade,
+		// deprecated methods
 		getCell: (x, y) => gameState.cells.getCellAt(x, y),
 		addToCell: (x, y, symbol) => gameState.cells.setCellAt(x, y, symbol),
 		setCell: (x, y, params) => gameState.cells.updateCellAt(x, y, params),
 		clearCell: (x, y) => gameState.cells.getCellAt(x, y).remove(),
 		getAll: (symbol) => gameState.cells.getAll(symbol),
 		setAll: (symbol, params) => gameState.cells.setAll(symbol, params),
+
+		player: gameState.player.facade,
 		getCellAt: (x, y) => gameState.cells.getCellAt(x, y),
 		setCellAt: (x, y, symbol) => gameState.cells.setCellAt(x, y, symbol),
 		updateCellAt: (x, y, params) => gameState.cells.updateCellAt(x, y, params),
 		clearCellAt: (x, y) => gameState.cells.getCellAt(x, y).remove(),
 		getCells: (query) => gameState.cells.getCells(query),
+		setCells: (query, symbol) => gameState.cells.setCells(query, symbol),
+		updateCells: (query, params) => gameState.cells.updateCells(query, params),
+		clearCells: (query) => gameState.cells.clearCells(query),
 		openDialog: (text) => dialog.open(text),
 		prompt: (...options) => prompt.open(...options),
 		openMenu: (options) => prompt.openMenu(options),

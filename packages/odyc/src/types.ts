@@ -1,6 +1,6 @@
 import { CellFacade } from './gameState/cellFacade.js'
 import { Player } from './gameState/player.js'
-import { CellQuery, CellState } from './gameState/types.js'
+import { CellParams, CellQuery, CellState } from './gameState/types.js'
 import { MenuOption } from './prompt.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { PlaySoundArgs } from './sound.js'
@@ -27,11 +27,7 @@ export interface GameApi<T extends string> {
 	/**
 	 * @deprecated use updateCellAt instead
 	 */
-	setCell: (
-		x: number,
-		y: number,
-		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
-	) => void
+	setCell: (x: number, y: number, params: CellParams) => void
 	/**
 	 * @deprecated use clearCellAt instead
 	 */
@@ -40,21 +36,20 @@ export interface GameApi<T extends string> {
 	 * @deprecated use getCells
 	 */
 	getAll: (symbol: T) => CellFacade<T>[]
-	setAll: (
-		symbol: T,
-		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
-	) => void
+	/**
+	 * @deprecated use updateCells
+	 */
+	setAll: (symbol: T, params: CellParams) => void
 
 	player: Player['facade']
 	getCellAt: (x: number, y: number) => CellFacade<T>
 	setCellAt: (x: number, y: number, symbol: T) => void
-	updateCellAt: (
-		x: number,
-		y: number,
-		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
-	) => void
+	updateCellAt: (x: number, y: number, params: CellParams) => void
 	clearCellAt: (x: number, y: number) => void
 	getCells: (query: CellQuery<T>) => CellFacade<T>[]
+	setCells: (query: CellQuery<T>, symbol: T) => void
+	updateCells: (query: CellQuery<T>, params: CellParams) => void
+	clearCells: (query: CellQuery<T>) => void
 	openDialog: (text: string) => Promise<void>
 	prompt: (...options: string[]) => Promise<number>
 	openMenu: (options: MenuOption) => Promise<void>

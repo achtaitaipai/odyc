@@ -4,7 +4,7 @@ import { createGridFromString, createObservable, Observable } from '../lib'
 import { Position, Unwrap } from '../types'
 import { CellFacade } from './cellFacade'
 import { GameMap } from './gameMap'
-import { CellQuery, CellState, Template, Templates } from './types'
+import { CellParams, CellQuery, CellState, Template, Templates } from './types'
 
 type CellsParams<T extends string> = {
 	templates: Templates<T>
@@ -33,7 +33,7 @@ export class Cells<T extends string> {
 			.map((el) => new CellFacade(el.position, this))
 	}
 
-	setAll(symbol: T, params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>) {
+	setAll(symbol: T, params: CellParams) {
 		for (let index = 0; index < this.#values.length; index++) {
 			const cell = this.#values[index]
 			if (cell?.symbol !== symbol) continue
@@ -54,11 +54,7 @@ export class Cells<T extends string> {
 		this.#observable.notify()
 	}
 
-	updateCellAt(
-		x: number,
-		y: number,
-		params: Unwrap<Partial<Omit<CellState<T>, 'symbol'>>>,
-	) {
+	updateCellAt(x: number, y: number, params: CellParams) {
 		for (let index = 0; index < this.#values.length; index++) {
 			const cell = this.#values[index]
 			if (cell && cell.position && vec2(cell.position).equals([x, y])) {
@@ -87,30 +83,68 @@ export class Cells<T extends string> {
 		)
 	}
 
-	#queryCells(query: CellQuery<T>) {
-		return this.#values.filter((cell) => {
-			if ('x' in query && query.x !== cell.position[0]) return false
-			if ('y' in query && query.y !== cell.position[1]) return false
-			if ('sprite' in query && query.sprite !== cell.sprite) return false
-			if ('solid' in query && query.solid !== cell.solid) return false
-			if (
-				'symbol' in query &&
-				'symbol' !== undefined &&
-				!(Array.isArray(query.symbol) ? query.symbol : [query.symbol]).includes(
-					cell.symbol,
-				)
+	updateCells(query: CellQuery<T>, params: CellParams) {
+		for (let index = 0; index < this.#values.length; index++) {
+			const cell = this.#values[index]
+			if (!cell || !this.#cellMatchesQuery(cell, query)) continue
+			const newValue = Object.assign({}, cell, params)
+			this.#values[index] = newValue
+		}
+		this.#observable.notify()
+	}
+
+	clearCells(query: CellQuery<T>) {
+		this.#values = this.#values.filter(
+			(cell) => !this.#cellMatchesQuery(cell, query),
+		)
+		this.#observable.notify()
+	}
+
+	setCells(query: CellQuery<T>, symbol: T) {
+		for (let index = 0; index < this.#values.length; index++) {
+			const cell = this.#values[index]
+			if (!cell || !this.#cellMatchesQuery(cell, query)) continue
+			const template = this.#getTemplateParams(
+				this.#templates,
+				symbol,
+				cell.position,
 			)
-				return false
-			if ('visible' in query && query.visible !== cell.visible) return false
-			if ('foreground' in query && query.foreground !== cell.foreground)
-				return false
-			if ('sound' in query && query.sound !== cell.sound) return false
-			if ('dialog' in query && query.dialog !== cell.dialog) return false
-			if ('end' in query && query.end !== cell.end) return false
-			if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
-				return false
-			return true
-		})
+			if (!template) continue
+			this.#values[index] = this.#createCellFromTemplate(
+				...cell.position,
+				symbol,
+				template,
+			)
+		}
+		this.#observable.notify()
+	}
+
+	#queryCells(query: CellQuery<T>) {
+		return this.#values.filter((cell) => this.#cellMatchesQuery(cell, query))
+	}
+
+	#cellMatchesQuery(cell: CellState<T>, query: CellQuery<T>) {
+		if ('x' in query && query.x !== cell.position[0]) return false
+		if ('y' in query && query.y !== cell.position[1]) return false
+		if ('sprite' in query && query.sprite !== cell.sprite) return false
+		if ('solid' in query && query.solid !== cell.solid) return false
+		if (
+			'symbol' in query &&
+			'symbol' !== undefined &&
+			!(Array.isArray(query.symbol) ? query.symbol : [query.symbol]).includes(
+				cell.symbol,
+			)
+		)
+			return false
+		if ('visible' in query && query.visible !== cell.visible) return false
+		if ('foreground' in query && query.foreground !== cell.foreground)
+			return false
+		if ('sound' in query && query.sound !== cell.sound) return false
+		if ('dialog' in query && query.dialog !== cell.dialog) return false
+		if ('end' in query && query.end !== cell.end) return false
+		if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
+			return false
+		return true
 	}
 
 	getEvent(

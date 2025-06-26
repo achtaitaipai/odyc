@@ -4,78 +4,22 @@ import { Position, Tile, UnTuplify } from '../types.js'
 import { CellFacade } from './cellFacade.js'
 import { PlayerParams } from './player.js'
 
-/**
- * Cell templates that define behavior for game entities.
- * Each template corresponds to a character used in the game map string.
- *
- * @template T - String literal type for template keys (map characters)
- * @example
- * ```typescript
- * const templates = {
- *   'x': { // Wall template
- *     solid: true,
- *     sprite: 4,
- *     visible: true
- *   },
- *   'e': { // Enemy template
- *     sprite: 1,
- *     sound: 'hit',
- *     onCollide: (target) => {
- *       target.remove();
- *       // Game logic here
- *     }
- *   },
- *   'd': () => ({ // Dynamic template (function)
- *     sprite: Math.random() > 0.5 ? 2 : 3,
- *     dialog: 'Hello!'
- *   })
- * }
- * ```
- */
 export type Templates<T extends string = string> = {
-	/** Template can be a function that returns a template (for dynamic behavior) or a static template object */
 	[K in T]: ((position: Position) => Template<K>) | Template<K>
 }
 
-/**
- * Template defining cell behavior and properties.
- * All properties are optional and define how cells behave in the game.
- *
- * @template T - String literal type for template key
- * @example
- * ```typescript
- * const doorTemplate: Template<'d'> = {
- *   solid: true,
- *   sprite: 5,
- *   dialog: 'A locked door',
- *   onEnter: (cell) => {
- *     if (hasKey()) {
- *       cell.remove();
- *       showMessage('Door unlocked!');
- *     }
- *   }
- * }
- * ```
- */
 export type Template<T extends string = string> = Partial<
 	Omit<CellState<T>, 'position' | 'symbol' | 'isOnScreen'>
 >
 
-/**
- * Game state configuration parameters
- * @template T - String literal type for cell template keys
- */
 export type GameStateParams<T extends string = string> = {
-	/** Player configuration */
 	player: PlayerParams
-	/** Cell templates that define game entities */
 	templates: Templates<T>
-	/** String representation of the game map */
 	map: string
-	/** Optional visual filter settings */
 	filter?: FilterParams
 }
 
+// Params of a Cell
 export type CellState<T extends string> = {
 	symbol: T
 	/** Visual representation - color index, character, or pixel art string */
@@ -110,8 +54,32 @@ export type CellState<T extends string> = {
 	onTurn?: (target: CellFacade<T>) => any
 }
 
+/**
+ * Parameters for updating cell properties.
+ * Excludes immutable fields (symbol, position) and event handlers to prevent accidental overwrites.
+ */
+export type CellParams = Partial<
+	Omit<
+		CellState<string>,
+		| 'symbol'
+		| 'position'
+		| 'onCollide'
+		| 'onEnter'
+		| 'onLeave'
+		| 'onScreenEnter'
+		| 'onScreenLeave'
+		| 'onTurn'
+	>
+>
+
+/**
+ * Query parameters for filtering cells.
+ * Supports all updateable properties plus coordinate-based and symbol-based filtering.
+ * 
+ * @template T - String literal type for cell symbols
+ */
 export type CellQuery<T extends string> = Partial<
-	Omit<CellFacade<T>, 'remove' | 'position' | 'symbol'> & {
+	CellParams & {
 		x?: number
 		y?: number
 		symbol?: T | T[]
