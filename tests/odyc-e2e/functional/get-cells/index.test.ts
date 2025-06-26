@@ -15,6 +15,38 @@ describe('getCells', () => {
 		expect(wallCells.every((cell) => cell.symbol === '#')).toBe(true)
 	})
 
+	test('should filter cells by array of symbols', () => {
+		const { game } = init()
+		const multiSymbolCells = game.getCells({ symbol: ['#', 'x'] })
+		expect(multiSymbolCells.length).toBe(6) // 5 '#' cells + 1 'x' cell
+		expect(
+			multiSymbolCells.every(
+				(cell) => cell.symbol === '#' || cell.symbol === 'x',
+			),
+		).toBe(true)
+
+		const twoSymbolCells = game.getCells({ symbol: ['e', '*'] })
+		expect(twoSymbolCells.length).toBe(2) // 1 'e' cell + 1 '*' cell
+		expect(
+			twoSymbolCells.every(
+				(cell) => cell.symbol === 'e' || cell.symbol === '*',
+			),
+		).toBe(true)
+	})
+
+	test('should filter cells by array of symbols with single element', () => {
+		const { game } = init()
+		const singleSymbolArray = game.getCells({ symbol: ['o'] })
+		expect(singleSymbolArray.length).toBe(1)
+		expect(singleSymbolArray[0]?.symbol).toBe('o')
+	})
+
+	test('should return empty array for array of non-existent symbols', () => {
+		const { game } = init()
+		const nonExistentSymbols = game.getCells({ symbol: ['z', 'q' as any] })
+		expect(nonExistentSymbols).toEqual([])
+	})
+
 	test('should filter cells by solid property', () => {
 		const { game } = init()
 		const solidCells = game.getCells({ solid: true })
@@ -107,7 +139,7 @@ describe('getCells', () => {
 
 	test('should return empty array when no cells match query', () => {
 		const { game } = init()
-		const nonExistentCells = game.getCells({ symbol: 'z' as any })
+		const nonExistentCells = game.getCells({ symbol: '#', solid: false })
 		expect(nonExistentCells).toEqual([])
 
 		const impossibleCombination = game.getCells({
