@@ -82,24 +82,35 @@ export class Cells<T extends string> {
 	}
 
 	getCells(query: CellQuery<T>) {
-		return this.#values
-			.map((state) => new CellFacade(state.position, this))
-			.filter((cell) => {
-				if ('x' in query && query.x !== cell.position[0]) return false
-				if ('y' in query && query.y !== cell.position[1]) return false
-				if ('sprite' in query && query.sprite !== cell.sprite) return false
-				if ('solid' in query && query.solid !== cell.solid) return false
-				if ('symbol' in query && query.symbol !== cell.symbol) return false
-				if ('visible' in query && query.visible !== cell.visible) return false
-				if ('foreground' in query && query.foreground !== cell.foreground)
-					return false
-				if ('sound' in query && query.sound !== cell.sound) return false
-				if ('dialog' in query && query.dialog !== cell.dialog) return false
-				if ('end' in query && query.end !== cell.end) return false
-				if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
-					return false
-				return true
-			})
+		return this.#queryCells(query).map(
+			({ position }) => new CellFacade(position, this),
+		)
+	}
+
+	#queryCells(query: CellQuery<T>) {
+		return this.#values.filter((cell) => {
+			if ('x' in query && query.x !== cell.position[0]) return false
+			if ('y' in query && query.y !== cell.position[1]) return false
+			if ('sprite' in query && query.sprite !== cell.sprite) return false
+			if ('solid' in query && query.solid !== cell.solid) return false
+			if (
+				'symbol' in query &&
+				'symbol' !== undefined &&
+				!(Array.isArray(query.symbol) ? query.symbol : [query.symbol]).includes(
+					cell.symbol,
+				)
+			)
+				return false
+			if ('visible' in query && query.visible !== cell.visible) return false
+			if ('foreground' in query && query.foreground !== cell.foreground)
+				return false
+			if ('sound' in query && query.sound !== cell.sound) return false
+			if ('dialog' in query && query.dialog !== cell.dialog) return false
+			if ('end' in query && query.end !== cell.end) return false
+			if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
+				return false
+			return true
+		})
 	}
 
 	getEvent(

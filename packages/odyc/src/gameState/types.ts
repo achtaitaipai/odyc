@@ -111,5 +111,9 @@ export type CellState<T extends string> = {
 }
 
 export type CellQuery<T extends string> = Partial<
-	Omit<CellFacade<T>, 'remove' | 'position'> & { x?: number; y?: number }
+	Omit<CellFacade<T>, 'remove' | 'position' | 'symbol'> & {
+		x?: number
+		y?: number
+		symbol?: T | T[]
+	}
 >
