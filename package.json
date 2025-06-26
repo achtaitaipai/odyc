@@ -11,7 +11,9 @@
 		"lint": "npm run lint --workspaces",
 		"test": "npm run test --workspace=odyc-e2e",
 		"test:once": "npm run test:once --workspace=odyc-e2e",
-		"build": "npm run build --workspace=odyc"
+		"build": "npm run build --workspace=odyc",
+		"prepublishOnly": "npm run lint && npm run build && npm run test:once",
+		"release": "npm run prepublishOnly && npm version patch --workspace=odyc && npm publish --workspace=odyc --access public && git push --follow-tags && gh release create v$(node -p \"require('./packages/odyc/package.json').version\") --generate-notes"
 	},
 	"devDependencies": {
 		"prettier": "^3.0.0"
