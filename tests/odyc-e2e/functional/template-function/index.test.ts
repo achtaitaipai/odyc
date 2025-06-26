@@ -47,4 +47,3 @@ test('template functions called multiple times for same position', () => {
 		[1, 1],
 	])
 })
-

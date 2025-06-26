@@ -189,10 +189,10 @@ describe('Vec2 class and vec2 helper', () => {
 		it('should differ from Euclidean distance', () => {
 			const v1 = vec2([0, 0])
 			const v2 = vec2([3, 4])
-			
+
 			const manhattanDist = v1.manhattanDistance(v2) // 7
 			const euclideanDist = v1.distance(v2) // 5
-			
+
 			expect(manhattanDist).toBe(7)
 			expect(euclideanDist).toBe(5)
 			expect(manhattanDist).toBeGreaterThan(euclideanDist)
@@ -203,7 +203,7 @@ describe('Vec2 class and vec2 helper', () => {
 			const v1 = vec2([0, 0])
 			const v2 = vec2([5, 0]) // Only horizontal movement
 			const v3 = vec2([0, 3]) // Only vertical movement
-			
+
 			expect(v1.manhattanDistance(v2)).toBe(v1.distance(v2))
 			expect(v1.manhattanDistance(v3)).toBe(v1.distance(v3))
 		})

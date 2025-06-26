@@ -22,4 +22,3 @@ export const init = () => {
 
 	return { game, receivedPositions }
 }
-
