@@ -22,8 +22,10 @@ export const DIALOG_SPEED = {
 
 export const FILTER_CANVAS_ID = 'odyc-filter-canvas'
 
-export const INPUT_TIME_BETWEEN_KEYS = 200
-export const INPUT_TIME_BETWEEN_TOUCH = 200
+export const MAX_INPUT_TIME_BETWEEN_KEYS = 200
+export const MIN_INPUT_TIME_BETWEEN_KEYS = 60
+export const MAX_INPUT_TIME_BETWEEN_TOUCH = 200
+export const MIN_INPUT_TIME_BETWEEN_TOUCH = 60
 export const INPUT_MIN_SWIPE_DIST = 30
 
 export const MESSAGE_CANVAS_ID = 'odyc-message-canvas'
