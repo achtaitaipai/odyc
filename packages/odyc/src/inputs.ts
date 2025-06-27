@@ -1,8 +1,11 @@
 import {
 	INPUT_MIN_SWIPE_DIST,
-	INPUT_TIME_BETWEEN_KEYS,
-	INPUT_TIME_BETWEEN_TOUCH,
+	MAX_INPUT_TIME_BETWEEN_KEYS,
+	MAX_INPUT_TIME_BETWEEN_TOUCH,
+	MIN_INPUT_TIME_BETWEEN_KEYS,
+	MIN_INPUT_TIME_BETWEEN_TOUCH,
 } from './consts'
+
 import { createSingleton } from './lib'
 
 export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
@@ -17,9 +20,10 @@ export type InputsHandlerParams = {
 
 class InputsHandler {
 	controls: [Input, string | string[]][] = []
-	lastKeysEvents: Map<string, number> = new Map()
+	lastKeysEvents: Map<string, { delay: number; timestamp: number }> = new Map()
 	onInput?: (input: Input) => void
 	lastPointerEvent = 0
+	pointerDelay = MAX_INPUT_TIME_BETWEEN_TOUCH
 	oldTouchX?: number
 	oldTouchY?: number
 	pointerId?: number
@@ -54,6 +58,7 @@ class InputsHandler {
 	init(params: InputsHandlerParams, onInput: (input: Input) => void) {
 		this.lastKeysEvents.clear()
 		this.lastPointerEvent = 0
+		this.pointerDelay = MAX_INPUT_TIME_BETWEEN_TOUCH
 		this.oldTouchX = undefined
 		this.oldTouchY = undefined
 		this.pointerId = undefined
@@ -77,12 +82,14 @@ class InputsHandler {
 		this.pointerId = undefined
 		if (!this.isSliding) this.onInput?.('ACTION')
 		this.isSliding = false
+		this.pointerDelay = MAX_INPUT_TIME_BETWEEN_TOUCH
 	}
 
 	handleTouchLeave = (e: PointerEvent) => {
 		if (this.pointerId !== e.pointerId) return
 		this.pointerId = undefined
 		this.isSliding = false
+		this.pointerDelay = MAX_INPUT_TIME_BETWEEN_TOUCH
 	}
 
 	handleTouchMove = (e: PointerEvent) => {
@@ -105,9 +112,12 @@ class InputsHandler {
 			Math.abs(diffY) < INPUT_MIN_SWIPE_DIST
 		)
 			return
-		if (now - this.lastPointerEvent < INPUT_TIME_BETWEEN_TOUCH) return
+		if (now - this.lastPointerEvent < this.pointerDelay) return
 
 		this.lastPointerEvent = now
+		this.pointerDelay =
+			MIN_INPUT_TIME_BETWEEN_TOUCH +
+			(this.pointerDelay - MIN_INPUT_TIME_BETWEEN_TOUCH) * 0.6
 		this.oldTouchX = x
 		this.oldTouchY = y
 
@@ -129,8 +139,16 @@ class InputsHandler {
 		const [input] = entrie
 		const now = e.timeStamp
 		const last = this.lastKeysEvents.get(e.code)
-		if (e.repeat && last && now - last < INPUT_TIME_BETWEEN_KEYS) return
-		this.lastKeysEvents.set(e.code, now)
+		if (e.repeat && last && now - last.timestamp < last.delay) return
+		const nextDelay =
+			e.repeat && last
+				? MIN_INPUT_TIME_BETWEEN_KEYS +
+					(last.delay - MIN_INPUT_TIME_BETWEEN_KEYS) * 0.6
+				: MAX_INPUT_TIME_BETWEEN_KEYS
+		this.lastKeysEvents.set(e.code, {
+			delay: nextDelay,
+			timestamp: now,
+		})
 		this.onInput?.(input)
 	}
 }
