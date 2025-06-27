@@ -82,12 +82,14 @@ class InputsHandler {
 		this.pointerId = undefined
 		if (!this.isSliding) this.onInput?.('ACTION')
 		this.isSliding = false
+		this.pointerDelay = MAX_INPUT_TIME_BETWEEN_TOUCH
 	}
 
 	handleTouchLeave = (e: PointerEvent) => {
 		if (this.pointerId !== e.pointerId) return
 		this.pointerId = undefined
 		this.isSliding = false
+		this.pointerDelay = MAX_INPUT_TIME_BETWEEN_TOUCH
 	}
 
 	handleTouchMove = (e: PointerEvent) => {
@@ -113,7 +115,9 @@ class InputsHandler {
 		if (now - this.lastPointerEvent < this.pointerDelay) return
 
 		this.lastPointerEvent = now
-		this.pointerDelay = MIN_INPUT_TIME_BETWEEN_TOUCH + (this.pointerDelay - MIN_INPUT_TIME_BETWEEN_TOUCH) * 0.6
+		this.pointerDelay =
+			MIN_INPUT_TIME_BETWEEN_TOUCH +
+			(this.pointerDelay - MIN_INPUT_TIME_BETWEEN_TOUCH) * 0.6
 		this.oldTouchX = x
 		this.oldTouchY = y
 
