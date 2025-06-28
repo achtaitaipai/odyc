@@ -10,3 +10,19 @@ __screenshots__
 CLAUDE.md
 
 notes.md
+
+# Astro specific
+.astro/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# jetbrains setting folder
+.idea/
