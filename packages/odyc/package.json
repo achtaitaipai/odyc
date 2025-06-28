@@ -13,7 +13,9 @@
 	"scripts": {
 		"dev": "tsup --watch",
 		"lint": "tsc",
-		"build": "tsup"
+		"build": "tsup",
+		"format": "prettier --write .",
+		"format:check": "prettier --check ."
 	},
 	"devDependencies": {
 		"@vitest/browser": "^3.2.4",
@@ -33,5 +35,8 @@
 		"url": "https://github.com/achtaitaipai/odyc/issues"
 	},
 	"author": "Charles Cailleteau",
-	"homepage": "https://odyc.dev"
+	"homepage": "https://odyc.dev",
+	"dependencies": {
+		"prettier": "^3.6.2"
+	}
 }
