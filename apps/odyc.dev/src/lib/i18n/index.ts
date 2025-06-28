@@ -16,8 +16,9 @@ export function useTranslations(lang: Locale) {
 	}
 }
 
-export function getLangFromUrl(url: URL): Locale {
-	const [, lang] = url.pathname.split('/')
+export function getLocaleByPath(path: string): Locale {
+	if (!path.startsWith('/')) path = '/' + path
+	const [, lang] = path.split('/')
 	//@ts-ignore
 	if (locales.includes(lang)) return lang as Locale
 	return defaultLocale

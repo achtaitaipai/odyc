@@ -17,6 +17,7 @@
 		"@astrojs/svelte": "^7.1.0",
 		"@tailwindcss/vite": "^4.1.11",
 		"astro": "^5.10.1",
+		"slugify": "^1.6.6",
 		"svelte": "^5.34.9",
 		"tailwindcss": "^4.1.11",
 		"typescript": "^5.8.3"

@@ -1,9 +1,8 @@
 // @ts-check
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
-
 import svelte from '@astrojs/svelte'
-import { defaultLocale, locales } from '#i18n/index.ts'
+import { defaultLocale, locales } from '#lib/i18n/index.ts'
 
 // https://astro.build/config
 export default defineConfig({
