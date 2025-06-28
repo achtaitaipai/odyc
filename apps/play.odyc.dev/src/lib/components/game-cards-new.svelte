@@ -11,7 +11,7 @@
 
 <Dialog.Root>
 	<Dialog.Trigger>
-		<Card.Root class="flex cursor-pointer justify-center">
+		<Card.Root class="flex h-full cursor-pointer justify-center">
 			<Card.Header>
 				<div class="flex justify-center">
 					<Button variant="secondary" disabled size="icon" class="size-8">
@@ -19,7 +19,7 @@
 					</Button>
 				</div>
 				<div class="mt-2">
-					<Card.Title class="font-title w-full text-center text-xl font-semibold"
+					<Card.Title class="font-title w-full text-center text-2xl font-light"
 						>Create new game</Card.Title
 					>
 

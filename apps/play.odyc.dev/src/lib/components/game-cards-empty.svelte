@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 </script>
 
-<Card.Root class="flex justify-center border-dashed bg-transparent">
+<Card.Root class="flex h-full justify-center border-dashed bg-transparent">
 	<Card.Header>
 		<div class="flex justify-center">
 			<Button variant="secondary" disabled size="icon" class="size-8">
@@ -12,7 +12,7 @@
 			</Button>
 		</div>
 		<div class="mt-2">
-			<Card.Title class="font-title w-full text-center text-xl font-semibold"
+			<Card.Title class="font-title w-full text-center text-2xl font-light"
 				>Nothing here yet</Card.Title
 			>
 
