@@ -10,6 +10,9 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
 	},
+	"imports": {
+		"#*": "./src/*"
+	},
 	"dependencies": {
 		"@astrojs/svelte": "^7.1.0",
 		"@tailwindcss/vite": "^4.1.11",
