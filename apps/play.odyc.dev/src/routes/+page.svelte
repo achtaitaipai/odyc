@@ -6,8 +6,8 @@
 	import AlertAnonymous from '$lib/components/alert-anonymous.svelte';
 </script>
 
-<div class="p-3 mx-auto w-full max-w-7xl">
-    <AlertAnonymous />
+<div class="mx-auto w-full max-w-7xl p-3">
+	<AlertAnonymous />
 </div>
 
 <Sidebar.Provider style="--sidebar-width: 0px; --header-height: calc(var(--spacing) * 12);">
@@ -20,17 +20,17 @@
 				<h1 class="font-title text-3xl">Your Games</h1>
 				<div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 					<div class="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-					    <GameCardsNew />
+						<GameCardsNew />
 					</div>
 				</div>
-				
-					<h1 class="font-title text-3xl">Your Collaborations</h1>
-					
-					<div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-						<div class="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-						    <GameCardsEmpty />
-						</div>
+
+				<h1 class="font-title text-3xl">Your Collaborations</h1>
+
+				<div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+					<div class="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+						<GameCardsEmpty />
 					</div>
+				</div>
 			</div>
 		</div>
 	</Sidebar.Inset>

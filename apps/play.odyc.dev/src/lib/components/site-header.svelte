@@ -7,9 +7,9 @@
 </script>
 
 <header
-	class="flex shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear  py-3"
+	class="flex shrink-0 items-center gap-2 border-b py-3 transition-[width,height] ease-linear"
 >
-	<div class="flex items-center gap-1 px-4 lg:gap-2 lg:px-6 mx-auto w-full max-w-7xl">
+	<div class="mx-auto flex w-full max-w-7xl items-center gap-1 px-4 lg:gap-2 lg:px-6">
 		<a href="/" class="flex items-center gap-2">
 			<img src="/logo.png" alt="Odyc.js Logo" class="pixelated h-5 w-5" />
 

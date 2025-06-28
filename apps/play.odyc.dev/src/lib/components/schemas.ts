@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from 'zod/v4';
 
 export const schema = z.object({
 	id: z.number(),
@@ -7,7 +7,7 @@ export const schema = z.object({
 	status: z.string(),
 	target: z.string(),
 	limit: z.string(),
-	reviewer: z.string(),
+	reviewer: z.string()
 });
 
 export type Schema = z.infer<typeof schema>;
