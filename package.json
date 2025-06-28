@@ -8,7 +8,7 @@
 	"scripts": {
 		"format": "npm run format --workspaces",
 		"format:check": "npm run format --check --workspaces",
-		"lint": "npm run lint --workspaces",
+		"lint": "npm run lint --workspaces --if-present",
 		"test": "npm run test --workspace=odyc-e2e",
 		"test:once": "npm run test:once --workspace=odyc-e2e",
 		"build": "npm run build --workspace=odyc",
