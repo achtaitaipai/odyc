@@ -11,7 +11,9 @@
 		"format:check": "prettier --check ."
 	},
 	"dependencies": {
-		"astro": "^5.10.1"
+		"@tailwindcss/vite": "^4.1.11",
+		"astro": "^5.10.1",
+		"tailwindcss": "^4.1.11"
 	},
 	"devDependencies": {
 		"prettier": "^3.6.2",
