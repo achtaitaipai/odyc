@@ -3,6 +3,7 @@
 	import { stores } from '$lib/stores.svelte';
 	import '../app.css';
 	import { ModeWatcher, mode } from 'mode-watcher';
+	import { Toaster } from '$lib/components/ui/sonner/index.js';
 
 	let { children, data } = $props();
 
@@ -22,5 +23,13 @@
 </script>
 
 <ModeWatcher defaultMode={theme} lightClassNames={[]} darkClassNames={['dark']} />
+<Toaster
+	position="top-center"
+	toastOptions={{
+		classes: {
+			icon: '!text-destructive'
+		}
+	}}
+/>
 
 {@render children()}

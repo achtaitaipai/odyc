@@ -11,11 +11,14 @@
 	import * as InputOTP from '$lib/components/ui/input-otp/index.js';
 	import { REGEXP_ONLY_DIGITS } from 'bits-ui';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import * as Alert from '$lib/components/ui/alert/index.js';
+	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
 
 	let isLoading = $state(false);
 
 	let email = $state('');
 	let otp = $state('');
+	let error = $state<any>(null);
 
 	let token = $state<null | Models.Token>(null);
 	let step = $state<1 | 2>(1);
@@ -23,11 +26,14 @@
 	async function onMagicSignIn(event: Event) {
 		event.preventDefault();
 		isLoading = true;
+		error = null;
 
 		if (!token) {
 			try {
 				token = await Backend.signInMagicURL(email);
 				step = 2;
+			} catch (err: any) {
+				error = err;
 			} finally {
 				isLoading = false;
 			}
@@ -35,6 +41,8 @@
 			try {
 				await Backend.signInFinish(token?.userId ?? '', otp);
 				await invalidate(Dependencies.USER);
+			} catch (err: any) {
+				error = err;
 			} finally {
 				isLoading = false;
 			}
@@ -46,18 +54,17 @@
 		email = '';
 		otp = '';
 		token = null;
-	}
-
-	async function onMagicSignInFinish(event: Event) {
-		event.preventDefault();
-		isLoading = true;
+		error = null;
 	}
 
 	async function onGuestSignIn() {
 		isLoading = true;
+		error = null;
 		try {
 			await Backend.signInAnonymous();
 			await invalidate(Dependencies.USER);
+		} catch (err: any) {
+			error = err;
 		} finally {
 			isLoading = false;
 		}
@@ -65,7 +72,7 @@
 
 	async function onGitHubSignIn() {
 		isLoading = true;
-		Backend.signInGitHub();
+		Backend.signInGitHub(); // Redirects away
 	}
 </script>
 
@@ -94,7 +101,7 @@
 								<Input
 									bind:value={email}
 									id="login-email"
-									type="email"
+									type="text"
 									placeholder="your@email.com"
 									required
 								/>
@@ -137,6 +144,14 @@
 							</div>
 						</div>
 					{/if}
+
+					{#if error}
+						<Alert.Root variant="destructive">
+							<AlertCircleIcon />
+							<Alert.Description class="text-destructive">{error.message}</Alert.Description>
+						</Alert.Root>
+					{/if}
+
 					<div
 						class="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"
 					>

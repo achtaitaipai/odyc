@@ -14,7 +14,7 @@
 			// Appwrite custom
 			if (json.type) {
 				console.info('ℹ️ Error type:', json.type);
-				if (json.type === 'user_already_exists') {
+				if (json.type === 'user_already_exists' || json.type === 'user_session_already_exists') {
 					return {
 						title: 'Your GitHub account is already linked to another Odyc Play account.',
 						description:
@@ -24,12 +24,6 @@
 					return {
 						title: 'You are doing too many actions.',
 						description: 'Please wait up to 1 hour, and try again later.'
-					};
-				} else if (json.type === 'user_session_already_exists') {
-					return {
-						title: 'You are already signed in.',
-						description:
-							'Please sign out of your account first, and then sign in to your other account.'
 					};
 				}
 			}

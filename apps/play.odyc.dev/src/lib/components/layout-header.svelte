@@ -7,16 +7,23 @@
 
 	import { toggleMode } from 'mode-watcher';
 	import { Backend } from '$lib/backend';
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { Dependencies } from '$lib/constants';
+	import { toast } from 'svelte-sonner';
+	
+	let isLoading = false;
 
 	async function onLogout() {
-		await Backend.signOut();
-		await invalidate(Dependencies.USER);
-	}
-
-	function onSignIn() {
-		Backend.signInGitHub();
+		isLoading = true;
+		try {
+			await Backend.signOut();
+			await invalidate(Dependencies.USER);
+			goto('/');
+		} catch (err: any) {
+		toast.error(err.message);
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 
@@ -78,7 +85,7 @@
 							><DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item></a
 						>
 						<DropdownMenu.Separator />
-						<button onclick={onLogout} class="w-full">
+						<button disabled={isLoading} onclick={onLogout} class="w-full">
 							<DropdownMenu.Item class="cursor-pointer">Log out</DropdownMenu.Item>
 						</button>
 					</DropdownMenu.Group>
