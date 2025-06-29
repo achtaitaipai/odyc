@@ -59,6 +59,7 @@
 	},
 	"dependencies": {
 		"@scaleway/random-name": "^5.1.2",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"appwrite": "^18.1.1",
 		"mode-watcher": "^1.1.0"
 	}
