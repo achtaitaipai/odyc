@@ -1,11 +1,11 @@
 import type { HandleClientError } from '@sveltejs/kit';
 
-export const handleError: HandleClientError = async ({ error, event, status, message }) => {
+export const handleError: HandleClientError = async ({ error }) => {
 	let err = error as any;
 
 	try {
 		err = JSON.stringify(err);
-	} catch (e) {}
+	} catch {}
 
 	return {
 		message: err

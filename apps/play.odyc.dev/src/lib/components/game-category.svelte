@@ -56,7 +56,7 @@
 				<props.emptyComponent></props.emptyComponent>
 			{/if}
 
-			{#each games.filter((_, index) => index < perPage) as game}
+			{#each games.filter((_, index) => index < perPage) as game (game.$id)}
 				<GameCardsStateful />
 			{/each}
 		</div>

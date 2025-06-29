@@ -9,8 +9,6 @@
 		try {
 			const json: any = JSON.parse(error);
 
-			console.log(json);
-
 			// Appwrite custom
 			if (json.type) {
 				console.info('ℹ️ Error type:', json.type);
@@ -35,7 +33,7 @@
 					if (response.message) {
 						return { title: response.message };
 					}
-				} catch (err) {}
+				} catch {}
 			}
 
 			// SvelteKit
@@ -56,7 +54,7 @@
 			}
 
 			return { title: error.toString ? error.toString() : error };
-		} catch (_) {
+		} catch {
 			return { title: error.toString ? error.toString() : error };
 		}
 	}

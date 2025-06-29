@@ -3,8 +3,6 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import IconPlayerPlayFilled from '@tabler/icons-svelte/icons/player-play-filled';
 	import IconBolt from '@tabler/icons-svelte/icons/bolt';
-	import IconDeviceTablet from '@tabler/icons-svelte/icons/device-tablet';
-	import IconSun from '@tabler/icons-svelte/icons/sun';
 	import Badge from './ui/badge/badge.svelte';
 
 	const { games } = $props();
@@ -22,7 +20,7 @@
 		</Card.Root>
 	{/if}
 
-	{#each games as game}
+	{#each games as game (game.$id)}
 		<Card.Root class="flex h-full justify-center bg-transparent">
 			<Card.Header>
 				<Card.Title class="font-title text-2xl font-light">{game.title}</Card.Title>
@@ -31,7 +29,7 @@
 				</Card.Description>
 				{#if game.tags}
 					<div class="mt-3">
-						{#each game.tags as tag}
+						{#each game.tags as tag (tag)}
 							<Badge class="text-base" variant="outline">
 								<IconBolt class="text-muted-foreground !h-4 !w-4" />ICON TODO {tag}</Badge
 							>

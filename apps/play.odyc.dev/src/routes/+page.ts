@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 
 export const ssr = false;
 
-export const load: PageLoad = async ({ depends, parent }) => {
+export const load: PageLoad = async ({ parent }) => {
 	await parent();
 
 	if (!stores.user) {

@@ -1,4 +1,3 @@
-import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import { stores } from '$lib/stores.svelte';
 import { Query } from 'appwrite';

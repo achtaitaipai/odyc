@@ -39,7 +39,7 @@ export class Backend {
 	}
 
 	static signInGitHub() {
-		let path =
+		const path =
 			window.location.origin +
 			'/oauth/callback?redirect=' +
 			encodeURIComponent(window.location.pathname);

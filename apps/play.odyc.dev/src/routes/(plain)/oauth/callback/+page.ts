@@ -1,6 +1,4 @@
-import { goto, invalidate } from '$app/navigation';
 import { Backend } from '$lib/backend';
-import { Dependencies } from '$lib/constants';
 import { stores } from '$lib/stores.svelte';
 import type { PageLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
@@ -8,7 +6,7 @@ import { error } from '@sveltejs/kit';
 
 // TODO: If need comes, add ability to show verbose errors to user
 // TODO: Remember last path
-export const load: PageLoad = async ({ params, url }) => {
+export const load: PageLoad = async ({ url }) => {
 	const userId = url.searchParams.get('userId') ?? '';
 	const secret = url.searchParams.get('secret') ?? '';
 	const errorMsg = url.searchParams.get('error') ?? '';
@@ -27,5 +25,5 @@ export const load: PageLoad = async ({ params, url }) => {
 	// TODO: Core quality; use invalidate()
 	await stores.fetchUser(); // Doing invalidate doesnt work here for some reason
 
-	throw redirect(307, '/'); // Success
+	throw redirect(307, href ? href : '/'); // Success
 };
