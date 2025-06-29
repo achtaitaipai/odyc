@@ -123,9 +123,16 @@ export class Cells<T extends string> {
 		if ('visible' in query && query.visible !== cell.visible) return false
 		if ('foreground' in query && query.foreground !== cell.foreground)
 			return false
-		if ('sound' in query && query.sound !== cell.sound) return false
 		if ('dialog' in query && query.dialog !== cell.dialog) return false
-		if ('end' in query && query.end !== cell.end) return false
+		if ('end' in query) {
+			if (typeof query.end !== typeof cell.end) return false
+			if (typeof query.end === 'string' && cell.end !== query.end) return false
+			if (typeof query.end === 'boolean' && cell.end !== query.end) return false
+			if (Array.isArray(query.end)) {
+				if (!Array.isArray(cell.end)) return false
+				if (query.end.join('') !== cell.end.join('')) return false
+			}
+		}
 		if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
 			return false
 		return true

@@ -11,14 +11,14 @@ describe('getCells', () => {
 	test('should filter cells by symbol', () => {
 		const { game } = init()
 		const wallCells = game.getCells({ symbol: '#' })
-		expect(wallCells.length).toBe(5)
+		expect(wallCells.length).toBe(3)
 		expect(wallCells.every((cell) => cell.symbol === '#')).toBe(true)
 	})
 
 	test('should filter cells by array of symbols', () => {
 		const { game } = init()
 		const multiSymbolCells = game.getCells({ symbol: ['#', 'x'] })
-		expect(multiSymbolCells.length).toBe(6) // 5 '#' cells + 1 'x' cell
+		expect(multiSymbolCells.length).toBe(4)
 		expect(
 			multiSymbolCells.every(
 				(cell) => cell.symbol === '#' || cell.symbol === 'x',
@@ -50,25 +50,25 @@ describe('getCells', () => {
 	test('should filter cells by solid property', () => {
 		const { game } = init()
 		const solidCells = game.getCells({ solid: true })
-		expect(solidCells.length).toBe(5) // All # cells are solid
+		expect(solidCells.length).toBe(3) // All # cells are solid
 		expect(solidCells.every((cell) => cell.solid === true)).toBe(true)
 
 		const nonSolidCells = game.getCells({ solid: false })
-		expect(nonSolidCells.length).toBe(4) // x, e, *, o cells
+		expect(nonSolidCells.length).toBe(6) // x, e, *, o, a, b cells
 		expect(nonSolidCells.every((cell) => cell.solid === false)).toBe(true)
 	})
 
 	test('should filter cells by sprite', () => {
 		const { game } = init()
 		const sprite1Cells = game.getCells({ sprite: 1 })
-		expect(sprite1Cells.length).toBe(5) // All # cells have sprite 1
+		expect(sprite1Cells.length).toBe(3) // All # cells have sprite 1
 		expect(sprite1Cells.every((cell) => cell.sprite === 1)).toBe(true)
 	})
 
 	test('should filter cells by x coordinate', () => {
 		const { game } = init()
 		const cellsAtX1 = game.getCells({ x: 1 })
-		expect(cellsAtX1.length).toBe(3) // Column 1: x, *, #
+		expect(cellsAtX1.length).toBe(3) // Column 1: x, *, a
 		expect(cellsAtX1.every((cell) => cell.position[0] === 1)).toBe(true)
 	})
 
@@ -103,6 +103,53 @@ describe('getCells', () => {
 		expect(endCells[0]?.end).toBe('Game Over')
 	})
 
+	test('should filter cells by end array property', () => {
+		const { game } = init()
+		const endArrayCells = game.getCells({ end: ['win', 'victory'] })
+		expect(endArrayCells.length).toBe(1)
+		expect(endArrayCells[0]?.symbol).toBe('a')
+		expect(endArrayCells[0]?.end).toEqual(['win', 'victory'])
+	})
+
+	test('should filter cells by single element end array', () => {
+		const { game } = init()
+		const singleEndArrayCells = game.getCells({ end: ['lose'] })
+		expect(singleEndArrayCells.length).toBe(1)
+		expect(singleEndArrayCells[0]?.symbol).toBe('b')
+		expect(singleEndArrayCells[0]?.end).toEqual(['lose'])
+	})
+
+	test('should not match different types of end values', () => {
+		const { game } = init()
+		// String query should not match array end values
+		const stringQueryForArray = game.getCells({ end: 'win' })
+		expect(stringQueryForArray.length).toBe(0)
+
+		// Array query should not match string end values
+		const arrayQueryForString = game.getCells({ end: ['Game Over'] })
+		expect(arrayQueryForString.length).toBe(0)
+	})
+
+	test('should not match arrays with different content', () => {
+		const { game } = init()
+		const differentArrayQuery = game.getCells({ end: ['win', 'lose'] })
+		expect(differentArrayQuery.length).toBe(0)
+
+		const differentOrderQuery = game.getCells({ end: ['victory', 'win'] })
+		expect(differentOrderQuery.length).toBe(0)
+	})
+
+	test('should not match partial array matches', () => {
+		const { game } = init()
+		const partialMatch = game.getCells({ end: ['win'] })
+		expect(partialMatch.length).toBe(0)
+
+		const extraElementsMatch = game.getCells({
+			end: ['win', 'victory', 'extra'],
+		})
+		expect(extraElementsMatch.length).toBe(0)
+	})
+
 	test('should filter cells by foreground property', () => {
 		const { game } = init()
 		const foregroundCells = game.getCells({ foreground: true })
@@ -122,7 +169,7 @@ describe('getCells', () => {
 	test('should support multiple query conditions', () => {
 		const { game } = init()
 		const solidSprite1Cells = game.getCells({ solid: true, sprite: 1 })
-		expect(solidSprite1Cells.length).toBe(5) // All # cells
+		expect(solidSprite1Cells.length).toBe(3) // All # cells
 		expect(
 			solidSprite1Cells.every(
 				(cell) => cell.solid === true && cell.sprite === 1,
