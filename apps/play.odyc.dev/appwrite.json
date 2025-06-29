@@ -121,8 +121,8 @@
 				{
 					"key": "collaboratorProfileIds",
 					"type": "string",
-					"required": false,
-					"array": true,
+					"required": true,
+					"array": false,
 					"size": 32,
 					"default": null
 				}
@@ -184,7 +184,7 @@
 					"type": "string",
 					"required": false,
 					"array": false,
-					"size": 64,
+					"size": 255,
 					"default": null
 				}
 			],
