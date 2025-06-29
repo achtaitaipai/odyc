@@ -34,6 +34,9 @@ export const initGameState = <U extends string>(
 	cells.subscribe(() => {
 		observable.notify()
 	})
+	gameMap.subscribe(() => {
+		observable.notify()
+	})
 
 	return {
 		player,
