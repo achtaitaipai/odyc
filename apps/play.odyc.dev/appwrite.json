@@ -96,14 +96,6 @@
 					"default": null
 				},
 				{
-					"key": "tags",
-					"type": "string",
-					"required": false,
-					"array": true,
-					"size": 32,
-					"default": null
-				},
-				{
 					"key": "slug",
 					"type": "string",
 					"required": false,

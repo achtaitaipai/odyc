@@ -8,7 +8,6 @@ export type Games = Models.Document & {
 	ownerProfileId: string;
 	description: string | null;
 	howToPlay: string | null;
-	tags: string[] | null;
 	slug: string | null;
 	collaboratorProfileIds: string[] | null;
 };

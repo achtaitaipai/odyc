@@ -45,15 +45,6 @@
 						>{getOwner(game)?.name}</a
 					>
 				</Card.Description>
-				{#if game.tags}
-					<div class="mt-3">
-						{#each game.tags as tag (tag)}
-							<Badge class="text-base" variant="outline">
-								<IconBolt class="text-muted-foreground !h-4 !w-4" />{tag}</Badge
-							>
-						{/each}
-					</div>
-				{/if}
 				<Card.Action>
 					<a href={`/g/${game.slug}`}>
 						<Button class="" variant="outline"
