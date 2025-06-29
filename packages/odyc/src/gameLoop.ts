@@ -39,6 +39,8 @@ class GameLoop<T extends string> {
 			.get()
 			.map((el) => this.#gameState.cells.getEvent(...el.position, 'onTurn'))
 
+		// map may change while on* events are being handled
+		const mapBeforeEvents = this.#gameState.gameMap.map;
 		if (this.#isCellOnworld(to.value)) {
 			const cell = this.#gameState.cells.getCellAt(...to.value)
 
@@ -54,10 +56,13 @@ class GameLoop<T extends string> {
 				await this.#gameState.cells.getEvent(...to.value, 'onCollide')?.()
 			else await this.#gameState.cells.getEvent(...to.value, 'onEnter')?.()
 		}
-		for (const event of onTurnEvents) {
-			await event?.()
+		// run turn events only if map didn't change
+		if (this.#gameState.gameMap.map === mapBeforeEvents) {
+			for (const event of onTurnEvents) {
+				await event?.()
+			}
+			this.#gameState.player.dispatchOnTurn()
 		}
-		this.#gameState.player.dispatchOnTurn()
 		if (!this.#ender.ending) this.#gameState.turn.next()
 		await this.#end(this.#gameState.cells.getCellAt(...to.value))
 	}
