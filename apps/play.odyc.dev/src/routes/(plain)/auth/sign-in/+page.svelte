@@ -135,9 +135,7 @@
 							<div class="flex w-full flex-col justify-center">
 								<Button disabled={isLoading} type="submit" class="w-full">Continue</Button>
 								<button onclick={onStepBack}
-									><p
-										class="text-muted-foreground mt-3 cursor-pointer text-center text-sm underline"
-									>
+									><p class="text-muted-foreground mt-3 text-center text-sm underline">
 										Didn't receive the code?
 									</p></button
 								>
@@ -163,7 +161,7 @@
 							onclick={onGuestSignIn}
 							variant="outline"
 							type="button"
-							class="!disabled:opacity-50 w-full cursor-pointer border-dashed !bg-transparent"
+							class="!disabled:opacity-50 w-full  border-dashed !bg-transparent"
 						>
 							<IconGhost />
 							Continue as guest
@@ -173,7 +171,7 @@
 							onclick={onGitHubSignIn}
 							variant="outline"
 							type="button"
-							class="w-full cursor-pointer"
+							class="w-full "
 						>
 							<IconGitHub />
 							Continue with GitHub

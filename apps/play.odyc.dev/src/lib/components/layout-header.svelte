@@ -60,7 +60,7 @@
 				GitHub
 			</Button>
 
-			<Button onclick={toggleMode} variant="ghost" class="cursor-pointer" size="icon">
+			<Button onclick={toggleMode} variant="ghost" class="" size="icon">
 				<SunIcon
 					class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90"
 				/>
@@ -72,7 +72,7 @@
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
-					<Button variant="ghost" class="cursor-pointer" size="icon">
+					<Button variant="ghost" class="" size="icon">
 						<UserIcon class="size-[1.2rem]" />
 					</Button>
 				</DropdownMenu.Trigger>
@@ -80,21 +80,19 @@
 					{#if stores.user}
 						<DropdownMenu.Group>
 							<a href="/dashboard/profile"
-								><DropdownMenu.Item class="cursor-pointer">My Profile</DropdownMenu.Item></a
+								><DropdownMenu.Item class="">My Profile</DropdownMenu.Item></a
 							>
 							<a href="/dashboard/settings"
-								><DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item></a
+								><DropdownMenu.Item class="">Settings</DropdownMenu.Item></a
 							>
 							<DropdownMenu.Separator />
 							<button disabled={isLoading} onclick={onLogout} class="w-full">
-								<DropdownMenu.Item class="cursor-pointer">Log out</DropdownMenu.Item>
+								<DropdownMenu.Item class="">Log out</DropdownMenu.Item>
 							</button>
 						</DropdownMenu.Group>
 					{:else}
 						<DropdownMenu.Group>
-							<a href="/auth/sign-in"
-								><DropdownMenu.Item class="cursor-pointer">Sign In</DropdownMenu.Item></a
-							>
+							<a href="/auth/sign-in"><DropdownMenu.Item class="">Sign In</DropdownMenu.Item></a>
 						</DropdownMenu.Group>
 					{/if}
 				</DropdownMenu.Content>

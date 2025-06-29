@@ -37,7 +37,7 @@
 					</div>
 				{/if}
 				<Card.Action>
-					<Button class="cursor-pointer" variant="outline"
+					<Button class="" variant="outline"
 						>Play now ACTION TODO<IconPlayerPlayFilled class="text-muted-foreground" /></Button
 					>
 				</Card.Action>

@@ -80,7 +80,7 @@
 					{/if}
 				</div>
 
-				<a href="/"><Button type="button" class="cursor-pointer">Back to homepage</Button></a>
+				<a href="/"><Button type="button" class="">Back to homepage</Button></a>
 			</div>
 		</div>
 	</div>

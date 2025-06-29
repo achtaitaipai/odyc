@@ -128,4 +128,11 @@ export class Backend {
 			Query.orderDesc('$createdAt')
 		]);
 	}
+
+	static async updateProfile(profileId: string, name: string, sprite: string) {
+		return await this.#databases.updateDocument<Profiles>('main', 'profiles', profileId, {
+			name,
+			avatarPixels: sprite
+		});
+	}
 }

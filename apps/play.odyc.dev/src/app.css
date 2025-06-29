@@ -137,3 +137,16 @@ body {
 .font-pixel {
 	font-family: 'Pixelify Sans', display;
 }
+
+a,
+button {
+	cursor: pointer;
+}
+
+svg[data-sonner-error-icon] {
+	@apply !text-destructive;
+}
+
+svg[data-sonner-success-icon] {
+	color: #51cf66;
+}

@@ -4,7 +4,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 </script>
 
-<Card.Root class="flex cursor-pointer justify-center overflow-hidden p-0">
+<Card.Root class="flex  justify-center overflow-hidden p-0">
 	<Card.Header class="p-0">
 		<div class="relative">
 			<div class="absolute top-2 right-2">

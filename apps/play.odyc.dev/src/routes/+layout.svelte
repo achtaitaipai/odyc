@@ -23,13 +23,6 @@
 </script>
 
 <ModeWatcher defaultMode={theme} lightClassNames={[]} darkClassNames={['dark']} />
-<Toaster
-	position="top-center"
-	toastOptions={{
-		classes: {
-			icon: '!text-destructive'
-		}
-	}}
-/>
+<Toaster position="top-center" />
 
 {@render children()}

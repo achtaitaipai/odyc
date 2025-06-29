@@ -22,7 +22,7 @@
 		</Alert.Description>
 	</div>
 
-	<Button onclick={onSignIn} variant="outline" class="text-primary cursor-pointer" size="sm">
+	<Button onclick={onSignIn} variant="outline" class="text-primary " size="sm">
 		<IconGitHub class="size-4" />
 		Connect with GitHub
 	</Button>

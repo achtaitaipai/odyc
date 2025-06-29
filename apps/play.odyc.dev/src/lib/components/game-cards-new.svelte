@@ -11,7 +11,7 @@
 
 <Dialog.Root>
 	<Dialog.Trigger>
-		<Card.Root class="flex h-full cursor-pointer justify-center">
+		<Card.Root class="flex h-full  justify-center">
 			<Card.Header>
 				<div class="flex justify-center">
 					<Button variant="secondary" disabled size="icon" class="size-8">
