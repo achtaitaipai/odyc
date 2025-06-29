@@ -41,7 +41,7 @@
 >
 	{#each pixels as row, y}
 		{#each row as pixel, x}
-			<rect width="1" height="1" {x} {y} style={`fill:${pixel};`} />
+			<rect width="1.1" height="1.1" {x} {y} style={`fill:${pixel};`} />
 		{/each}
 	{/each}
 </svg>
