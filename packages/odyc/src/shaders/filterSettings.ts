@@ -3,6 +3,7 @@ import defaultFragment from './default.frag.glsl'
 import fractalShader from './fractal.frag.glsl'
 import crtShader from './crt.frag.glsl'
 import neonShader from './neon.frag.glsl'
+import glowShader from './glow.frag.glsl'
 
 /**
  * Shader uniform values (scalars, vec2, vec3, vec4)
@@ -46,6 +47,12 @@ const filters = {
 			intensity: 0.8,
 		},
 	},
+	glow: {
+		fragment: glowShader,
+		settings: {
+			intensity: 0.5,
+		},
+	},
 } satisfies Record<string, Filter>
 
 type FilterKey = keyof typeof filters
@@ -68,6 +75,7 @@ type CustomFilterSettings = {
  * - 'fractal': Creates a polygon of n sides for each pixel with configurable rotation and scale
  * - 'crt': Simulates old CRT monitor with scanlines and screen curvature
  * - 'neon': Adds glowing neon-like effect with bloom
+ * - 'glow': Adds a glowing effect without mosaic
  *
  * @example
  * ```typescript
