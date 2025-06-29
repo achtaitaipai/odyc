@@ -1,31 +1,42 @@
-<script>
+<script lang="ts">
+	import type { Games } from '$lib/appwrite';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import IconLock from '@tabler/icons-svelte/icons/lock';
-	import { Badge } from '$lib/components/ui/badge/index.js';
+	import relativeTime from 'dayjs/plugin/relativeTime';
+	import dayjs from 'dayjs';
+
+	const {
+		game
+	}: {
+		game: Games;
+	} = $props();
+
+	dayjs.extend(relativeTime);
 </script>
 
-<Card.Root class="flex  justify-center overflow-hidden p-0">
-	<Card.Header class="p-0">
-		<div class="relative">
-			<div class="absolute top-2 right-2">
-				<Badge variant="outline" class="bg-background border-muted border">
-					Private <IconLock class="text-muted-foreground" />
-				</Badge>
-			</div>
+<a href={`/dashboard/games/${game.$id}`}>
+	<Card.Root class="flex  justify-center overflow-hidden p-0">
+		<Card.Header class="p-0">
 			<img
-				alt="Screenshot of forest hike"
-				src="https://odyc.dev/gallery/forest-hike.png"
-				class="aspect-video w-full object-cover object-center"
+				alt={`Light Screenshot of ${game.name}`}
+				src="/placeholder-light.svg"
+				class="block aspect-video w-full object-cover object-center dark:hidden"
 			/>
-		</div>
+			<img
+				alt={`Dark Screenshot of ${game.name}`}
+				src="/placeholder-dark.svg"
+				class="hidden aspect-video w-full object-cover object-center dark:block"
+			/>
 
-		<div class="px-3 pt-1">
-			<Card.Title class="font-title w-full text-lg font-light"
-				>Forest Hike
-				<span></span>
-			</Card.Title>
+			<div class="px-3 pt-1">
+				<Card.Title class="font-title w-full text-lg font-light"
+					>{game.name}
+					<span></span>
+				</Card.Title>
 
-			<Card.Description class="mb-2.5 text-xs">Last changed 3 days ago</Card.Description>
-		</div>
-	</Card.Header>
-</Card.Root>
+				<Card.Description class="mb-2.5 text-xs"
+					>Last modified {dayjs().to(game.$createdAt)}</Card.Description
+				>
+			</div>
+		</Card.Header>
+	</Card.Root>
+</a>

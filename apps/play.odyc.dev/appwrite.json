@@ -112,34 +112,27 @@
 					"default": null
 				},
 				{
-					"key": "private",
-					"type": "boolean",
-					"required": true,
-					"array": false,
-					"default": null
-				},
-				{
 					"key": "collaboratorProfileIds",
 					"type": "string",
-					"required": true,
-					"array": false,
+					"required": false,
+					"array": true,
 					"size": 32,
 					"default": null
 				}
 			],
 			"indexes": [
 				{
-					"key": "slug",
-					"type": "key",
-					"status": "available",
-					"attributes": ["slug"],
-					"orders": ["ASC"]
-				},
-				{
 					"key": "ownerProfileId",
 					"type": "key",
 					"status": "available",
 					"attributes": ["ownerProfileId"],
+					"orders": ["ASC"]
+				},
+				{
+					"key": "slug",
+					"type": "unique",
+					"status": "available",
+					"attributes": ["slug"],
 					"orders": ["ASC"]
 				}
 			]
@@ -189,6 +182,24 @@
 				}
 			],
 			"indexes": []
+		}
+	],
+	"sites": [
+		{
+			"$id": "6861946a003c2d835173",
+			"name": "odyc",
+			"enabled": true,
+			"logging": true,
+			"framework": "sveltekit",
+			"timeout": 30,
+			"installCommand": "npm install",
+			"buildCommand": "npm run build",
+			"outputDirectory": "./build",
+			"specification": "s-1vcpu-512mb",
+			"buildRuntime": "node-22",
+			"adapter": "static",
+			"fallbackFile": "index.html",
+			"path": "sites/odyc"
 		}
 	]
 }

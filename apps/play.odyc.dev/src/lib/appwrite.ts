@@ -10,7 +10,6 @@ export type Games = Models.Document & {
 	howToPlay: string | null;
 	tags: string[] | null;
 	slug: string | null;
-	private: boolean;
 	collaboratorProfileIds: string[] | null;
 };
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import GameCardsNew from '$lib/components/game-cards-new.svelte';
 	import GameCardsEmpty from '$lib/components/game-cards-empty.svelte';
 	import GameCategory from '$lib/components/game-category.svelte';
 	import GameCommunity from '$lib/components/game-community.svelte';
@@ -14,16 +13,19 @@
 		<GameCategory
 			games={data.yourGames}
 			queries={data.yourGamesQueries}
-			alwaysShowEmpty={true}
-			emptyComponent={GameCardsNew}
+			allowCreate={true}
 			title="Your Games"
-		/>
+		>
+			<GameCardsEmpty description="Create your first game!"></GameCardsEmpty>
+		</GameCategory>
 		<GameCategory
 			games={data.collaborationGames}
 			queries={data.collaborationGamesQueries}
-			emptyComponent={GameCardsEmpty}
 			title="Your Collaborations"
-		/>
-		<GameCommunity games={data.communityHighlights} />
+			allowCreate={false}
+			><GameCardsEmpty description="You have not yet collaborated on someone else's game."
+			></GameCardsEmpty>
+		</GameCategory>
+		<GameCommunity profiles={data.profiles} games={data.communityHighlights} />
 	</div>
 </div>

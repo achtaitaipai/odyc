@@ -1,7 +1,13 @@
-<script>
+<script lang="ts">
 	import * as Card from '$lib/components/ui/card/index.js';
 	import IconQuestionMark from '@tabler/icons-svelte/icons/question-mark';
 	import { Button } from '$lib/components/ui/button/index.js';
+
+	const {
+		description
+	}: {
+		description: string;
+	} = $props();
 </script>
 
 <Card.Root class="flex h-full justify-center border-dashed bg-transparent">
@@ -16,9 +22,9 @@
 				>Nothing here yet</Card.Title
 			>
 
-			<Card.Description class="mt-2 w-full text-center text-sm"
-				>You have not yet collaborated on someone else's game.</Card.Description
-			>
+			{#if description}
+				<Card.Description class="mt-2 w-full text-center text-sm">{description}</Card.Description>
+			{/if}
 		</div>
 	</Card.Header>
 </Card.Root>

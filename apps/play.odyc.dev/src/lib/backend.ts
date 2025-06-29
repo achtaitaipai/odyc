@@ -10,6 +10,8 @@ import {
 } from 'appwrite';
 import randomName from '@scaleway/random-name';
 import { type Games, type CommunityHighlights, type Profiles } from './appwrite';
+import slugify from 'slugify';
+import { stores } from './stores.svelte';
 
 type BackendPrefs = {
 	theme?: string;
@@ -107,14 +109,10 @@ export class Backend {
 		const highlights = await this.#databases.listDocuments<CommunityHighlights>(
 			'main',
 			'communityHighlights',
-			[
-				Query.orderDesc('$createdAt'),
-				Query.limit(50), // Extra, in case some were marked as private
-				Query.select(['$id'])
-			]
+			[Query.orderDesc('$createdAt'), Query.limit(10), Query.select(['gameId'])]
 		);
 
-		const highlightIds = highlights.documents.map((highlight) => highlight.$id);
+		const highlightIds = highlights.documents.map((highlight) => highlight.gameId);
 		if (highlightIds.length <= 0) {
 			return {
 				total: 0,
@@ -122,11 +120,7 @@ export class Backend {
 			};
 		}
 
-		return await this.getGames([
-			Query.equal('$id', highlightIds),
-			Query.limit(10),
-			Query.orderDesc('$createdAt')
-		]);
+		return await this.getGames([Query.equal('$id', highlightIds), Query.orderDesc('$createdAt')]);
 	}
 
 	static async updateProfile(profileId: string, name: string, sprite: string) {
@@ -134,5 +128,25 @@ export class Backend {
 			name,
 			avatarPixels: sprite
 		});
+	}
+
+	static async createGame(name: string) {
+		try {
+			return await this.#databases.createDocument<Games>('main', 'games', ID.unique(), {
+				name,
+				slug: slugify(name),
+				ownerProfileId: stores.profile?.$id
+			});
+		} catch (error: unknown) {
+			if (error instanceof AppwriteException && error.code === 409) {
+				const id = ID.unique();
+				return await this.#databases.createDocument<Games>('main', 'games', id, {
+					name,
+					slug: id,
+					ownerProfileId: stores.profile?.$id
+				});
+			}
+			throw error;
+		}
 	}
 }
