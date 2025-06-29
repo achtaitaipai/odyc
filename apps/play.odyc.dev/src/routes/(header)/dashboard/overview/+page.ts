@@ -26,18 +26,10 @@ export const load: PageLoad = async ({ parent }) => {
 		Backend.getCommunityHighlights()
 	]);
 
-	const gameLists = [
-		yourGames.documents,
-		collaborationGames.documents,
-		communityHighlights.documents
-	];
-
 	const profileIds: string[] = [];
-	for (const gameList of gameLists) {
-		for (const game of gameList) {
-			if (profileIds.includes(game.ownerProfileId)) continue;
-			profileIds.push(game.ownerProfileId);
-		}
+	for (const game of communityHighlights.documents) {
+		if (profileIds.includes(game.ownerProfileId)) continue;
+		profileIds.push(game.ownerProfileId);
 	}
 
 	const profiles =

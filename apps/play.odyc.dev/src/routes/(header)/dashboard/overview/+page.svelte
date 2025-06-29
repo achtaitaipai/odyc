@@ -13,7 +13,6 @@
 	>
 		<GameCategory
 			games={data.yourGames}
-			profiles={data.profiles}
 			queries={data.yourGamesQueries}
 			alwaysShowEmpty={true}
 			emptyComponent={GameCardsNew}
@@ -21,7 +20,6 @@
 		/>
 		<GameCategory
 			games={data.collaborationGames}
-			profiles={data.profiles}
 			queries={data.collaborationGamesQueries}
 			emptyComponent={GameCardsEmpty}
 			title="Your Collaborations"

@@ -10,6 +10,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { Dependencies } from '$lib/constants';
 	import { toast } from 'svelte-sonner';
+	import { stores } from '$lib/stores.svelte';
 
 	let isLoading = false;
 
@@ -76,19 +77,26 @@
 					</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
-					<DropdownMenu.Group>
-						<DropdownMenu.Label>My Account</DropdownMenu.Label>
-						<a href="/dashboard/profile"
-							><DropdownMenu.Item class="cursor-pointer">Profile</DropdownMenu.Item></a
-						>
-						<a href="/dashboard/settings"
-							><DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item></a
-						>
-						<DropdownMenu.Separator />
-						<button disabled={isLoading} onclick={onLogout} class="w-full">
-							<DropdownMenu.Item class="cursor-pointer">Log out</DropdownMenu.Item>
-						</button>
-					</DropdownMenu.Group>
+					{#if stores.user}
+						<DropdownMenu.Group>
+							<a href="/dashboard/profile"
+								><DropdownMenu.Item class="cursor-pointer">My Profile</DropdownMenu.Item></a
+							>
+							<a href="/dashboard/settings"
+								><DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item></a
+							>
+							<DropdownMenu.Separator />
+							<button disabled={isLoading} onclick={onLogout} class="w-full">
+								<DropdownMenu.Item class="cursor-pointer">Log out</DropdownMenu.Item>
+							</button>
+						</DropdownMenu.Group>
+					{:else}
+						<DropdownMenu.Group>
+							<a href="/auth/sign-in"
+								><DropdownMenu.Item class="cursor-pointer">Sign In</DropdownMenu.Item></a
+							>
+						</DropdownMenu.Group>
+					{/if}
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>

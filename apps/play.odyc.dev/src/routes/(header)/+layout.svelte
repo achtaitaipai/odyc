@@ -15,7 +15,7 @@
 >
 	<Sidebar.Inset>
 		<header>
-			{#if !stores.user?.email}
+			{#if stores.user && !stores.user?.email}
 				<div class="mx-auto w-full max-w-7xl p-3">
 					<LayoutAlertsAnonymous />
 				</div>
