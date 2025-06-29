@@ -11,6 +11,7 @@
 
 			console.log(json);
 
+			// Appwrite custom
 			if (json.type) {
 				console.info('ℹ️ Error type:', json.type);
 				if (json.type === 'user_already_exists') {
@@ -33,10 +34,7 @@
 				}
 			}
 
-			if (json.message) {
-				return { title: json.message };
-			}
-
+			// Appwrite default
 			if (json.response) {
 				try {
 					const response = JSON.parse(json.response);
@@ -44,6 +42,23 @@
 						return { title: response.message };
 					}
 				} catch (err) {}
+			}
+
+			// SvelteKit
+			if (json.text) {
+				if (json.text === 'Not Found') {
+					return {
+						title: 'Sorry, this page does not exist',
+						description: 'Please go back to homepage and try again later.'
+					};
+				}
+
+				return { title: json.text };
+			}
+
+			// JS default
+			if (json.message) {
+				return { title: json.message };
 			}
 
 			return { title: error.toString ? error.toString() : error };
