@@ -12,7 +12,7 @@
 
 	const props = $props();
 
-	const games: any[] = ['a', 'b', 'c', 'd', 'e'];
+	const games: any[] = [];
 </script>
 
 <div class="flex flex-col gap-4">
@@ -52,7 +52,7 @@
 	</div>
 	<div class="flex flex-col gap-4 md:gap-6">
 		<div class="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-			{#if games.length === 0 && props.emptyComponent}
+			{#if (props.alwaysShowEmpty || games.length === 0) && props.emptyComponent}
 				<props.emptyComponent></props.emptyComponent>
 			{/if}
 

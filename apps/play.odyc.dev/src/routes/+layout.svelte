@@ -10,7 +10,7 @@
 	let theme = data.theme as any; // Prevent issues with unsupported words
 
 	async function storeTheme(mode: string) {
-		await Backend.updateThemePrefferences(mode);
+		await Backend.updateThemePrefs(mode);
 	}
 
 	$effect(() => {

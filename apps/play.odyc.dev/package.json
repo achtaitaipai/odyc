@@ -58,6 +58,7 @@
 		"zod": "^3.25.67"
 	},
 	"dependencies": {
+		"@scaleway/random-name": "^5.1.2",
 		"appwrite": "^18.1.1",
 		"mode-watcher": "^1.1.0"
 	}

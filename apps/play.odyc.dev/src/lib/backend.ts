@@ -1,7 +1,19 @@
-import { Account, AppwriteException, Client, ID, OAuthProvider, type Models } from 'appwrite';
+import {
+	Account,
+	AppwriteException,
+	Client,
+	Databases,
+	ID,
+	OAuthProvider,
+	Query,
+	type Models
+} from 'appwrite';
+import randomName from '@scaleway/random-name';
+import { type Games, type CommunityHighlights, type Profiles } from './appwrite';
 
 type BackendPrefs = {
-	theme: string;
+	theme?: string;
+	profileId?: string;
 };
 export type BackendUser = Models.User<BackendPrefs>;
 
@@ -16,6 +28,7 @@ export class Backend {
 
 	// Service SDKs
 	static #account: Account = new Account(this.#client);
+	static #databases: Databases = new Databases(this.#client);
 
 	static async signInAnonymous() {
 		return await this.#account.createAnonymousSession();
@@ -58,8 +71,54 @@ export class Backend {
 		return await this.#account.deleteSession('current');
 	}
 
-	static async updateThemePrefferences(theme: string) {
+	static async updateThemePrefs(theme: string) {
 		const prefs = await this.#account.getPrefs();
-		return await this.#account.updatePrefs({ ...prefs, theme });
+		return await this.#account.updatePrefs<BackendPrefs>({ ...prefs, theme });
+	}
+
+	static async updateProfileIdPrefs(profileId: string) {
+		const prefs = await this.#account.getPrefs();
+		return await this.#account.updatePrefs<BackendPrefs>({ ...prefs, profileId });
+	}
+
+	static async getProfile(profileId: string) {
+		return await this.#databases.getDocument<Profiles>('main', 'profiles', profileId);
+	}
+
+	static async listProfiles(profileIds: string[]) {
+		return await this.#databases.listDocuments<Profiles>('main', 'profiles', [
+			Query.equal('$id', profileIds)
+		]);
+	}
+
+	static async createProfile(name?: string) {
+		if (!name) {
+			name = randomName(undefined, ' ');
+		}
+		return await this.#databases.createDocument<Profiles>('main', 'profiles', ID.unique(), {
+			name
+		});
+	}
+
+	static async getGames(queries: string[]) {
+		return await this.#databases.listDocuments<Games>('main', 'games', queries);
+	}
+
+	static async getCommunityHighlights(): Promise<Models.DocumentList<Games>> {
+		const highlights = await this.#databases.listDocuments<CommunityHighlights>(
+			'main',
+			'communityHighlights',
+			[Query.orderDesc('$createdAt'), Query.limit(10), Query.select(['$id'])]
+		);
+
+		const highlightIds = highlights.documents.map((highlight) => highlight.$id);
+		if (highlightIds.length <= 0) {
+			return {
+				total: 0,
+				documents: []
+			};
+		}
+
+		return await this.getGames([Query.equal('$id', highlightIds)]);
 	}
 }
