@@ -5,11 +5,11 @@ let user = $state<BackendUser | undefined>(undefined);
 let profile = $state<Profiles | undefined>(undefined);
 
 export const stores = {
-  get user() {
+	get user() {
 		return user;
 	},
 	fetchUser: async () => (user = await Backend.getUserSafe()),
-	
+
 	get profile() {
 		return profile;
 	},

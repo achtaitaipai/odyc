@@ -10,7 +10,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { Dependencies } from '$lib/constants';
 	import { toast } from 'svelte-sonner';
-	
+
 	let isLoading = false;
 
 	async function onLogout() {
@@ -20,7 +20,7 @@
 			await invalidate(Dependencies.USER);
 			goto('/');
 		} catch (err: any) {
-		toast.error(err.message);
+			toast.error(err.message);
 		} finally {
 			isLoading = false;
 		}
