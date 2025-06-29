@@ -34,7 +34,10 @@
 	}
 </script>
 
+
 <div class="mx-auto w-full max-w-4xl p-3">
+    
+    <h1 class="font-title flex-shrink-0 text-3xl my-6">Settings</h1>
 	<form onsubmit={onSave}>
 		<Card.Root class="w-full">
 			<Card.Header>
