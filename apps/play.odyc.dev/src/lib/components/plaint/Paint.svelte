@@ -11,11 +11,9 @@
 	import IconArrowMoveLeft from '@tabler/icons-svelte/icons/arrow-move-left';
 	import IconArrowMoveRight from '@tabler/icons-svelte/icons/arrow-move-right';
 	import IconEraser from '@tabler/icons-svelte/icons/eraser';
-	import IconCheck from '@tabler/icons-svelte/icons/check';
 	import { OdycColorsHEX } from '$lib/constants';
 
 	type Props = {
-		resize?: boolean;
 		sprite?: string;
 		class?: string;
 	};
@@ -56,24 +54,6 @@
 			drawing.display(ctx);
 			onChange?.(drawing.text);
 		}
-	}
-
-	async function handleChangeWidth(e: Event) {
-		const target = e.target as HTMLInputElement;
-		const width = target.valueAsNumber;
-		drawing.resize(width, drawing.height);
-		await tick();
-		drawing.display(ctx);
-		onChange?.(drawing.text);
-	}
-
-	async function handleChangeHeight(e: Event) {
-		const target = e.target as HTMLInputElement;
-		const height = target.valueAsNumber;
-		drawing.resize(drawing.width, height);
-		await tick();
-		drawing.display(ctx);
-		onChange?.(drawing.text);
 	}
 
 	function mirrorX() {
@@ -195,7 +175,7 @@
 		>
 			<input type="radio" bind:group={currentColor} value={-1} hidden />
 		</label>
-		{#each OdycColorsHEX as color, index}
+		{#each OdycColorsHEX as color, index (index)}
 			<label
 				class={[
 					'aspect-square h-auto w-full  ring transition-all',

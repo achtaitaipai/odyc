@@ -104,6 +104,9 @@ export class Backend {
 	static async getGames(queries: string[]) {
 		return await this.#databases.listDocuments<Games>('main', 'games', queries);
 	}
+	static async getGame(gameId: string) {
+		return await this.#databases.getDocument<Games>('main', 'games', gameId);
+	}
 
 	static async getCommunityHighlights(): Promise<Models.DocumentList<Games>> {
 		const highlights = await this.#databases.listDocuments<CommunityHighlights>(

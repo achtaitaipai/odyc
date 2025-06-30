@@ -102,7 +102,7 @@ export class Drawing {
 		const height = rows.length;
 		const width = Math.max(...rows.map((row) => row.length));
 
-		let newGrid = this.#createGrid(width, height);
+		const newGrid = this.#createGrid(width, height);
 
 		for (let y = 0; y < height; y++) {
 			for (let x = 0; x < width; x++) {

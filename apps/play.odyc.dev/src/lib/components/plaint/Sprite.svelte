@@ -39,8 +39,8 @@
 	xmlns="http://www.w3.org/2000/svg"
 	style="background-color: white;"
 >
-	{#each pixels as row, y}
-		{#each row as pixel, x}
+	{#each pixels as row, y (y)}
+		{#each row as pixel, x (x)}
 			<rect width="1.1" height="1.1" {x} {y} style={`fill:${pixel};`} />
 		{/each}
 	{/each}

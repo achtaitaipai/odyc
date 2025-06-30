@@ -33,7 +33,9 @@
 					if (response.message) {
 						return { title: response.message };
 					}
-				} catch {}
+				} catch {
+					// Data structure unexpected
+				}
 			}
 
 			// SvelteKit

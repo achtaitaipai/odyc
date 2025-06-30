@@ -2,8 +2,6 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import IconPlayerPlayFilled from '@tabler/icons-svelte/icons/player-play-filled';
-	import IconBolt from '@tabler/icons-svelte/icons/bolt';
-	import Badge from './ui/badge/badge.svelte';
 	import type { Models } from 'appwrite';
 	import type { Games, Profiles } from '$lib/appwrite';
 
