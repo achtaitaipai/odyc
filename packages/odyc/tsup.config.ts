@@ -1,4 +1,24 @@
 import { defineConfig } from 'tsup'
+import { execSync } from 'child_process'
+import { readFileSync } from 'fs'
+import { join } from 'path'
+
+function getGitHash() {
+	try {
+		return execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
+	} catch {
+		return 'unknown'
+	}
+}
+
+function getPackageVersion() {
+	try {
+		const packageJson = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'))
+		return packageJson.version
+	} catch {
+		return 'unknown'
+	}
+}
 
 export default defineConfig({
 	dts: true, // Generate .d.ts files
@@ -13,5 +33,9 @@ export default defineConfig({
 	injectStyle: true,
 	loader: {
 		'.glsl': 'text',
+	},
+	define: {
+		__GIT_HASH__: JSON.stringify(getGitHash()),
+		__PACKAGE_VERSION__: JSON.stringify(getPackageVersion()),
 	},
 })
