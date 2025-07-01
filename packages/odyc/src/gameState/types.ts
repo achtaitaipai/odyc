@@ -52,6 +52,8 @@ export type CellState<T extends string> = {
 	onScreenLeave?: (target: CellFacade<T>) => any
 	/** Called at the end of each game turn */
 	onTurn?: (target: CellFacade<T>) => any
+	/** Called when a message is sent to this cell via sendMessageToCells */
+	onMessage?: (target: CellFacade<T>, message?: any) => any
 }
 
 /**
@@ -69,6 +71,7 @@ export type CellParams = Partial<
 		| 'onScreenEnter'
 		| 'onScreenLeave'
 		| 'onTurn'
+		| 'onMessage'
 	>
 >
 
