@@ -13,7 +13,9 @@ function getGitHash() {
 
 function getPackageVersion() {
 	try {
-		const packageJson = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'))
+		const packageJson = JSON.parse(
+			readFileSync(join(__dirname, 'package.json'), 'utf8'),
+		)
 		return packageJson.version
 	} catch {
 		return 'unknown'

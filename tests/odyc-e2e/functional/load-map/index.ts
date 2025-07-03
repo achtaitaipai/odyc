@@ -11,8 +11,8 @@ export const init = () => {
 		templates: {
 			'#': { solid: true, sprite: 1 },
 			'.': { solid: false, sprite: 2 },
-			'x': { solid: false, sprite: 3 },
-			'o': { solid: false, sprite: 4 },
+			x: { solid: false, sprite: 3 },
+			o: { solid: false, sprite: 4 },
 		},
 		map: `
 			###
