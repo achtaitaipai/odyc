@@ -103,6 +103,15 @@ export class Cells<T extends string> {
 		this.#observable.notify()
 	}
 
+	sendMessageToCells(query: CellQuery<T>, message?: any) {
+		for (let index = 0; index < this.#values.length; index++) {
+			const cell = this.#values[index]
+			if (!cell || !this.#cellMatchesQuery(cell, query) || !cell.onMessage)
+				continue
+			cell.onMessage(new CellFacade(cell.position, this), message)
+		}
+	}
+
 	moveCell(from: Position, to: Position) {
 		if (vec2(from).equals(to)) return
 		this.#values = this.#values.filter(
@@ -243,6 +252,7 @@ export class Cells<T extends string> {
 			onScreenEnter: template.onScreenEnter,
 			onScreenLeave: template.onScreenLeave,
 			onTurn: template.onTurn,
+			onMessage: template.onMessage,
 		}
 	}
 

@@ -175,4 +175,3 @@ describe('moveTo method', () => {
 		expect(game.getCellAt(1, 1).dialog).toBe('test dialog')
 	})
 })
-
