@@ -215,6 +215,7 @@ export class Cells<T extends string> {
 		template: Template<T>,
 	): CellState<T> {
 		return {
+			id: crypto.randomUUID(),
 			symbol: symbol,
 			sprite: template.sprite ?? null,
 			position: [x, y],
