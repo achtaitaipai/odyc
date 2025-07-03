@@ -7,6 +7,19 @@
 			try {
 				// @ts-expect-error Purpose of try/catch is to check if this variable exists
 				odyc;
+				// @ts-expect-error Override untyped global method
+				window.createGame = odyc.createGame;
+				// @ts-expect-error Override untyped global method
+				window.createSound = odyc.createSound;
+				// @ts-expect-error Override untyped global method
+				window.charToSprite = odyc.charToSprite;
+				// @ts-expect-error Override untyped global method
+				window.vec2 = odyc.vec2;
+				// @ts-expect-error Override untyped global method
+				window.tick = odyc.tick;
+				// @ts-expect-error Override untyped global method
+				window.mergeSprites = odyc.mergeSprites;
+
 				odycReady = true;
 			} catch {
 				setTimeout(() => {

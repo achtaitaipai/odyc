@@ -42,7 +42,7 @@ export const OdycColorsRGB = [
 	[165, 47, 1]
 ];
 
-export const DefaultCode = `const game = odyc.createGame({
+export const DefaultCode = `const game = createGame({
 	player: {
 		sprite: \`
 			...00...

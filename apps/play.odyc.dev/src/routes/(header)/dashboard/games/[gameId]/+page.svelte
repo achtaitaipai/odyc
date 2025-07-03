@@ -1,7 +1,5 @@
 <script lang="ts">
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-	import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Menubar from '$lib/components/ui/menubar/index.js';
@@ -19,19 +17,23 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { env } from '$env/dynamic/public';
+	import Editor from '$lib/components/editor/Editor.svelte';
+	import { stores } from '$lib/stores.svelte';
 
 	let { data }: PageProps = $props();
 
 	const game = $derived(data.game);
 
 	const initialCode = game.code ? game.code : DefaultCode;
+	let code = $state(initialCode);
+	let editor: Editor;
 
-	let editor: ReturnType<typeof monaco.editor.create> | null;
-	const editorOptions = {
-		value: initialCode,
-		language: 'javascript',
-		automaticLayout: true
-	};
+	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+	const ctrlKey = isMac ? 'Cmd' : 'Ctrl';
+
+	function onEditorChange() {
+		// Nothing needed yet, code itself is 2-way-binded
+	}
 
 	let preview: HTMLCanvasElement | null = $state(null);
 
@@ -43,26 +45,27 @@
 			updateCode();
 		}
 	});
+
 	$effect(() => {
 		if (mode && mode.current) {
 			updateTheme();
 		}
 	});
 
-	function updateTheme() {
-		if (editor) {
-			editor.updateOptions({
-				...editorOptions,
-				theme: mode.current === 'light' ? 'vs-light' : 'vs-dark'
-			});
+	$effect(() => {
+		if (code) {
+			updateCode();
 		}
+	});
+
+	function updateTheme() {
+		// TODO: Implement
 	}
 
 	// Hover on each property to see its docs!
 	onMount(() => {
-		const ide = document.getElementById('ide');
 		preview = document.getElementById('preview') as HTMLCanvasElement;
-		if (ide && preview) {
+		if (preview) {
 			// @ts-expect-error It exists, not sure why types dont see it
 			const contentWindow = preview?.contentWindow;
 
@@ -84,25 +87,41 @@
 			contentWindow.console.trace = (...args: any) => {
 				console.trace(...args);
 			};
+		}
 
-			editor = monaco.editor.create(ide, {
-				...editorOptions,
-				theme: mode.current === 'light' ? 'vs-light' : 'vs-dark'
-			});
-			editor.onDidChangeModelContent(() => {
-				if (!editor) {
+		document.addEventListener('keydown', (event) => {
+			const isCtrl = event.metaKey || event.ctrlKey;
+			const isShift = event.shiftKey;
+			if (isShift) {
+				if (isCtrl && event.code === 'KeyF') {
+					event.preventDefault();
+					event.stopPropagation();
+					onFormat();
+					return;
+				} else if (isCtrl && event.code === 'KeyS') {
+					event.preventDefault();
+					event.stopPropagation();
+					setShowSaveAsDialog(true);
+					return;
+				} else if (isCtrl && event.code === 'KeyD') {
+					event.preventDefault();
+					event.stopPropagation();
+					onDownload();
 					return;
 				}
-				hasChangedCode = true;
-				updateCode();
-			});
-		}
+			}
+
+			if (isCtrl && event.code === 'KeyS') {
+				event.preventDefault();
+				event.stopPropagation();
+				onSaveCode();
+				return;
+			}
+		});
 	});
 
 	function updateCode() {
-		if (!editor) {
-			return;
-		}
+		hasChangedCode = code !== initialCode;
 
 		// @ts-expect-error It exists, not sure why types dont see it
 		const contentWindow = preview?.contentWindow;
@@ -110,7 +129,7 @@
 			{
 				type: 'oncodechange',
 				detail: {
-					code: editor.getValue()
+					code
 				}
 			},
 			'*'
@@ -160,12 +179,9 @@
 	}
 
 	function onDownload() {
-		if (!editor) return;
-
 		const fileName = slugify(game.name).toLowerCase() + '.html';
-		const gameCode = editor.getValue();
 
-		const code = `
+		const htmlCode = `
 		<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -176,14 +192,14 @@
 <body>
     <script src="https://www.unpkg.com/odyc@latest/dist/index.global.js"><\/script>
     <script>
-${gameCode}
+${code}
     <\/script>
 </body>
 </html>
 `;
 
 		const downloadLink = document.createElement('a');
-		const encodedContent = encodeURIComponent(code);
+		const encodedContent = encodeURIComponent(htmlCode);
 		downloadLink.setAttribute('href', 'data:text/html;charset=utf-8,' + encodedContent);
 		downloadLink.setAttribute('download', fileName);
 		downloadLink.style.display = 'none';
@@ -193,10 +209,8 @@ ${gameCode}
 	}
 
 	async function onSaveCode() {
-		if (!editor) return;
-
 		try {
-			await Backend.updateGameCode(game.$id, editor.getValue());
+			await Backend.updateGameCode(game.$id, code);
 			await invalidate(Dependencies.GAMES);
 			toast.success('Game code successfully saved.');
 			hasChangedCode = false;
@@ -214,11 +228,10 @@ ${gameCode}
 	let isSavingAs = $state(false);
 	async function onSaveAs() {
 		if (isSavingAs) return;
-		if (!editor) return;
 
 		isSavingAs = true;
 		try {
-			const newGame = await Backend.createGame(saveAsName, editor.getValue());
+			const newGame = await Backend.createGame(saveAsName, code);
 			await invalidate(Dependencies.GAMES);
 			toast.success('Game successfully copied.');
 			setShowSaveAsDialog(false);
@@ -274,6 +287,10 @@ ${gameCode}
 			isRenaming = false;
 		}
 	}
+
+	function onFormat() {
+		editor.formatCode();
+	}
 </script>
 
 <div class="mx-auto mb-3 h-full w-full max-w-7xl p-4 lg:p-6">
@@ -313,14 +330,72 @@ ${gameCode}
 								<div class="size-3 transform rounded-full bg-yellow-500"></div>
 							</div>
 						{/if}
-						<span>Save</span>
+						<span class="w-full">Save</span>
+						<div class="flex items-center justify-end gap-0.5">
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>{ctrlKey}</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>S</kbd
+							>
+						</div>
 					</Menubar.Item>
 
-					<Menubar.Item onclick={() => setShowSaveAsDialog(true)}>Save as...</Menubar.Item>
+					<Menubar.Item onclick={() => setShowSaveAsDialog(true)}>
+						<span class="w-full">Save as...</span>
+						<div class="flex items-center justify-end gap-0.5">
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>{ctrlKey}</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>Shift</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>S</kbd
+							>
+						</div>
+					</Menubar.Item>
 
-					<Menubar.Item onclick={onDownload}>Download</Menubar.Item>
+					<Menubar.Item onclick={onDownload}>
+						<span class="w-full">Download</span>
+						<div class="flex items-center justify-end gap-0.5">
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>{ctrlKey}</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>Shift</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>D</kbd
+							>
+						</div>
+					</Menubar.Item>
 					<Menubar.Separator />
-					<Menubar.Item>Format code</Menubar.Item>
+					<Menubar.Item onclick={onFormat}>
+						<span class="w-full">Format code</span>
+						<div class="flex items-center justify-end gap-0.5">
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>{ctrlKey}</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>Shift</kbd
+							>
+							<kbd
+								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+								>F</kbd
+							>
+						</div>
+					</Menubar.Item>
 					<Menubar.Separator />
 					<Menubar.Item>Use template...</Menubar.Item>
 				</Menubar.Content>
@@ -382,6 +457,12 @@ ${gameCode}
 	<div class="grid h-full grid-cols-12 gap-4">
 		<Card.Root class="col-span-12 h-full max-h-[608px] p-0 md:col-span-6">
 			<Card.Content class="h-full p-2">
+				<Editor
+					bind:code
+					withVim={stores?.user?.prefs?.vimModeEnabled}
+					bind:this={editor}
+					handleChange={onEditorChange}
+				/>
 				<div id="ide" class="h-full overflow-hidden rounded-md"></div>
 			</Card.Content>
 		</Card.Root>

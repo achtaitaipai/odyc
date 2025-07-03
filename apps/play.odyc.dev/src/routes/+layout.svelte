@@ -1,7 +1,10 @@
 <script lang="ts">
+	import '../app.css';
+	import '../editor.css';
+	import 'codemirror-theme-vars/base.css';
+
 	import { Backend } from '$lib/backend';
 	import { stores } from '$lib/stores.svelte';
-	import '../app.css';
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 

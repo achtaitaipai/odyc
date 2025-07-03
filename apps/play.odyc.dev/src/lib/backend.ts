@@ -16,6 +16,7 @@ import { stores } from './stores.svelte';
 type BackendPrefs = {
 	theme?: string;
 	profileId?: string;
+	vimModeEnabled?: boolean;
 };
 export type BackendUser = Models.User<BackendPrefs>;
 
@@ -80,6 +81,11 @@ export class Backend {
 	static async updateProfileIdPrefs(profileId: string) {
 		const prefs = await this.#account.getPrefs();
 		return await this.#account.updatePrefs<BackendPrefs>({ ...prefs, profileId });
+	}
+
+	static async updateVimModePrefs(enabled: boolean) {
+		const prefs = await this.#account.getPrefs();
+		return await this.#account.updatePrefs<BackendPrefs>({ ...prefs, vimModeEnabled: enabled });
 	}
 
 	static async getProfile(profileId: string) {
