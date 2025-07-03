@@ -9,7 +9,7 @@ export type Templates<T extends string = string> = {
 }
 
 export type Template<T extends string = string> = Partial<
-	Omit<CellState<T>, 'position' | 'symbol' | 'isOnScreen'>
+	Omit<CellState<T>, 'id' | 'position' | 'symbol' | 'isOnScreen'>
 >
 
 export type GameStateParams<T extends string = string> = {
@@ -21,6 +21,9 @@ export type GameStateParams<T extends string = string> = {
 
 // Params of a Cell
 export type CellState<T extends string> = {
+	/** Unique identifier for this cell instance */
+	id: string
+	/** The symbol/type of this cell from the template system */
 	symbol: T
 	/** Visual representation - color index, character, or pixel art string */
 	sprite: Tile | null
@@ -61,6 +64,7 @@ export type CellState<T extends string> = {
 export type CellParams = Partial<
 	Omit<
 		CellState<string>,
+		| 'id'
 		| 'symbol'
 		| 'position'
 		| 'onCollide'
