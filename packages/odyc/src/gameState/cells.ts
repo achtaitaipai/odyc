@@ -111,7 +111,7 @@ export class Cells<T extends string> {
 			cell.onMessage(new CellFacade(cell.position, this), message)
 		}
 	}
-	
+
 	moveCell(from: Position, to: Position) {
 		if (vec2(from).equals(to)) return
 		this.#values = this.#values.filter(

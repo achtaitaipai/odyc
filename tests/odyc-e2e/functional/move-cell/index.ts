@@ -40,4 +40,3 @@ export const init = () => {
 
 	return { game, state }
 }
-

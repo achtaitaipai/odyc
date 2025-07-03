@@ -46,4 +46,3 @@ describe('sendMessageToCells', () => {
 		expect(savedMsg).toBe('message')
 	})
 })
-
