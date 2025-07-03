@@ -1,7 +1,7 @@
 import { vec2 } from '../helpers'
 import { Position } from '../types'
 import { Cells } from './cells'
-import { CellState } from './types'
+import { CellParams, CellState } from './types'
 
 export class CellFacade<T extends string = string> {
 	#position: Position
@@ -84,13 +84,18 @@ export class CellFacade<T extends string = string> {
 		this.#cells.clearCellAt(...this.#position)
 	}
 
+	moveTo(x: number, y: number) {
+		this.#cells.moveCell(this.#position, [x, y])
+		this.#position = [x, y]
+	}
+
 	#getProperties() {
 		return this.#cells
 			.get()
 			.find((el) => vec2(el.position).equals(this.#position))
 	}
 
-	#setProperty<U extends keyof CellState<T>>(key: U, value: CellState<T>[U]) {
+	#setProperty<U extends keyof CellParams>(key: U, value: CellParams[U]) {
 		this.#cells.updateCellAt(...this.#position, { [key]: value })
 	}
 }

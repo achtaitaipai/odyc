@@ -35,10 +35,12 @@ class GameLoop<T extends string> {
 		const from = vec2(this.#gameState.player.position)
 		const to = from.add(directions[input])
 
-		const onTurnEvents = this.#gameState.cells
-			.get()
-			.filter((cell) => cell.onTurn)
-
+		const onTurnCellIds = new Set(
+			this.#gameState.cells
+				.get()
+				.filter((el) => el.onTurn)
+				.map((el) => el.id),
+		)
 		if (this.#isCellOnworld(to.value)) {
 			const cell = this.#gameState.cells.getCellAt(...to.value)
 
@@ -54,8 +56,10 @@ class GameLoop<T extends string> {
 				await this.#gameState.cells.getEvent(...to.value, 'onCollide')?.()
 			else await this.#gameState.cells.getEvent(...to.value, 'onEnter')?.()
 		}
-		for (const cell of onTurnEvents) {
-			await this.#gameState.cells.getEvent(...cell.position, 'onTurn')?.()
+
+		for (const cell of this.#gameState.cells.get()) {
+			if (onTurnCellIds.has(cell.id))
+				await this.#gameState.cells.getEvent(...cell.position, 'onTurn')?.()
 		}
 		this.#gameState.player.dispatchOnTurn()
 		if (!this.#ender.ending) this.#gameState.turn.next()

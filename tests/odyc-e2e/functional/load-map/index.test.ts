@@ -196,4 +196,3 @@ describe('loadMap', () => {
 		// This ensures the player's new position is properly saved
 	})
 })
-
