@@ -139,7 +139,8 @@ body {
 }
 
 a,
-button {
+button,
+[role='menuitem'] {
 	cursor: pointer;
 }
 

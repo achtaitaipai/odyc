@@ -36,7 +36,7 @@
 	let isLoading = $state(false);
 
 	async function onPageChange(page: number) {
-		games = await Backend.getGames([...props.queries, Query.offset(perPage * (page - 1))]);
+		games = await Backend.listGames([...props.queries, Query.offset(perPage * (page - 1))]);
 	}
 
 	async function onCreateGame(event: Event) {

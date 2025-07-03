@@ -2,8 +2,12 @@ import type { PageLoad } from './$types';
 import { stores } from '$lib/stores.svelte';
 import { Query } from 'appwrite';
 import { Backend } from '$lib/backend';
+import { Dependencies } from '$lib/constants';
 
-export const load: PageLoad = async ({ parent }) => {
+export const load: PageLoad = async ({ parent, depends }) => {
+	depends(Dependencies.GAMES);
+	depends(Dependencies.HIGHLIGHTS);
+
 	await parent();
 
 	const yourGamesQueries = [
@@ -21,8 +25,8 @@ export const load: PageLoad = async ({ parent }) => {
 	];
 
 	const [yourGames, collaborationGames, communityHighlights] = await Promise.all([
-		Backend.getGames(yourGamesQueries),
-		Backend.getGames(collaborationGamesQueries),
+		Backend.listGames(yourGamesQueries),
+		Backend.listGames(collaborationGamesQueries),
 		Backend.getCommunityHighlights()
 	]);
 

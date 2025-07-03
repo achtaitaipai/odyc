@@ -101,11 +101,21 @@ export class Backend {
 		});
 	}
 
-	static async getGames(queries: string[]) {
+	static async listGames(queries: string[]) {
 		return await this.#databases.listDocuments<Games>('main', 'games', queries);
 	}
 	static async getGame(gameId: string) {
 		return await this.#databases.getDocument<Games>('main', 'games', gameId);
+	}
+	static async updateGameCode(gameId: string, code: string) {
+		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
+			code
+		});
+	}
+	static async updateGameName(gameId: string, name: string) {
+		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
+			name
+		});
 	}
 
 	static async getCommunityHighlights(): Promise<Models.DocumentList<Games>> {
@@ -123,7 +133,7 @@ export class Backend {
 			};
 		}
 
-		return await this.getGames([Query.equal('$id', highlightIds), Query.orderDesc('$createdAt')]);
+		return await this.listGames([Query.equal('$id', highlightIds), Query.orderDesc('$createdAt')]);
 	}
 
 	static async updateProfile(profileId: string, name: string, sprite: string) {
@@ -133,12 +143,13 @@ export class Backend {
 		});
 	}
 
-	static async createGame(name: string) {
+	static async createGame(name: string, code = '') {
 		try {
 			return await this.#databases.createDocument<Games>('main', 'games', ID.unique(), {
 				name,
-				slug: slugify(name),
-				ownerProfileId: stores.profile?.$id
+				slug: slugify(name).toLowerCase(),
+				ownerProfileId: stores.profile?.$id,
+				code
 			});
 		} catch (error: unknown) {
 			if (error instanceof AppwriteException && error.code === 409) {
@@ -151,5 +162,9 @@ export class Backend {
 			}
 			throw error;
 		}
+	}
+
+	static async deleteGame(gameId: string) {
+		return await this.#databases.deleteDocument('main', 'games', gameId);
 	}
 }
