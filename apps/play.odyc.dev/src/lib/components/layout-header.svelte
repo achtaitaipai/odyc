@@ -8,9 +8,10 @@
 	import { toggleMode } from 'mode-watcher';
 	import { Backend } from '$lib/backend';
 	import { goto, invalidate } from '$app/navigation';
-	import { Dependencies } from '$lib/constants';
+	import { DefaultProfilePicture, Dependencies } from '$lib/constants';
 	import { toast } from 'svelte-sonner';
 	import { stores } from '$lib/stores.svelte';
+	import Sprite from './plaint/Sprite.svelte';
 
 	let isLoading = false;
 
@@ -73,7 +74,14 @@
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
 					<Button variant="ghost" class="" size="icon">
-						<UserIcon class="size-[1.2rem]" />
+						{#if stores.user}
+							<Sprite
+								class="size-[1.2rem]"
+								sprite={stores.profile?.avatarPixels ?? DefaultProfilePicture}
+							/>
+						{:else}
+							<UserIcon class="size-[1.2rem]" />
+						{/if}
 					</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>

@@ -18,9 +18,11 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { env } from '$env/dynamic/public';
 
 	let { data }: PageProps = $props();
-	const { game } = data;
+
+	const game = $derived(data.game);
 
 	const initialCode = game.code ? game.code : DefaultCode;
 
@@ -61,6 +63,28 @@
 		const ide = document.getElementById('ide');
 		preview = document.getElementById('preview') as HTMLCanvasElement;
 		if (ide && preview) {
+			// @ts-expect-error It exists, not sure why types dont see it
+			const contentWindow = preview?.contentWindow;
+
+			contentWindow.console.log = (...args: any) => {
+				console.log(...args);
+			};
+			contentWindow.console.error = (...args: any) => {
+				console.error(...args);
+			};
+			contentWindow.console.warn = (...args: any) => {
+				console.warn(...args);
+			};
+			contentWindow.console.info = (...args: any) => {
+				console.info(...args);
+			};
+			contentWindow.console.debug = (...args: any) => {
+				console.debug(...args);
+			};
+			contentWindow.console.trace = (...args: any) => {
+				console.trace(...args);
+			};
+
 			editor = monaco.editor.create(ide, {
 				...editorOptions,
 				theme: mode.current === 'light' ? 'vs-light' : 'vs-dark'
@@ -365,7 +389,12 @@ ${gameCode}
 		<Card.Root class="col-span-12 h-full max-h-[608px] p-0 md:col-span-6">
 			<Card.Content class="h-full p-2">
 				<div class="relative h-full w-full overflow-hidden rounded-md">
-					<iframe class="h-full w-full" id="preview" src={`/iframe`} title="Game preview"></iframe>
+					<iframe
+						class="h-full w-full"
+						id="preview"
+						src={env.PUBLIC_IFRAME_ENDPOINT ?? '/iframe'}
+						title="Game preview"
+					></iframe>
 				</div>
 			</Card.Content>
 		</Card.Root>
