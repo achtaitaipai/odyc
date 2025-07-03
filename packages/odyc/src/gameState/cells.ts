@@ -103,6 +103,17 @@ export class Cells<T extends string> {
 		this.#observable.notify()
 	}
 
+	moveCell(from: Position, to: Position) {
+		if (vec2(from).equals(to)) return
+		this.#values = this.#values.filter(
+			(cell) => !vec2(cell.position).equals(to),
+		)
+		this.#values = this.#values.map((cell) =>
+			vec2(cell.position).equals(from) ? { ...cell, position: to } : cell,
+		)
+		this.#observable.notify()
+	}
+
 	#queryCells(query: CellQuery<T>) {
 		return this.#values.filter((cell) => this.#cellMatchesQuery(cell, query))
 	}
