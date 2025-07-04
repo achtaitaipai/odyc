@@ -4,8 +4,10 @@ export class Drawing {
 	#grid: number[][] = [];
 	#width = $state(8);
 	#height = $state(8);
-	constructor(sprite?: string) {
+	constructor(sprite?: string, width?: number, height?: number) {
 		this.updateSprite(sprite);
+		this.#width = width || this.#width;
+		this.#height = height || this.#height;
 	}
 
 	updateSprite(sprite?: string) {
@@ -122,6 +124,14 @@ export class Drawing {
 
 	get height() {
 		return this.#height;
+	}
+
+	set width(value: number) {
+		this.#width = value;
+	}
+
+	set height(value: number) {
+		this.#height = value;
 	}
 
 	async loadImgFile(file: File) {

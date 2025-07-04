@@ -13,6 +13,7 @@
 	import { onMount, tick } from 'svelte';
 	import OdycVersions from '$lib/versions.json';
 	import type { PageProps } from './$types';
+	import { Slider } from '$lib/components/ui/slider/index.js';
 	import * as Card from '$lib/components/ui/card';
 	import { DefaultCode, Dependencies } from '$lib/constants';
 	import { mode } from 'mode-watcher';
@@ -427,6 +428,9 @@ ${code}
 		showSpriteEditor = value;
 	}
 
+	let spriteEditorWidth = $state(8);
+	let spriteEditorHeight = $state(8);
+
 	function onSpriteCopy() {
 		navigator.clipboard.writeText(spriteEditor);
 		toast.success('Sprite copied to clipboard.');
@@ -751,7 +755,6 @@ ${code}
 										variant="outline"
 										class="w-[200px] justify-between"
 										role="combobox"
-										aria-expanded={open}
 									>
 										{versionValue || 'Select a version...'}
 										<ChevronsUpDownIcon class="opacity-50" />
@@ -853,7 +856,13 @@ ${code}
 
 		<Separator />
 
-		<Paint bind:sprite={spriteEditor} />
+		<Paint
+			resize={true}
+			width={spriteEditorWidth}
+			height={spriteEditorHeight}
+			bind:sprite={spriteEditor}
+		/>
+
 		<Dialog.Footer>
 			<Button type="button" variant="outline" onclick={onLoadSprite}>Load from clipboard</Button>
 			<Button type="button" onclick={onSpriteCopy}>Copy</Button>

@@ -24,6 +24,5 @@ export const load: PageLoad = async ({ url }) => {
 
 	// TODO: Core quality; use invalidate()
 	await stores.fetchUser(); // Doing invalidate doesnt work here for some reason
-
 	throw redirect(307, href ? href : '/'); // Success
 };

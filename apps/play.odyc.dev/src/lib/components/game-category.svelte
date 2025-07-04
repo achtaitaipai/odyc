@@ -45,9 +45,9 @@
 		try {
 			const game = await Backend.createGame(gameName);
 			goto('/dashboard/games/' + game.$id);
+			toast.success('Game successfully created!');
 		} catch (error: any) {
 			toast.error(error.message);
-		} finally {
 			isLoading = false;
 		}
 	}

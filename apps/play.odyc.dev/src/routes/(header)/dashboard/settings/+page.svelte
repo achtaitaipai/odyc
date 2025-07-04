@@ -16,6 +16,9 @@
 	import { invalidate } from '$app/navigation';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 
+	let originalName = $state(stores.profile?.name ?? '');
+	let originalSprite = $state(stores.profile?.avatarPixels);
+
 	let name = $state(stores.profile?.name ?? '');
 	let sprite = $state(stores.profile?.avatarPixels ?? DefaultProfilePicture);
 
@@ -35,6 +38,8 @@
 			await Backend.updateProfile(stores.profile?.$id ?? '', name, sprite);
 			await invalidate(Dependencies.PROFILE);
 			toast.success('Profile updated successfully.');
+			originalName = name;
+			originalSprite = sprite;
 		} catch (err: any) {
 			toast.error(err.message);
 		} finally {
@@ -42,6 +47,7 @@
 		}
 	}
 
+	let originalVimModeEnabled = $state(stores.user?.prefs?.vimModeEnabled);
 	let vimModeEnabled = $state(stores.user?.prefs?.vimModeEnabled ?? false);
 	let isLoadingPrefs = $state(false);
 	async function onPrefsSave(event: Event) {
@@ -53,6 +59,7 @@
 			await Backend.updateVimModePrefs(vimModeEnabled);
 			await invalidate(Dependencies.USER);
 			toast.success('Preferences updated successfully.');
+			originalVimModeEnabled = vimModeEnabled;
 		} catch (err: any) {
 			toast.error(err.message);
 		} finally {
@@ -91,7 +98,10 @@
 					</div>
 				</Card.Content>
 				<Card.Footer class="w-full flex-col items-end gap-2">
-					<Button disabled={isLoading} type="submit">Save changes</Button>
+					<Button
+						disabled={isLoading || (name === originalName && sprite === originalSprite)}
+						type="submit">Update profile</Button
+					>
 				</Card.Footer>
 			</Card.Root>
 		</form>
@@ -116,7 +126,10 @@
 					</div>
 				</Card.Content>
 				<Card.Footer class="w-full flex-col items-end gap-2">
-					<Button disabled={isLoadingPrefs} type="submit">Update</Button>
+					<Button
+						disabled={isLoadingPrefs || vimModeEnabled === originalVimModeEnabled}
+						type="submit">Update preferences</Button
+					>
 				</Card.Footer>
 			</Card.Root>
 		</form>

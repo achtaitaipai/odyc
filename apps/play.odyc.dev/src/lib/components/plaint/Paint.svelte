@@ -12,13 +12,30 @@
 	import IconArrowMoveRight from '@tabler/icons-svelte/icons/arrow-move-right';
 	import IconEraser from '@tabler/icons-svelte/icons/eraser';
 	import { OdycColorsHEX } from '$lib/constants';
+	import Label from '../ui/label/label.svelte';
+	import Input from '../ui/input/input.svelte';
 
 	type Props = {
 		sprite?: string;
 		class?: string;
+		width?: number;
+		height?: number;
+		resize?: boolean;
 	};
 
-	let { sprite = $bindable(), class: className = '' }: Props = $props();
+	let {
+		width = 8,
+		height = 8,
+		sprite = $bindable(),
+		class: className = '',
+		resize = false
+	}: Props = $props();
+
+	let spriteEditorWidth = $state(8);
+	let spriteEditorHeight = $state(8);
+	$effect(() => {
+		changeSize(spriteEditorWidth, spriteEditorHeight);
+	});
 
 	let canvas: HTMLCanvasElement;
 	let currentColor = $state(0);
@@ -35,6 +52,16 @@
 		canvas.width = drawing.width;
 		canvas.height = drawing.height;
 		drawing.display(ctx);
+	});
+
+	$effect(() => {
+		if (width || height) {
+			drawing.width = width;
+			drawing.height = height;
+			canvas.width = drawing.width;
+			canvas.height = drawing.height;
+			drawing.display(ctx);
+		}
 	});
 
 	$effect(() => {
@@ -72,6 +99,13 @@
 
 	function mirrorY() {
 		drawing.mirror(true);
+		drawing.display(ctx);
+		onChange?.(drawing.text);
+	}
+
+	async function changeSize(width: number, height: number) {
+		drawing.resize(width, height);
+		await tick();
 		drawing.display(ctx);
 		onChange?.(drawing.text);
 	}
@@ -134,7 +168,7 @@
 	}
 </script>
 
-<div class={twMerge('w-full px-4', className)} onpaste={handlePaste}>
+<div class={twMerge('w-full', className)} onpaste={handlePaste}>
 	<div class="flex pt-2">
 		<Button size="icon" variant="ghost" onclick={mirrorX}>
 			<IconFlipHorizontal />
@@ -161,12 +195,12 @@
 			<IconEraser />
 		</Button>
 	</div>
-	<div class="mt-3 flex aspect-square">
+	<div class="mt-3 flex aspect-square w-full">
 		<canvas
 			onpointerdown={(e) => handleClick(e)}
 			onpointermove={(e) => handleMouseMove(e)}
 			class={[
-				'pixelated m-auto max-h-full max-w-full cursor-crosshair touch-none',
+				'pixelated m-auto max-h-[400px] max-w-[400px] cursor-crosshair touch-none',
 				drawing.width > drawing.height ? 'h-auto w-full' : 'h-full w-auto'
 			]}
 			bind:this={canvas}
@@ -196,3 +230,14 @@
 		{/each}
 	</div>
 </div>
+
+{#if resize}
+	<div class="flex w-full max-w-sm flex-col gap-1.5">
+		<Label for="size">Size</Label>
+		<div class="flex items-center gap-1">
+			<Input bind:value={spriteEditorWidth} type="number" id="size" placeholder="8" />
+			<p class="text-muted-foreground font-light">x</p>
+			<Input bind:value={spriteEditorHeight} type="number" id="size" placeholder="8" />
+		</div>
+	</div>
+{/if}

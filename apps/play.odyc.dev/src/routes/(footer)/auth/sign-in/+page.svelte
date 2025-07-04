@@ -13,6 +13,7 @@
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
+	import { toast } from 'svelte-sonner';
 
 	let isLoading = $state(false);
 
@@ -32,6 +33,7 @@
 			try {
 				token = await Backend.signInMagicURL(email);
 				step = 2;
+				toast.success('Email with OTP was sent to your inbox.');
 			} catch (err: any) {
 				error = err;
 			} finally {
@@ -41,6 +43,8 @@
 			try {
 				await Backend.signInFinish(token?.userId ?? '', otp);
 				await invalidate(Dependencies.USER);
+
+				toast.success('Successfully signed in. Welcome!');
 			} catch (err: any) {
 				error = err;
 			} finally {
@@ -63,6 +67,7 @@
 		try {
 			await Backend.signInAnonymous();
 			await invalidate(Dependencies.USER);
+			toast.success('Guest account created successfully.');
 		} catch (err: any) {
 			error = err;
 		} finally {
