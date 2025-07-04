@@ -10,7 +10,7 @@
 	import { mode } from 'mode-watcher';
 	import { toast } from 'svelte-sonner';
 	import { Backend } from '$lib/backend';
-	import { goto, invalidate } from '$app/navigation';
+	import { beforeNavigate, goto, invalidate } from '$app/navigation';
 	import slugify from 'slugify';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import Label from '$lib/components/ui/label/label.svelte';
@@ -61,6 +61,18 @@
 	function updateTheme() {
 		// TODO: Implement
 	}
+
+	beforeNavigate(({ cancel }) => {
+		if (hasChangedCode) {
+			if (
+				!confirm(
+					'Are you sure you want to leave this page? You have unsaved changes that will be lost.'
+				)
+			) {
+				cancel();
+			}
+		}
+	});
 
 	// Hover on each property to see its docs!
 	onMount(() => {
@@ -190,7 +202,7 @@
     <title>${game.name}</title>
 </head>
 <body>
-    <script src="https://www.unpkg.com/odyc@latest/dist/index.global.js"><\/script>
+    <script src="https://www.unpkg.com/odyc@${game.version}/dist/index.global.js"><\/script>
     <script>
 ${code}
     <\/script>
@@ -463,7 +475,6 @@ ${code}
 					bind:this={editor}
 					handleChange={onEditorChange}
 				/>
-				<div id="ide" class="h-full overflow-hidden rounded-md"></div>
 			</Card.Content>
 		</Card.Root>
 
@@ -473,7 +484,7 @@ ${code}
 					<iframe
 						class="h-full w-full"
 						id="preview"
-						src={env.PUBLIC_IFRAME_ENDPOINT ?? '/iframe'}
+						src={(env.PUBLIC_IFRAME_ENDPOINT ?? '/iframe') + '?version=' + game.version}
 						title="Game preview"
 					></iframe>
 				</div>

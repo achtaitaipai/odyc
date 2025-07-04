@@ -12,6 +12,7 @@ import randomName from '@scaleway/random-name';
 import { type Games, type CommunityHighlights, type Profiles } from './appwrite';
 import slugify from 'slugify';
 import { stores } from './stores.svelte';
+import { env } from '$env/dynamic/public';
 
 type BackendPrefs = {
 	theme?: string;
@@ -150,21 +151,20 @@ export class Backend {
 	}
 
 	static async createGame(name: string, code = '') {
+		const game = {
+			name,
+			slug: slugify(name).toLowerCase(),
+			ownerProfileId: stores.profile?.$id,
+			code,
+			version: env.PUBLIC_ODYC_VERSION
+		};
 		try {
-			return await this.#databases.createDocument<Games>('main', 'games', ID.unique(), {
-				name,
-				slug: slugify(name).toLowerCase(),
-				ownerProfileId: stores.profile?.$id,
-				code
-			});
+			return await this.#databases.createDocument<Games>('main', 'games', ID.unique(), game);
 		} catch (error: unknown) {
 			if (error instanceof AppwriteException && error.code === 409) {
 				const id = ID.unique();
-				return await this.#databases.createDocument<Games>('main', 'games', id, {
-					name,
-					slug: id,
-					ownerProfileId: stores.profile?.$id
-				});
+				game.slug = id;
+				return await this.#databases.createDocument<Games>('main', 'games', id, game);
 			}
 			throw error;
 		}

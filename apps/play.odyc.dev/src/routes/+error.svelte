@@ -74,7 +74,9 @@
 							<img src="/logo.png" class="pixelated size-12" alt="Odyc.js Play Logo" />
 						</div>
 					</a>
-					<h1 class="text-center text-xl font-bold">{err.title}</h1>
+					<h1 class="text-center text-xl font-bold">
+						{err.title === '{}' ? 'Unknown Error' : err.title}
+					</h1>
 					{#if err.description}
 						<div class="text-muted-foreground text-center text-sm">
 							{err.description}

@@ -11,6 +11,7 @@ export type Games = Models.Document & {
 	slug: string | null;
 	collaboratorProfileIds: string[] | null;
 	code: string | null;
+	version: string;
 };
 
 export type CommunityHighlights = Models.Document & {

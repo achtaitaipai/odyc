@@ -2,12 +2,15 @@
 	import Paint from '$lib/components/plaint/Paint.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
+
+	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
+
 	import { stores } from '$lib/stores.svelte';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Sprite from '$lib/components/plaint/Sprite.svelte';
 	import { DefaultProfilePicture, Dependencies } from '$lib/constants';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { toast } from 'svelte-sonner';
 	import { Backend } from '$lib/backend';
 	import { invalidate } from '$app/navigation';
@@ -17,6 +20,11 @@
 	let sprite = $state(stores.profile?.avatarPixels ?? DefaultProfilePicture);
 
 	let isLoading = $state(false);
+
+	let showEditor = $state(false);
+	function setShowEditor(value: boolean) {
+		showEditor = value;
+	}
 
 	async function onSave(event: Event) {
 		event.preventDefault();
@@ -74,26 +82,9 @@
 								<Card.Content class="flex flex-col items-center gap-4">
 									<Sprite class="aspect-square w-full max-w-40" {sprite} />
 
-									<AlertDialog.Root>
-										<AlertDialog.Trigger>
-											<div>
-												<Button type="button" variant="outline">Open editor</Button>
-											</div>
-										</AlertDialog.Trigger>
-										<AlertDialog.Content>
-											<AlertDialog.Header>
-												<AlertDialog.Title>Profile picture editor</AlertDialog.Title>
-												<AlertDialog.Description>
-													<p>Paint your own avatar.</p>
-
-													<Paint bind:sprite />
-												</AlertDialog.Description>
-											</AlertDialog.Header>
-											<AlertDialog.Footer>
-												<AlertDialog.Cancel>Close editor</AlertDialog.Cancel>
-											</AlertDialog.Footer>
-										</AlertDialog.Content>
-									</AlertDialog.Root>
+									<Button onclick={() => setShowEditor(true)} type="button" variant="outline"
+										>Open editor</Button
+									>
 								</Card.Content>
 							</Card.Root>
 						</div>
@@ -131,3 +122,19 @@
 		</form>
 	</div>
 </div>
+
+<Dialog.Root open={showEditor} onOpenChange={setShowEditor}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header class="mb-2">
+			<Dialog.Title>Profile picture editor</Dialog.Title>
+			<Dialog.Description>Paint your own avatar.</Dialog.Description>
+		</Dialog.Header>
+
+		<Separator />
+
+		<Paint bind:sprite />
+		<Dialog.Footer>
+			<Button type="button" onclick={() => setShowEditor(false)}>Close editor</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
