@@ -9,10 +9,10 @@
 	<div
 		class="i mx-auto mt-4 flex w-full max-w-7xl flex-col items-center justify-between gap-3 text-lg sm:flex-row"
 	>
-		<p class="font font-light">
-			Made with <span class="text-base">🩵</span> and
-			<a href="https://appwrite.io/" target="_blank"
-				><img alt="Appwrite logo" src="/appwrite.svg" class="inline size-5" /></a
+		<p class="font text-sm font-light">
+			Made with love and
+			<a href="https://appwrite.io/" class="text-[#FD366E] hover:underline" target="_blank">
+				Appwrite</a
 			>
 		</p>
 		<p class="text-muted-foreground text-sm font-light">Copyright © {currentYear} Odyc.js</p>

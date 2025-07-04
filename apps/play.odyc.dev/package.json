@@ -11,7 +11,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "prettier --check . && eslint .",
+		"generate:versions": "npm view odyc versions --json > src/lib/versions.json"
 	},
 	"devDependencies": {
 		"@dnd-kit-svelte/core": "^0.0.8",

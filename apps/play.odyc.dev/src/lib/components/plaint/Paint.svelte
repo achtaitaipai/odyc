@@ -37,6 +37,14 @@
 		drawing.display(ctx);
 	});
 
+	$effect(() => {
+		if (sprite) {
+			const formattedSprite = sprite.trim().replace(/[ \t]/gm, ''); //removes tabs and whitespaces
+			drawing.updateSprite(formattedSprite);
+			drawing.display(ctx);
+		}
+	});
+
 	function handleClick(e: PointerEvent) {
 		e.preventDefault();
 		const [x, y] = getMousePos(e);

@@ -1,9 +1,17 @@
 <script lang="ts">
+	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	import CheckIcon from '@lucide/svelte/icons/check';
+	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
+	import * as Command from '$lib/components/ui/command/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import { cn } from '$lib/utils.js';
+	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Menubar from '$lib/components/ui/menubar/index.js';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
+	import OdycVersions from '$lib/versions.json';
 	import type { PageProps } from './$types';
 	import * as Card from '$lib/components/ui/card';
 	import { DefaultCode, Dependencies } from '$lib/constants';
@@ -15,10 +23,11 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import { env } from '$env/dynamic/public';
+	import Button, { buttonVariants } from '$lib/components/ui/button/button.svelte';
 	import Editor from '$lib/components/editor/Editor.svelte';
 	import { stores } from '$lib/stores.svelte';
+	import { PUBLIC_IFRAME_ENDPOINT, PUBLIC_ODYC_VERSION } from '$env/static/public';
+	import Paint from '$lib/components/plaint/Paint.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -297,6 +306,94 @@ ${code}
 		}
 	}
 
+	let showVersionDialog = $state(false);
+	function setShowVersionDialog(value: boolean) {
+		showVersionDialog = value;
+	}
+
+	const versions = [...OdycVersions].reverse().map((version) => {
+		return {
+			value: version,
+			label: version
+		};
+	});
+	let versionOpen = $state(false);
+	let versionValue = $state(game.version);
+	let versionRef = $state<HTMLButtonElement>(null!);
+	const versionSelected = $derived(versions.find((f) => f.value === versionValue)?.label);
+	function closeAndFocusVersionsTrigger() {
+		versionOpen = false;
+		tick().then(() => {
+			versionRef.focus();
+		});
+	}
+
+	let isChangingVersion = $state(false);
+	async function onChangeVersion() {
+		if (isChangingVersion) return;
+
+		isChangingVersion = true;
+		try {
+			await Backend.updateGameVersion(game.$id, versionSelected ?? PUBLIC_ODYC_VERSION);
+			toast.success('Game version successfully changed.');
+			await invalidate(Dependencies.GAMES);
+			showVersionDialog = false;
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			isChangingVersion = false;
+		}
+	}
+
+	let showUrlDialog = $state(false);
+	function setShowUrlDialog(value: boolean) {
+		showUrlDialog = value;
+	}
+
+	let gameUrl = $state(game.slug);
+	let isChangingUrl = $state(false);
+	async function onChangeUrl() {
+		if (isChangingUrl) return;
+
+		isChangingUrl = true;
+		try {
+			await Backend.updateGameUrl(game.$id, gameUrl);
+			toast.success('Game URL successfully changed.');
+			await invalidate(Dependencies.GAMES);
+			showUrlDialog = false;
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			isChangingUrl = false;
+		}
+	}
+
+	let showDescriptionDialog = $state(false);
+	function setShowDescriptionDialog(value: boolean) {
+		showDescriptionDialog = value;
+	}
+
+	let description = $state(game.description ?? '');
+	let howToPlay = $state(game.howToPlay ?? '');
+	let isChangingDescription = $state(false);
+	async function onChangeDescription(event: Event) {
+		event.preventDefault();
+
+		if (isChangingDescription) return;
+
+		isChangingDescription = true;
+		try {
+			await Backend.updateGameDescription(game.$id, description, howToPlay);
+			toast.success('Game description successfully changed.');
+			await invalidate(Dependencies.GAMES);
+			showDescriptionDialog = false;
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			isChangingDescription = false;
+		}
+	}
+
 	let showRenameDialog = $state(false);
 	function setShowRenameDialog(value: boolean) {
 		showRenameDialog = value;
@@ -322,6 +419,25 @@ ${code}
 
 	function onFormat() {
 		editor.formatCode();
+	}
+
+	let spriteEditor = $state('');
+	let showSpriteEditor = $state(false);
+	function setShowSpriteEditor(value: boolean) {
+		showSpriteEditor = value;
+	}
+
+	function onSpriteCopy() {
+		navigator.clipboard.writeText(spriteEditor);
+		toast.success('Sprite copied to clipboard.');
+		setShowSpriteEditor(false);
+	}
+
+	function onLoadSprite() {
+		navigator.clipboard.readText().then((text) => {
+			spriteEditor = text;
+			toast.success('Sprite loaded from clipboard.');
+		});
 	}
 </script>
 
@@ -436,7 +552,7 @@ ${code}
 			<Menubar.Menu>
 				<Menubar.Trigger>Edit</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item>Sprite</Menubar.Item>
+					<Menubar.Item onclick={() => setShowSpriteEditor(true)}>Sprite</Menubar.Item>
 					<Menubar.Item>Map</Menubar.Item>
 					<Menubar.Item>Sounds</Menubar.Item>
 				</Menubar.Content>
@@ -476,7 +592,12 @@ ${code}
 				<Menubar.Trigger>Settings</Menubar.Trigger>
 				<Menubar.Content>
 					<Menubar.Item onclick={() => setShowRenameDialog(true)}>Change name</Menubar.Item>
-					<Menubar.Item>Change URL</Menubar.Item>
+					<Menubar.Item onclick={() => setShowUrlDialog(true)}>Change URL</Menubar.Item>
+					<Menubar.Item onclick={() => setShowDescriptionDialog(true)}
+						>Change Description</Menubar.Item
+					>
+					<Menubar.Separator />
+					<Menubar.Item onclick={() => setShowVersionDialog(true)}>Change Version</Menubar.Item>
 					<Menubar.Separator />
 					<Menubar.Item onclick={() => setShowDeleteDialog(true)} variant="destructive"
 						>Delete project</Menubar.Item
@@ -504,7 +625,7 @@ ${code}
 					<iframe
 						class="h-full w-full"
 						id="preview"
-						src={(env.PUBLIC_IFRAME_ENDPOINT ?? '/iframe') + '?version=' + game.version}
+						src={(PUBLIC_IFRAME_ENDPOINT ?? '/iframe') + '?version=' + game.version}
 						title="Game preview"
 					></iframe>
 				</div>
@@ -571,6 +692,142 @@ ${code}
 	</Dialog.Content>
 </Dialog.Root>
 
+<Dialog.Root open={showUrlDialog} onOpenChange={setShowUrlDialog}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<form onsubmit={onChangeUrl}>
+			<Dialog.Header class="mb-2">
+				<Dialog.Title>Change game's URL</Dialog.Title>
+				<Dialog.Description
+					>Change public URL you can share to let others play your game.</Dialog.Description
+				>
+			</Dialog.Header>
+
+			<Separator />
+
+			<div class="grid gap-4 py-4">
+				<div class="flex w-full max-w-sm flex-col gap-1.5">
+					<Label for="game-url">Game URL</Label>
+
+					<div class="flex items-center gap-1">
+						<Input
+							required={true}
+							bind:value={gameUrl}
+							type="text"
+							id="game-url"
+							placeholder="awesome-game"
+						/>
+					</div>
+				</div>
+			</div>
+			<Dialog.Footer>
+				<Button disabled={isChangingUrl} type="submit">Update</Button>
+			</Dialog.Footer>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root open={showVersionDialog} onOpenChange={setShowVersionDialog}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<form onsubmit={onChangeVersion}>
+			<Dialog.Header class="mb-2">
+				<Dialog.Title>Upgrade your game version</Dialog.Title>
+				<Dialog.Description
+					>Increase or lower Odyc.js engine version used in your game.</Dialog.Description
+				>
+			</Dialog.Header>
+
+			<Separator />
+
+			<div class="grid gap-4 py-4">
+				<div class="flex w-full max-w-sm flex-col gap-1.5">
+					<Label for="game-url">Odyc.js version</Label>
+
+					<div class="flex items-center gap-1">
+						<Popover.Root bind:open={versionOpen}>
+							<Popover.Trigger bind:ref={versionRef}>
+								{#snippet child({ props })}
+									<Button
+										{...props}
+										variant="outline"
+										class="w-[200px] justify-between"
+										role="combobox"
+										aria-expanded={open}
+									>
+										{versionValue || 'Select a version...'}
+										<ChevronsUpDownIcon class="opacity-50" />
+									</Button>
+								{/snippet}
+							</Popover.Trigger>
+							<Popover.Content class="w-[200px] p-0">
+								<Command.Root>
+									<Command.Input placeholder="Search versions..." />
+									<Command.List>
+										<Command.Empty>No version found.</Command.Empty>
+										<Command.Group value="versions">
+											{#each versions as version (version.value)}
+												<Command.Item
+													value={version.value}
+													onSelect={() => {
+														versionValue = version.value;
+														closeAndFocusVersionsTrigger();
+													}}
+												>
+													<CheckIcon
+														class={cn(versionValue !== version.value && 'text-transparent')}
+													/>
+													{version.label}
+												</Command.Item>
+											{/each}
+										</Command.Group>
+									</Command.List>
+								</Command.Root>
+							</Popover.Content>
+						</Popover.Root>
+					</div>
+				</div>
+			</div>
+			<Dialog.Footer>
+				<Button disabled={isChangingVersion} type="submit">Update</Button>
+			</Dialog.Footer>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Sheet.Root open={showDescriptionDialog} onOpenChange={setShowDescriptionDialog}>
+	<Sheet.Content>
+		<form onsubmit={onChangeDescription}>
+			<Sheet.Header>
+				<Sheet.Title>Edit game description</Sheet.Title>
+				<Sheet.Description>
+					Describe story of your game, rules, and how to play in general.
+				</Sheet.Description>
+			</Sheet.Header>
+
+			<div class="grid flex-1 auto-rows-min gap-6 px-4">
+				<div class="grid gap-3">
+					<Label for="description" class="text-right">Description</Label>
+					<Textarea
+						bind:value={description}
+						id="description"
+						placeholder="Short description of your game."
+					/>
+				</div>
+				<div class="grid gap-3">
+					<Label for="howToPlay" class="text-right">How to play</Label>
+					<Textarea
+						bind:value={howToPlay}
+						id="howToPlay"
+						placeholder="Controls and rules of your game."
+					/>
+				</div>
+			</div>
+			<Sheet.Footer>
+				<Button type="submit" variant="outline">Update</Button>
+			</Sheet.Footer>
+		</form>
+	</Sheet.Content>
+</Sheet.Root>
+
 <AlertDialog.Root open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
@@ -586,3 +843,20 @@ ${code}
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
+
+<Dialog.Root open={showSpriteEditor} onOpenChange={setShowSpriteEditor}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header class="mb-2">
+			<Dialog.Title>Sprite editor</Dialog.Title>
+			<Dialog.Description>Simple painting tool to illustrate Odyc sprites</Dialog.Description>
+		</Dialog.Header>
+
+		<Separator />
+
+		<Paint bind:sprite={spriteEditor} />
+		<Dialog.Footer>
+			<Button type="button" variant="outline" onclick={onLoadSprite}>Load from clipboard</Button>
+			<Button type="button" onclick={onSpriteCopy}>Copy</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

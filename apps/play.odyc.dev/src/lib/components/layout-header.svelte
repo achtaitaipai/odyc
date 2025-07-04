@@ -73,10 +73,10 @@
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
-					<Button variant="ghost" class="" size="icon">
+					<Button variant="ghost" class="size-7 translate-y-0.5 transform" size="icon">
 						{#if stores.user}
 							<Sprite
-								class="size-[1.2rem]"
+								class="!aspect-square !h-full !w-full"
 								sprite={stores.profile?.avatarPixels ?? DefaultProfilePicture}
 							/>
 						{:else}

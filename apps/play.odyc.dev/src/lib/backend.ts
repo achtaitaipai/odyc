@@ -13,7 +13,7 @@ import randomName from '@scaleway/random-name';
 import { type Games, type CommunityHighlights, type Profiles } from './appwrite';
 import slugify from 'slugify';
 import { stores } from './stores.svelte';
-import { env } from '$env/dynamic/public';
+import { PUBLIC_ODYC_VERSION } from '$env/static/public';
 
 type BackendPrefs = {
 	theme?: string;
@@ -129,6 +129,35 @@ export class Backend {
 		});
 	}
 
+	static async updateGameVersion(gameId: string, version: string) {
+		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
+			version
+		});
+	}
+
+	static async updateGameDescription(gameId: string, description: string, howToPlay: string) {
+		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
+			description,
+			howToPlay
+		});
+	}
+
+	static async updateGameUrl(gameId: string, slug: string) {
+		try {
+			return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
+				slug
+			});
+		} catch (err: unknown) {
+			if (err instanceof AppwriteException) {
+				if (err.type === 'document_already_exists') {
+					throw new Error('This URL is already taken by another game.');
+				}
+			}
+
+			throw err;
+		}
+	}
+
 	static getSceenshotPreview(fileId: string) {
 		return this.#storage.getFileView('screenshots', fileId).toString();
 	}
@@ -164,7 +193,7 @@ export class Backend {
 			slug: slugify(name).toLowerCase(),
 			ownerProfileId: stores.profile?.$id,
 			code,
-			version: env.PUBLIC_ODYC_VERSION
+			version: PUBLIC_ODYC_VERSION
 		};
 		try {
 			return await this.#databases.createDocument<Games>('main', 'games', ID.unique(), game);
