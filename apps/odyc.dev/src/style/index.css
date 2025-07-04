@@ -1,1 +1,19 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--color-accent: var(--color-pink-500);
+}
+
+* {
+	scrollbar-width: auto;
+	scrollbar-color: var(--color-gray-400) transparent;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--color-gray-400);
+}

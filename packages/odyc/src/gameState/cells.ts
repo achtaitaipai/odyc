@@ -103,6 +103,26 @@ export class Cells<T extends string> {
 		this.#observable.notify()
 	}
 
+	sendMessageToCells(query: CellQuery<T>, message?: any) {
+		for (let index = 0; index < this.#values.length; index++) {
+			const cell = this.#values[index]
+			if (!cell || !this.#cellMatchesQuery(cell, query) || !cell.onMessage)
+				continue
+			cell.onMessage(new CellFacade(cell.position, this), message)
+		}
+	}
+
+	moveCell(from: Position, to: Position) {
+		if (vec2(from).equals(to)) return
+		this.#values = this.#values.filter(
+			(cell) => !vec2(cell.position).equals(to),
+		)
+		this.#values = this.#values.map((cell) =>
+			vec2(cell.position).equals(from) ? { ...cell, position: to } : cell,
+		)
+		this.#observable.notify()
+	}
+
 	#queryCells(query: CellQuery<T>) {
 		return this.#values.filter((cell) => this.#cellMatchesQuery(cell, query))
 	}
@@ -123,9 +143,16 @@ export class Cells<T extends string> {
 		if ('visible' in query && query.visible !== cell.visible) return false
 		if ('foreground' in query && query.foreground !== cell.foreground)
 			return false
-		if ('sound' in query && query.sound !== cell.sound) return false
 		if ('dialog' in query && query.dialog !== cell.dialog) return false
-		if ('end' in query && query.end !== cell.end) return false
+		if ('end' in query) {
+			if (typeof query.end !== typeof cell.end) return false
+			if (typeof query.end === 'string' && cell.end !== query.end) return false
+			if (typeof query.end === 'boolean' && cell.end !== query.end) return false
+			if (Array.isArray(query.end)) {
+				if (!Array.isArray(cell.end)) return false
+				if (query.end.join('') !== cell.end.join('')) return false
+			}
+		}
 		if ('isOnScreen' in query && query.isOnScreen !== cell.isOnScreen)
 			return false
 		return true
@@ -208,6 +235,7 @@ export class Cells<T extends string> {
 		template: Template<T>,
 	): CellState<T> {
 		return {
+			id: crypto.randomUUID(),
 			symbol: symbol,
 			sprite: template.sprite ?? null,
 			position: [x, y],
@@ -224,6 +252,7 @@ export class Cells<T extends string> {
 			onScreenEnter: template.onScreenEnter,
 			onScreenLeave: template.onScreenLeave,
 			onTurn: template.onTurn,
+			onMessage: template.onMessage,
 		}
 	}
 

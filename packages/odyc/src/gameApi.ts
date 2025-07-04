@@ -35,6 +35,8 @@ export const initGameApi = <T extends string>(
 		setCells: (query, symbol) => gameState.cells.setCells(query, symbol),
 		updateCells: (query, params) => gameState.cells.updateCells(query, params),
 		clearCells: (query) => gameState.cells.clearCells(query),
+		sendMessageToCells: (query, message) =>
+			gameState.cells.sendMessageToCells(query, message),
 		openDialog: (text) => dialog.open(text),
 		prompt: (...options) => prompt.open(...options),
 		openMenu: (options) => prompt.openMenu(options),

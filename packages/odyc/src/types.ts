@@ -1,6 +1,6 @@
 import { CellFacade } from './gameState/cellFacade.js'
 import { Player } from './gameState/player.js'
-import { CellParams, CellQuery, CellState } from './gameState/types.js'
+import { CellParams, CellQuery } from './gameState/types.js'
 import { MenuOption } from './prompt.js'
 import { Uniforms } from './shaders/filterSettings.js'
 import { PlaySoundArgs } from './sound.js'
@@ -50,6 +50,7 @@ export interface GameApi<T extends string> {
 	setCells: (query: CellQuery<T>, symbol: T) => void
 	updateCells: (query: CellQuery<T>, params: CellParams) => void
 	clearCells: (query: CellQuery<T>) => void
+	sendMessageToCells: (query: CellQuery<T>, message?: any) => void
 	openDialog: (text: string) => Promise<void>
 	prompt: (...options: string[]) => Promise<number>
 	openMenu: (options: MenuOption) => Promise<void>
