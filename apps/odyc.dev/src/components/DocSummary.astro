@@ -1,0 +1,37 @@
+---
+import { getDocsSummary } from '#lib/docsPost.ts'
+import type { Locale } from '#lib/i18n/index.ts'
+
+export type Props = { locale: Locale; currentSlug: string }
+const { locale, currentSlug } = Astro.props
+const summary = await getDocsSummary(locale)
+---
+
+<aside class="sticky top-0 h-screen w-sm px-4 py-6">
+	<div class="h-full overflow-hidden rounded-md border ps-4 pt-4 pb-2">
+		<ul class="h-full space-y-4 overflow-auto">
+			{
+				summary.map(([category, items]) => (
+					<li>
+						<span class="text-lg font-bold">{category}</span>
+						<ul class="mt-1 space-y-1 ps-0.5">
+							{items.map((el) => (
+								<li>
+									<a
+										href={el.url}
+										class:list={[
+											'hover:text-accent',
+											el.slug === currentSlug && 'text-accent underline',
+										]}
+									>
+										{el.title}
+									</a>
+								</li>
+							))}
+						</ul>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</aside>

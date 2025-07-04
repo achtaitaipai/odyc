@@ -1,18 +1,10 @@
 ---
-import BaseLayout from '#layouts/Base.astro'
+import DocsLayout from '#layouts/Docs.astro'
 import { getDocStaticPaths } from '#lib/docsPost.ts'
-import type { GetStaticPaths } from 'astro'
 
-export const getStaticPaths = getDocStaticPaths('fr') satisfies GetStaticPaths
+export const getStaticPaths = getDocStaticPaths('fr')
 
 const { post } = Astro.props
-const { Content } = await post.render()
 ---
 
-<BaseLayout>
-	<h1>{post.data.title}</h1>
-
-	<article class="prose">
-		<Content />
-	</article>
-</BaseLayout>
+<DocsLayout {post} locale="fr" />
