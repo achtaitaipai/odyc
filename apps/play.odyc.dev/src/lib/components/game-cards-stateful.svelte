@@ -3,6 +3,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import dayjs from 'dayjs';
+	import { Backend } from '$lib/backend';
 
 	const {
 		game
@@ -11,6 +12,14 @@
 	} = $props();
 
 	dayjs.extend(relativeTime);
+
+	function getPreview(fileId: string) {
+		if (!fileId) {
+			return undefined;
+		}
+
+		return Backend.getSceenshotPreview(fileId);
+	}
 </script>
 
 <a href={`/dashboard/games/${game.$id}`}>
@@ -18,12 +27,12 @@
 		<Card.Header class="p-0">
 			<img
 				alt={`Light Screenshot of ${game.name}`}
-				src="/placeholder-light.svg"
+				src={getPreview(game.thumbnailFileId) ?? '/placeholder-light.svg'}
 				class="block aspect-video w-full object-cover object-center dark:hidden"
 			/>
 			<img
 				alt={`Dark Screenshot of ${game.name}`}
-				src="/placeholder-dark.svg"
+				src={getPreview(game.thumbnailFileId) ?? '/placeholder-dark.svg'}
 				class="hidden aspect-video w-full object-cover object-center dark:block"
 			/>
 

@@ -6,6 +6,7 @@ import {
 	ID,
 	OAuthProvider,
 	Query,
+	Storage,
 	type Models
 } from 'appwrite';
 import randomName from '@scaleway/random-name';
@@ -33,6 +34,7 @@ export class Backend {
 	// Service SDKs
 	static #account: Account = new Account(this.#client);
 	static #databases: Databases = new Databases(this.#client);
+	static #storage: Storage = new Storage(this.#client);
 
 	static async signInAnonymous() {
 		return await this.#account.createAnonymousSession();
@@ -114,15 +116,21 @@ export class Backend {
 	static async getGame(gameId: string) {
 		return await this.#databases.getDocument<Games>('main', 'games', gameId);
 	}
-	static async updateGameCode(gameId: string, code: string) {
+	static async updateGameCode(gameId: string, code: string, thumbnailFileId?: string) {
 		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
-			code
+			code,
+			thumbnailFileId: thumbnailFileId ? thumbnailFileId : undefined
 		});
 	}
+
 	static async updateGameName(gameId: string, name: string) {
 		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
 			name
 		});
+	}
+
+	static getSceenshotPreview(fileId: string) {
+		return this.#storage.getFileView('screenshots', fileId).toString();
 	}
 
 	static async getCommunityHighlights(): Promise<Models.DocumentList<Games>> {
@@ -172,5 +180,13 @@ export class Backend {
 
 	static async deleteGame(gameId: string) {
 		return await this.#databases.deleteDocument('main', 'games', gameId);
+	}
+
+	static async createScreenshotFile(blob: Blob) {
+		return await this.#storage.createFile(
+			'screenshots',
+			ID.unique(),
+			new File([blob], 'screenshot.png')
+		);
 	}
 }

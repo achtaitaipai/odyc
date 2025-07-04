@@ -41,10 +41,25 @@
 	let hasChangedCode = $state(false);
 
 	window.addEventListener('message', function (event) {
-		if (event.data === 'on-runner-ready') {
+		const { type, detail } = event.data;
+		if (type === 'on-runner-ready') {
 			updateCode();
+		} else if (type === 'on-canvas-blob') {
+			const { blob } = detail;
+			onSaveCodeFinish(blob);
 		}
 	});
+
+	async function getGameBlob() {
+		// @ts-expect-error It exists, not sure why types dont see it
+		const contentWindow = preview?.contentWindow;
+		contentWindow?.postMessage(
+			{
+				type: 'onblobstart'
+			},
+			'*'
+		);
+	}
 
 	$effect(() => {
 		if (mode && mode.current) {
@@ -126,7 +141,7 @@
 			if (isCtrl && event.code === 'KeyS') {
 				event.preventDefault();
 				event.stopPropagation();
-				onSaveCode();
+				onSaveCodeStart();
 				return;
 			}
 		});
@@ -220,9 +235,14 @@ ${code}
 		document.body.removeChild(downloadLink);
 	}
 
-	async function onSaveCode() {
+	function onSaveCodeStart() {
+		getGameBlob();
+	}
+
+	async function onSaveCodeFinish(screenshot: Blob) {
 		try {
-			await Backend.updateGameCode(game.$id, code);
+			const file = await Backend.createScreenshotFile(screenshot);
+			await Backend.updateGameCode(game.$id, code, file.$id);
 			await invalidate(Dependencies.GAMES);
 			toast.success('Game code successfully saved.');
 			hasChangedCode = false;
@@ -333,7 +353,7 @@ ${code}
 					File
 				</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item onclick={onSaveCode} class="flex items-center justify-start gap-2">
+					<Menubar.Item onclick={onSaveCodeStart} class="flex items-center justify-start gap-2">
 						{#if hasChangedCode}
 							<div class="relative">
 								<div
