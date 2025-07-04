@@ -1,28 +1,18 @@
 ---
-import { defaultLocale, getLocaleByPath } from '#lib/i18n/index.ts'
+import BaseLayout from '#layouts/Base.astro'
+import { getDocStaticPaths } from '#lib/docsPost.ts'
 import type { GetStaticPaths } from 'astro'
-import { getCollection } from 'astro:content'
 
-export const getStaticPaths = (async () => {
-	const posts = (await getCollection('docs')).filter(
-		(el) => getLocaleByPath(el.id) === 'fr',
-	)
-	return posts.map((post) => {
-		let slug = post.id
-			.replace(/\d+-/g, '') // Remove "1--", "2--", etc.
-			.replace(/\.md$/, '') // Remove .md extension
-			.replace('fr/', '')
-		return {
-			params: { slug },
-			props: { post },
-		}
-	})
-}) satisfies GetStaticPaths
+export const getStaticPaths = getDocStaticPaths('fr') satisfies GetStaticPaths
 
 const { post } = Astro.props
 const { Content } = await post.render()
 ---
 
-<h1>{post.data.title}</h1>
+<BaseLayout>
+	<h1>{post.data.title}</h1>
 
-<Content />
+	<article class="prose">
+		<Content />
+	</article>
+</BaseLayout>

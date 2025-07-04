@@ -1,8 +1,20 @@
-import type { CollectionEntry } from 'astro:content'
-import { getLocaleByPath, pathHasLocale } from 'astro:i18n'
-import { defaultLocale } from './i18n'
+import { getCollection } from 'astro:content'
+import { defaultLocale, getLocaleByPath, type Locale } from './i18n'
 
-export function getDocPostLocale(post: CollectionEntry<'docs'>) {
-	if (pathHasLocale(post.id)) return getLocaleByPath(post.id)
-	return defaultLocale
+export function getDocStaticPaths(locale: Locale) {
+	return async () => {
+		const posts = (await getCollection('docs')).filter(
+			(el) => getLocaleByPath(el.id) === locale,
+		)
+		return posts.map((post) => {
+			let slug = post.id
+				.replace(/\d+-/g, '') // Remove "1--", "2--", etc.
+				.replace(/\.md$/, '') // Remove .md extension
+			if (locale !== defaultLocale) slug = slug.replace(locale + '/', '')
+			return {
+				params: { slug },
+				props: { post },
+			}
+		})
+	}
 }
