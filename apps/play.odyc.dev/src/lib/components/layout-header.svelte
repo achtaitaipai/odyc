@@ -95,6 +95,11 @@
 			});
 		});
 	}
+
+	function openCommands() {
+		const ninja = document.querySelector('ninja-keys') as any;
+		ninja.open();
+	}
 </script>
 
 <header
@@ -168,6 +173,7 @@
 			</div>
 
 			<button
+				onclick={openCommands}
 				class="bg-primary-foreground border-muted-background flex items-center gap-2 rounded-lg border px-2 py-1.5 pl-3"
 			>
 				<span class="text-muted-foreground text-sm font-light">Type a command...</span>

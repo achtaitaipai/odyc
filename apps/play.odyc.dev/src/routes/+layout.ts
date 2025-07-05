@@ -1,7 +1,9 @@
 import { Backend } from '$lib/backend';
 import { Dependencies } from '$lib/constants';
 import { stores } from '$lib/stores.svelte';
+import { Query, type Models } from 'appwrite';
 import type { LayoutLoad } from './$types';
+import type { Games } from '$lib/appwrite';
 
 export const ssr = false;
 
@@ -22,7 +24,18 @@ export const load: LayoutLoad = async ({ depends }) => {
 		}
 	}
 
+	let games: Models.DocumentList<Games> = {
+		total: 0,
+		documents: []
+	};
+	try {
+		games = await Backend.listGames([Query.limit(50), Query.select(['$id', 'name', 'slug'])]);
+	} catch {
+		// Empty array
+	}
+
 	return {
-		theme: stores.user?.prefs?.theme ?? 'dark'
+		theme: stores.user?.prefs?.theme ?? 'dark',
+		games
 	};
 };

@@ -80,6 +80,7 @@
 		"js-beautify": "^1.15.4",
 		"lz-string": "^1.5.0",
 		"mode-watcher": "^1.1.0",
+		"ninja-keys": "^1.2.2",
 		"pfxr": "^1.0.9",
 		"slugify": "^1.6.6"
 	}
