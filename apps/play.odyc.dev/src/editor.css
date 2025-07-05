@@ -1,0 +1,104 @@
+html {
+	/* UI: main editor background */
+	--code-color-background: var(--color-neutral-50);
+
+	/* UI: background for hovered buttons */
+	--code-color-button-hover-background: var(--color-neutral-100);
+
+	/* UI: selection highlight color for text and custom selection layers */
+	--code-color-selection: var(--color-neutral-300);
+
+	/* UI: caret and cursor color */
+	--code-color-cursor: var(--color-blue-500);
+
+	/* UI: background for tooltip overlays */
+	--code-color-tooltip-background: var(--color-neutral-800);
+
+	/* UI: background for active line highlight and autocomplete selection */
+	--code-color-highlight-background: var(--color-blue-100);
+
+	/* UI: darkest background for panels, pop-ups, gutters */
+	--code-color-dark-background: var(--color-neutral-50);
+
+	/* Syntax: names in definitions */
+	--code-color-syntax-name: var(--color-orange-700);
+
+	/* Syntax: identifiers, property names, macros */
+	--code-color-syntax-identifier: var(--color-red-600);
+
+	/* Syntax: operators, punctuation, regex tokens, links, escapes */
+	--code-color-syntax-operator: var(--color-teal-600);
+
+	/* Syntax: invalid tokens / error highlighting */
+	--code-color-syntax-invalid: var(--color-black);
+
+	/* UI: primary text color for editor content and panels */
+	--code-color-text-primary: var(--color-neutral-800);
+
+	/* UI: secondary text color for gutters, comments, metadata */
+	--code-color-text-secondary: var(--color-neutral-600);
+
+	/* Syntax: function names and label names */
+	--code-color-syntax-function: var(--color-blue-600);
+
+	/* Syntax: string literals and inserted text */
+	--code-color-syntax-string: var(--color-green-600);
+
+	/* Syntax: constants, booleans, atoms */
+	--code-color-syntax-constant: var(--color-orange-700);
+
+	/* Syntax: language keywords (if, for, return, etc.) */
+	--code-color-syntax-keyword: var(--color-purple-600);
+}
+.dark {
+	/* UI: main editor background */
+	--code-color-background: var(--color-neutral-900);
+
+	/* UI: background for hovered buttons */
+	--code-color-button-hover-background: var(--color-neutral-800);
+
+	/* UI: selection highlight color for text and custom selection layers */
+	--code-color-selection: var(--color-neutral-700);
+
+	/* UI: caret and cursor color */
+	--code-color-cursor: var(--color-blue-500);
+
+	/* UI: background for tooltip overlays */
+	--code-color-tooltip-background: var(--color-neutral-800);
+
+	/* UI: background for active line highlight and autocomplete selection */
+	--code-color-highlight-background: var(--color-neutral-950);
+
+	/* UI: darkest background for panels, pop-ups, gutters */
+	--code-color-dark-background: var(--color-neutral-950);
+
+	/* Syntax: names in definitions */
+	--code-color-syntax-name: var(--color-orange-300);
+
+	/* Syntax: identifiers, property names, macros */
+	--code-color-syntax-identifier: var(--color-red-400);
+
+	/* Syntax: operators, punctuation, regex tokens, links, escapes */
+	--code-color-syntax-operator: var(--color-teal-400);
+
+	/* Syntax: invalid tokens / error highlighting */
+	--code-color-syntax-invalid: var(--color-white);
+
+	/* UI: primary text color for editor content and panels */
+	--code-color-text-primary: var(--color-neutral-200);
+
+	/* UI: secondary text color for gutters, comments, metadata */
+	--code-color-text-secondary: var(--color-neutral-400);
+
+	/* Syntax: function names and label names */
+	--code-color-syntax-function: var(--color-blue-400);
+
+	/* Syntax: string literals and inserted text */
+	--code-color-syntax-string: var(--color-green-400);
+
+	/* Syntax: constants, booleans, atoms */
+	--code-color-syntax-constant: var(--color-orange-300);
+
+	/* Syntax: language keywords (if, for, return, etc.) */
+	--code-color-syntax-keyword: var(--color-purple-400);
+}

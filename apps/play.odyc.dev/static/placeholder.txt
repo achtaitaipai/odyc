@@ -1,0 +1,10 @@
+Dark:
+
+https://placehold.co/600x400/232323/a1a1a1?text=Preview%20not%20available&font=Lato
+
+---
+
+
+Light:
+
+https://placehold.co/600x400/f2f2f2/a1a1a1?text=Preview%20not%20available&font=Lato
