@@ -4,15 +4,12 @@ export class Drawing {
 	#grid: number[][] = [];
 	#width = $state(8);
 	#height = $state(8);
-	constructor(sprite?: string, width?: number, height?: number) {
-		this.updateSprite(sprite);
-		this.#width = width || this.#width;
-		this.#height = height || this.#height;
-	}
 
-	updateSprite(sprite?: string) {
+	constructor(sprite?: string, width?: number, height?: number) {
 		this.#grid = this.#createGrid(this.#width, this.#height);
 		if (sprite) this.text = sprite;
+		this.#width = width || this.#width;
+		this.#height = height || this.#height;
 	}
 
 	display(ctx: CanvasRenderingContext2D) {
@@ -81,6 +78,7 @@ export class Drawing {
 		this.#width = width;
 		this.#height = height;
 		this.#grid = newGrid;
+		console.log(this.text);
 	}
 
 	get text() {
@@ -92,7 +90,7 @@ export class Drawing {
 			}
 			result += '\n';
 		}
-		return result;
+		return result.replace(/[ \t]/gm, '');
 	}
 
 	set text(value: string) {

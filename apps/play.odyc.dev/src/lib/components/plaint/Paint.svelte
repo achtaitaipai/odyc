@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount, tick, untrack } from 'svelte';
 	import { Drawing } from './Drawing.svelte';
 	import { twMerge } from 'tailwind-merge';
 	import Button from '../ui/button/button.svelte';
@@ -23,26 +23,10 @@
 		resize?: boolean;
 	};
 
-	let {
-		width = 8,
-		height = 8,
-		sprite = $bindable(),
-		class: className = '',
-		resize = false
-	}: Props = $props();
-
-	let spriteEditorWidth = $state(8);
-	let spriteEditorHeight = $state(8);
-	$effect(() => {
-		changeSize(spriteEditorWidth, spriteEditorHeight);
-	});
+	let { sprite = $bindable(), class: className = '', resize = false }: Props = $props();
 
 	let canvas: HTMLCanvasElement;
 	let currentColor = $state(0);
-
-	const onChange = (newSprite: string) => {
-		sprite = newSprite;
-	};
 
 	const drawing = new Drawing(sprite);
 	let ctx: CanvasRenderingContext2D;
@@ -55,19 +39,9 @@
 	});
 
 	$effect(() => {
-		if (width || height) {
-			drawing.width = width;
-			drawing.height = height;
-			canvas.width = drawing.width;
-			canvas.height = drawing.height;
-			drawing.display(ctx);
-		}
-	});
-
-	$effect(() => {
-		if (sprite) {
-			const formattedSprite = sprite.trim().replace(/[ \t]/gm, ''); //removes tabs and whitespaces
-			drawing.updateSprite(formattedSprite);
+		console.log(123);
+		if (sprite && sprite !== untrack(() => drawing.text)) {
+			drawing.text = sprite;
 			drawing.display(ctx);
 		}
 	});
@@ -77,7 +51,7 @@
 		const [x, y] = getMousePos(e);
 		drawing.putPixel(x, y, currentColor);
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function handleMouseMove(e: PointerEvent) {
@@ -87,64 +61,57 @@
 		if (isPressed) {
 			drawing.putPixel(x, y, currentColor);
 			drawing.display(ctx);
-			onChange?.(drawing.text);
+			sprite = drawing.text;
 		}
 	}
 
 	function mirrorX() {
 		drawing.mirror();
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function mirrorY() {
 		drawing.mirror(true);
 		drawing.display(ctx);
-		onChange?.(drawing.text);
-	}
-
-	async function changeSize(width: number, height: number) {
-		drawing.resize(width, height);
-		await tick();
-		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	async function rotate() {
 		drawing.rotate();
 		await tick();
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function moveUp() {
 		drawing.move(0, -1);
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function moveRight() {
 		drawing.move(1, 0);
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function moveDown() {
 		drawing.move(0, 1);
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function moveLeft() {
 		drawing.move(-1, 0);
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	function clear() {
 		drawing.clear();
 		drawing.display(ctx);
-		onChange?.(drawing.text);
+		sprite = drawing.text;
 	}
 
 	async function handlePaste(e: ClipboardEvent) {
@@ -165,6 +132,21 @@
 		const x = Math.floor(((e.clientX - left) / width) * drawing.width);
 		const y = Math.floor(((e.clientY - top) / height) * drawing.height);
 		return [x, y];
+	}
+
+	async function handleChangeWidth(e: Event & { currentTarget: HTMLInputElement }) {
+		drawing.resize(e.currentTarget.valueAsNumber, drawing.height);
+		await tick();
+		drawing.display(ctx);
+		sprite = drawing.text;
+		console.log(sprite);
+	}
+
+	async function handleChangeHeight(e: Event & { currentTarget: HTMLInputElement }) {
+		drawing.resize(drawing.width, e.currentTarget.valueAsNumber);
+		await tick();
+		drawing.display(ctx);
+		sprite = drawing.text;
 	}
 </script>
 
@@ -235,9 +217,25 @@
 	<div class="flex w-full max-w-sm flex-col gap-1.5">
 		<Label for="size">Size</Label>
 		<div class="flex items-center gap-1">
-			<Input bind:value={spriteEditorWidth} type="number" id="size" placeholder="8" />
+			<Input
+				onchange={handleChangeWidth}
+				value={drawing.width}
+				min="2"
+				max="24"
+				type="number"
+				id="size"
+				placeholder="8"
+			/>
 			<p class="text-muted-foreground font-light">x</p>
-			<Input bind:value={spriteEditorHeight} type="number" id="size" placeholder="8" />
+			<Input
+				onchange={handleChangeHeight}
+				value={drawing.height}
+				min="2"
+				max="24"
+				type="number"
+				id="size"
+				placeholder="8"
+			/>
 		</div>
 	</div>
 {/if}
