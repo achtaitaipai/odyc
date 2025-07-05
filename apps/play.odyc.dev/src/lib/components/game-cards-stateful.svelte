@@ -27,12 +27,12 @@
 		<Card.Header class="p-0">
 			<img
 				alt={`Light Screenshot of ${game.name}`}
-				src={getPreview(game.thumbnailFileId) ?? '/placeholder-light.svg'}
+				src={getPreview(game.thumbnailFileId ?? '') ?? '/placeholder-light.svg'}
 				class="block aspect-video w-full object-cover object-center dark:hidden"
 			/>
 			<img
 				alt={`Dark Screenshot of ${game.name}`}
-				src={getPreview(game.thumbnailFileId) ?? '/placeholder-dark.svg'}
+				src={getPreview(game.thumbnailFileId ?? '') ?? '/placeholder-dark.svg'}
 				class="hidden aspect-video w-full object-cover object-center dark:block"
 			/>
 
