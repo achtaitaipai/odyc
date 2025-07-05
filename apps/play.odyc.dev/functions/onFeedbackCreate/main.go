@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -16,6 +17,30 @@ type RequestBody struct {
 	FileId string `json:"fileId"`
 	Text   string `json:"text"`
 	Id     string `json:"$id"`
+}
+
+type DiscordPayload struct {
+	Content     interface{} `json:"content"`
+	Embeds      []DiscordEmbed `json:"embeds"`
+	Attachments []string    `json:"attachments"`
+}
+
+type DiscordEmbed struct {
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	Color       int     `json:"color"`
+	Fields      []DiscordField `json:"fields"`
+	Image       DiscordImage   `json:"image"`
+}
+
+type DiscordField struct {
+	Name   string `json:"name"`
+	Value  string `json:"value"`
+	Inline bool   `json:"inline"`
+}
+
+type DiscordImage struct {
+	URL string `json:"url"`
 }
 
 func Main(Context openruntimes.Context) openruntimes.Response {
@@ -60,7 +85,16 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 		return Context.Res.Send("", Context.Res.WithStatusCode(500))
 	}
 
-	accountAgeVerbose := time.Since(accountAgeTime).String()
+	duration := time.Since(accountAgeTime)
+	days := int(duration.Hours() / 24)
+	hours := int(duration.Hours()) % 24
+	
+	var accountAgeVerbose string
+	if days > 0 {
+		accountAgeVerbose = fmt.Sprintf("%d days, %d hours", days, hours)
+	} else {
+		accountAgeVerbose = fmt.Sprintf("%d hours", hours)
+	}
 
 	name := "Anonymous"
 	if user.Name != "" {
@@ -71,49 +105,58 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 
 	unixTimestamp := time.Now().Unix()
 
-	message := `{
-	    "content": null,
-	    "embeds": [
-	      {
-	        "title": "🧪 We recieved new feedback!",
-	        "description": "An Odyc.js Play user just submitted a new feedback.",
-	        "color": 14642836,
-	        "fields": [
-	          {
-	            "name": "👤 User",
-	            "value": "` + name + `",
-	            "inline": true
-	          },
-	          {
-	            "name": "🎂 Account Age",
-	            "value": "` + accountAgeVerbose + `",
-	            "inline": true
-	          },
-	          {
-	            "name": "💬 Message",
-	            "value": "` + body.Text + `",
-	            "inline": true
-	          },
-	          {
-	            "name": "📅 Timings",
-	            "value": "Created <t:` + fmt.Sprintf("%d", unixTimestamp) + `:R>",
-	            "inline": true
-	          },
-	          {
-	            "name": "🔗 Quick Actions",
-	            "value": "[Feedback](https://cloud.appwrite.io/console/project-fra-odyc-js/databases/database-main/collection-feedbacks/document-` + body.Id + `) | [User](https://cloud.appwrite.io/console/project-fra-odyc-js/auth/user-` + user.Id + `)",
-	            "inline": true
-	          }
-	        ],
-	        "image": {
-	          "url": "https://fra.cloud.appwrite.io/v1/storage/buckets/feedbacks/files/` + body.FileId + `/view?project=odyc-js&mode=admin"
-	        }
-	      }
-	    ],
-	    "attachments": []
-	  }`
+	message := DiscordPayload{
+		Content: nil,
+		Embeds: []DiscordEmbed{
+			{
+				Title:       "🧪 We recieved new feedback!",
+				Description: "An Odyc.js Play user just submitted a new feedback.",
+				Color:       14642836,
+				Fields: []DiscordField{
+					{
+						Name:   "👤 User",
+						Value:  name,
+						Inline: true,
+					},
+					{
+						Name:   "🎂 Account Age",
+						Value:  accountAgeVerbose,
+						Inline: true,
+					},
+					{
+						Name:   "💬 Message",
+						Value:  body.Text + "\n",
+						Inline: false,
+					},
+					{
+						Name:   "📅 Timings",
+						Value:  "Created <t:" + fmt.Sprintf("%d", unixTimestamp) + ":R>",
+						Inline: true,
+					},
+					{
+						Name:   "🔗 Quick Actions",
+						Value:  "[Feedback](https://cloud.appwrite.io/console/project-fra-odyc-js/databases/database-main/collection-feedbacks/document-" + body.Id + ") | [User](https://cloud.appwrite.io/console/project-fra-odyc-js/auth/user-" + user.Id + ")",
+						Inline: true,
+					},
+				},
+			},
+		},
+		Attachments: []string{},
+	}
+	
+	if body.FileId != "" {
+		message.Embeds[0].Image = DiscordImage{
+			URL: "https://fra.cloud.appwrite.io/v1/storage/buckets/feedbacks/files/" + body.FileId + "/view?project=odyc-js&mode=admin",
+		}
+	}
 
-	httpReq, err := http.NewRequest("POST", webhookURL, bytes.NewBuffer([]byte(message)))
+	messageJSON, err := json.Marshal(message)
+	if err != nil {
+		Context.Error("Error preparing Discord payload.")
+		return Context.Res.Send("", Context.Res.WithStatusCode(500))
+	}
+
+	httpReq, err := http.NewRequest("POST", webhookURL, bytes.NewBuffer(messageJSON))
 	if err != nil {
 		Context.Error("Error preparing webhook request.")
 		return Context.Res.Send("", Context.Res.WithStatusCode(500))

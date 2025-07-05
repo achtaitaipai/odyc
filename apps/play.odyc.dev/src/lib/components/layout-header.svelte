@@ -39,6 +39,14 @@
 		}
 	}
 
+	function onFeedbackCancel() {
+		feedbackText = ''
+		screenshotBlob = null
+		feedbackHasScreenshot = false
+		isScreenshotLoading = false
+		setIsFeedbackOpen(false)
+	}
+
 	let feedbackText = $state('')
 	let isFeedbackLoading = $state(false)
 	async function onFeedbackSubmit() {
@@ -55,6 +63,8 @@
 			setIsFeedbackOpen(false)
 			feedbackText = ''
 			screenshotBlob = null
+			feedbackHasScreenshot = false
+			isScreenshotLoading = false
 		} catch (err: any) {
 			toast.error(err.message)
 		} finally {
@@ -72,7 +82,12 @@
 	let screenshotBlob = $state<null | Blob>(null)
 	function makeScreenshot() {
 		isScreenshotLoading = true
-		html2canvas(document.body).then(function (canvas) {
+		html2canvas(document.body, {
+			logging: false,
+			ignoreElements: (element) => {
+				return element.id === 'feedback-popover'
+			}
+		}).then(function (canvas) {
 			canvas.toBlob((blob) => {
 				screenshotBlob = blob
 				feedbackHasScreenshot = true
@@ -92,63 +107,65 @@
 			<h1 class="font-pixel text-2xl font-medium">Odyc.js</h1>
 		</a>
 		<div class="ml-auto flex items-center gap-2">
-			<Popover.Root bind:open={isFeedbackOpen}>
-				<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}>Feedback</Popover.Trigger>
-				<Popover.Content class="w-[25rem]">
-					<div class="grid gap-4">
-						<div class="space-y-2">
-							<h4 class="leading-none font-medium">Let's make Odyc.js better</h4>
-							<p class="text-muted-foreground text-sm">
-								Odyc.js evolves with community. Tell us how we can make Odyc.js better for you.
-							</p>
-						</div>
-						<div class="grid gap-2">
-							<div class="grid w-full gap-1.5">
-								<Label for="support-message" class="text-sm">Tell us about your experience</Label>
-								<Textarea
-									bind:value={feedbackText}
-									class="h-28"
-									placeholder="Type your message here."
-									id="support-message"
-								/>
-								<p class="text-muted-foreground text-xs font-light">
-									Your can tell us about bug you faced, or feature you want to see.
+			<div id="feedback-popover" data-html2canvas-ignore>
+				<Popover.Root bind:open={isFeedbackOpen}>
+					<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}>Feedback</Popover.Trigger>
+					<Popover.Content class="w-[25rem]">
+						<div class="grid gap-4">
+							<div class="space-y-2">
+								<h4 class="leading-none font-medium">Let's make Odyc.js better</h4>
+								<p class="text-muted-foreground text-sm">
+									Odyc.js evolves with community. Tell us how we can make Odyc.js better for you.
 								</p>
 							</div>
-						</div>
-
-						<div class="flex items-center justify-between">
-							{#if isScreenshotLoading}
-								<div class="flex items-center gap-1">
-									<Button disabled={true} variant="secondary" size="icon" class="size-8">
-										<IconLoader class="animate-spin" />
-									</Button>
+							<div class="grid gap-2">
+								<div class="grid w-full gap-1.5">
+									<Label for="support-message" class="text-sm">Tell us about your experience</Label>
+									<Textarea
+										bind:value={feedbackText}
+										class="h-28"
+										placeholder="Type your message here."
+										id="support-message"
+									/>
+									<p class="text-muted-foreground text-xs font-light">
+										Your can tell us about bug you faced, or feature you want to see.
+									</p>
 								</div>
-							{:else if !feedbackHasScreenshot}
+							</div>
+
+							<div class="flex items-center justify-between">
+								{#if isScreenshotLoading}
+									<div class="flex items-center gap-1">
+										<Button disabled={true} variant="secondary" size="icon" class="size-8">
+											<IconLoader class="animate-spin" />
+										</Button>
+									</div>
+								{:else if !feedbackHasScreenshot}
+									<div>
+										<Button onclick={makeScreenshot} variant="secondary" size="icon" class="size-8">
+											<IconCamera />
+										</Button>
+									</div>
+								{:else}
+									<div class="flex items-center gap-1">
+										<Button disabled={true} variant="secondary" size="icon" class="size-8">
+											<IconCheck />
+										</Button>
+										<p class="text-muted-foreground text-xs">Screenshot included</p>
+									</div>
+								{/if}
+
 								<div>
-									<Button onclick={makeScreenshot} variant="secondary" size="icon" class="size-8">
-										<IconCamera />
-									</Button>
+									<Button variant="ghost" onclick={onFeedbackCancel}>Cancel</Button>
+									<Button disabled={isFeedbackLoading} onclick={onFeedbackSubmit} variant="outline"
+										>Submit</Button
+									>
 								</div>
-							{:else}
-								<div class="flex items-center gap-1">
-									<Button disabled={true} variant="secondary" size="icon" class="size-8">
-										<IconCheck />
-									</Button>
-									<p class="text-muted-foreground text-xs">Screenshot included</p>
-								</div>
-							{/if}
-
-							<div>
-								<Button variant="ghost" onclick={() => setIsFeedbackOpen(false)}>Cancel</Button>
-								<Button disabled={isFeedbackLoading} onclick={onFeedbackSubmit} variant="outline"
-									>Submit</Button
-								>
 							</div>
 						</div>
-					</div>
-				</Popover.Content>
-			</Popover.Root>
+					</Popover.Content>
+				</Popover.Root>
+			</div>
 
 			<button
 				class="bg-primary-foreground border-muted-background flex items-center gap-2 rounded-lg border px-2 py-1.5 pl-3"
