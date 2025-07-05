@@ -66,10 +66,10 @@
 
 <div class="w-sm px-4 py-4">
 	<ul
-		class="soundsList | bg-base-200 flex h-40 flex-col overflow-auto border border-gray-200 py-2 dark:border-gray-800"
+		class="soundsList | bg-base-200 flex h-40 flex-col overflow-auto border border-neutral-200 py-2 dark:border-neutral-800"
 	>
 		{#each sounds as sound, i}
-			<li class={['flex', selected === i && 'bg-gray-100 font-bold dark:bg-gray-900']}>
+			<li class={['flex', selected === i && 'bg-neutral-100 font-bold dark:bg-neutral-900']}>
 				<button
 					class={['grow cursor-pointer px-2 py-1 text-left text-sm']}
 					onclick={() => selectAndPlay(i)}>{sound.name}</button
