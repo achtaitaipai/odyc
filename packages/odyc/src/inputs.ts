@@ -136,6 +136,8 @@ class InputsHandler {
 			([_, keys]) => keys === e.code || keys.includes(e.code),
 		)
 		if (!entrie) return
+		e.preventDefault()
+		e.stopPropagation()
 		const [input] = entrie
 		const now = e.timeStamp
 		const last = this.lastKeysEvents.get(e.code)
