@@ -76,6 +76,7 @@
 		"appwrite": "^18.1.1",
 		"codemirror": "^6.0.2",
 		"codemirror-theme-vars": "^0.1.2",
+		"lz-string": "^1.5.0",
 		"dayjs": "^1.11.13",
 		"js-beautify": "^1.15.4",
 		"mode-watcher": "^1.1.0",
