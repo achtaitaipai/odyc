@@ -335,7 +335,7 @@ ${code}
 
 		isChangingVersion = true;
 		try {
-			await Backend.updateGameVersion(game.$id, versionSelected ?? PUBLIC_ODYC_VERSION);
+			await Backend.updateGameVersion(game.$id, versionSelected ?? PUBLIC_ODYC_VERSION ?? 'latest');
 			toast.success('Game version successfully changed.');
 			await invalidate(Dependencies.GAMES);
 			showVersionDialog = false;

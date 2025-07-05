@@ -1,197 +1,313 @@
 {
-	"projectId": "odyc-js",
-	"endpoint": "https://fra.cloud.appwrite.io/v1",
-	"projectName": "Odyc.js",
-	"settings": {
-		"services": {
-			"account": true,
-			"avatars": false,
-			"databases": true,
-			"locale": false,
-			"health": false,
-			"storage": false,
-			"teams": false,
-			"users": true,
-			"sites": true,
-			"functions": false,
-			"graphql": true,
-			"messaging": false
-		},
-		"auth": {
-			"methods": {
-				"jwt": true,
-				"phone": false,
-				"invites": false,
-				"anonymous": true,
-				"email-otp": true,
-				"magic-url": false,
-				"email-password": false
-			},
-			"security": {
-				"duration": 31536000,
-				"limit": 0,
-				"sessionsLimit": 10,
-				"passwordHistory": 0,
-				"passwordDictionary": false,
-				"personalDataCheck": false,
-				"sessionAlerts": false,
-				"mockNumbers": []
-			}
-		}
-	},
-	"databases": [
-		{
-			"$id": "main",
-			"name": "main",
-			"enabled": true
-		}
-	],
-	"collections": [
-		{
-			"$id": "games",
-			"$permissions": ["create(\"users\")"],
-			"databaseId": "main",
-			"name": "games",
-			"enabled": true,
-			"documentSecurity": true,
-			"attributes": [
-				{
-					"key": "name",
-					"type": "string",
-					"required": true,
-					"array": false,
-					"size": 64,
-					"default": null
-				},
-				{
-					"key": "thumbnailFileId",
-					"type": "string",
-					"required": false,
-					"array": false,
-					"size": 32,
-					"default": null
-				},
-				{
-					"key": "ownerProfileId",
-					"type": "string",
-					"required": true,
-					"array": false,
-					"size": 32,
-					"default": null
-				},
-				{
-					"key": "description",
-					"type": "string",
-					"required": false,
-					"array": false,
-					"size": 500,
-					"default": null
-				},
-				{
-					"key": "howToPlay",
-					"type": "string",
-					"required": false,
-					"array": false,
-					"size": 500,
-					"default": null
-				},
-				{
-					"key": "slug",
-					"type": "string",
-					"required": false,
-					"array": false,
-					"size": 32,
-					"default": null
-				},
-				{
-					"key": "collaboratorProfileIds",
-					"type": "string",
-					"required": false,
-					"array": true,
-					"size": 32,
-					"default": null
-				}
-			],
-			"indexes": [
-				{
-					"key": "ownerProfileId",
-					"type": "key",
-					"status": "available",
-					"attributes": ["ownerProfileId"],
-					"orders": ["ASC"]
-				},
-				{
-					"key": "slug",
-					"type": "unique",
-					"status": "available",
-					"attributes": ["slug"],
-					"orders": ["ASC"]
-				}
-			]
-		},
-		{
-			"$id": "communityHighlights",
-			"$permissions": ["read(\"users\")"],
-			"databaseId": "main",
-			"name": "communityHighlights",
-			"enabled": true,
-			"documentSecurity": false,
-			"attributes": [
-				{
-					"key": "gameId",
-					"type": "string",
-					"required": true,
-					"array": false,
-					"size": 32,
-					"default": null
-				}
-			],
-			"indexes": []
-		},
-		{
-			"$id": "profiles",
-			"$permissions": ["create(\"users\")", "read(\"users\")"],
-			"databaseId": "main",
-			"name": "profiles",
-			"enabled": true,
-			"documentSecurity": true,
-			"attributes": [
-				{
-					"key": "name",
-					"type": "string",
-					"required": true,
-					"array": false,
-					"size": 32,
-					"default": null
-				},
-				{
-					"key": "avatarPixels",
-					"type": "string",
-					"required": false,
-					"array": false,
-					"size": 255,
-					"default": null
-				}
-			],
-			"indexes": []
-		}
-	],
-	"sites": [
-		{
-			"$id": "6861946a003c2d835173",
-			"name": "odyc",
-			"enabled": true,
-			"logging": true,
-			"framework": "sveltekit",
-			"timeout": 30,
-			"installCommand": "npm install",
-			"buildCommand": "npm run build",
-			"outputDirectory": "./build",
-			"specification": "s-1vcpu-512mb",
-			"buildRuntime": "node-22",
-			"adapter": "static",
-			"fallbackFile": "index.html",
-			"path": "sites/odyc"
-		}
-	]
+    "projectId": "odyc-js",
+    "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "projectName": "Odyc.js",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": false,
+            "databases": true,
+            "locale": false,
+            "health": false,
+            "storage": true,
+            "teams": false,
+            "users": true,
+            "sites": true,
+            "functions": false,
+            "graphql": true,
+            "messaging": false
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": false,
+                "invites": false,
+                "anonymous": true,
+                "email-otp": true,
+                "magic-url": false,
+                "email-password": false
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 10,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "databases": [
+        {
+            "$id": "main",
+            "name": "main",
+            "enabled": true
+        }
+    ],
+    "collections": [
+        {
+            "$id": "games",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "main",
+            "name": "games",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null
+                },
+                {
+                    "key": "thumbnailFileId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "ownerProfileId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null
+                },
+                {
+                    "key": "howToPlay",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null
+                },
+                {
+                    "key": "slug",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "collaboratorProfileIds",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "code",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000000,
+                    "default": null
+                },
+                {
+                    "key": "version",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "ownerProfileId",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "ownerProfileId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                },
+                {
+                    "key": "slug",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "slug"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "communityHighlights",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "main",
+            "name": "communityHighlights",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "gameId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "profiles",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")"
+            ],
+            "databaseId": "main",
+            "name": "profiles",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "avatarPixels",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "feedbacks",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "main",
+            "name": "feedbacks",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "text",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 10000,
+                    "default": null
+                },
+                {
+                    "key": "fileId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        }
+    ],
+    "sites": [
+        {
+            "$id": "6861946a003c2d835173",
+            "name": "odyc",
+            "enabled": true,
+            "logging": true,
+            "framework": "sveltekit",
+            "timeout": 30,
+            "installCommand": "npm install",
+            "buildCommand": "npm run build",
+            "outputDirectory": "./build",
+            "specification": "s-1vcpu-512mb",
+            "buildRuntime": "node-22",
+            "adapter": "static",
+            "fallbackFile": "index.html",
+            "path": "sites/odyc"
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "screenshots",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"users\")"
+            ],
+            "fileSecurity": false,
+            "name": "screenshots",
+            "enabled": true,
+            "maximumFileSize": 10000000,
+            "allowedFileExtensions": [
+                "png"
+            ],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
+        },
+        {
+            "$id": "feedbacks",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"guests\")"
+            ],
+            "fileSecurity": false,
+            "name": "feedbacks",
+            "enabled": true,
+            "maximumFileSize": 10000000,
+            "allowedFileExtensions": [],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
+        }
+    ],
+    "functions": [
+        {
+            "$id": "onFeedbackCreate",
+            "name": "onFeedbackCreate",
+            "runtime": "go-1.23",
+            "specification": "s-0.5vcpu-512mb",
+            "execute": [],
+            "events": [
+                "databases.main.collections.feedbacks.documents.*.create"
+            ],
+            "scopes": [
+                "users.read"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "main.go",
+            "commands": "",
+            "path": "functions/onFeedbackCreate"
+        }
+    ]
 }

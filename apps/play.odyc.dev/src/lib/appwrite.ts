@@ -2,6 +2,11 @@ import { type Models } from 'appwrite';
 
 // Auto-generated using `appwrite types -l ts ./src/lib`
 
+export type Feedback = Models.Document & {
+	fileId: string | null;
+	text: string;
+};
+
 export type Games = Models.Document & {
 	name: string;
 	thumbnailFileId: string | null;
