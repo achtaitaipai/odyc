@@ -14,6 +14,7 @@ import { type Games, type CommunityHighlights, type Profiles } from './appwrite'
 import slugify from 'slugify';
 import { stores } from './stores.svelte';
 import { PUBLIC_ODYC_VERSION } from '$env/static/public';
+import { generateAvatar } from './avatar';
 
 type BackendPrefs = {
 	theme?: string;
@@ -105,8 +106,14 @@ export class Backend {
 		if (!name) {
 			name = randomName(undefined, ' ');
 		}
-		return await this.#databases.createDocument<Profiles>('main', 'profiles', ID.unique(), {
-			name
+
+		const id = ID.unique();
+		const seed = id.split('').reduce((prev, curr) => prev + curr.charCodeAt(0), 0);
+		const avatarPixels = generateAvatar(8, 8, seed);
+
+		return await this.#databases.createDocument<Profiles>('main', 'profiles', id, {
+			name,
+			avatarPixels
 		});
 	}
 
