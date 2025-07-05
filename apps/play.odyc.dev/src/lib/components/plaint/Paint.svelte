@@ -39,7 +39,6 @@
 	});
 
 	$effect(() => {
-		console.log(123);
 		if (sprite && sprite !== untrack(() => drawing.text)) {
 			drawing.text = sprite;
 			drawing.display(ctx);

@@ -29,6 +29,7 @@
 	import { stores } from '$lib/stores.svelte';
 	import { PUBLIC_IFRAME_ENDPOINT, PUBLIC_ODYC_VERSION } from '$env/static/public';
 	import Paint from '$lib/components/plaint/Paint.svelte';
+	import Sound from '$lib/components/sound/Sound.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -443,6 +444,11 @@ ${code}
 			toast.success('Sprite loaded from clipboard.');
 		});
 	}
+
+	let showSoundEditor = $state(false);
+	function setShowSoundEditor(value: boolean) {
+		showSoundEditor = value;
+	}
 </script>
 
 <div class="mx-auto mb-3 h-full w-full max-w-7xl p-4 lg:p-6">
@@ -557,8 +563,7 @@ ${code}
 				<Menubar.Trigger>Edit</Menubar.Trigger>
 				<Menubar.Content>
 					<Menubar.Item onclick={() => setShowSpriteEditor(true)}>Sprite</Menubar.Item>
-					<Menubar.Item>Map</Menubar.Item>
-					<Menubar.Item>Sounds</Menubar.Item>
+					<Menubar.Item onclick={() => setShowSoundEditor(true)}>Sound</Menubar.Item>
 				</Menubar.Content>
 			</Menubar.Menu>
 
@@ -867,5 +872,17 @@ ${code}
 			<Button type="button" variant="outline" onclick={onLoadSprite}>Load from clipboard</Button>
 			<Button type="button" onclick={onSpriteCopy}>Copy</Button>
 		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root open={showSoundEditor} onOpenChange={setShowSoundEditor}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header class="mb-2">
+			<Dialog.Title>Sound editor</Dialog.Title>
+		</Dialog.Header>
+
+		<Separator />
+
+		<Sound />
 	</Dialog.Content>
 </Dialog.Root>
