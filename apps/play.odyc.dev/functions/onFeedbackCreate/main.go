@@ -125,7 +125,7 @@ func Main(Context openruntimes.Context) openruntimes.Response {
 					},
 					{
 						Name:   "💬 Message",
-						Value:  body.Text + "\n",
+						Value:  body.Text,
 						Inline: false,
 					},
 					{

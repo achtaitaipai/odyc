@@ -1,7 +1,7 @@
 <script>
-	import Separator from '$lib/components/ui/separator/separator.svelte'
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 
-	const currentYear = new Date().getFullYear()
+	const currentYear = new Date().getFullYear();
 </script>
 
 <footer class="bg-primary-foreground flex flex-col items-center justify-center gap-4 pt-6 pb-4">
@@ -23,10 +23,11 @@
 	<div
 		class="i mx-auto mt-4 flex w-full max-w-7xl flex-col items-center justify-between gap-3 text-lg sm:flex-row"
 	>
-	
-	<p class="text-muted-foreground text-sm font-light">© {currentYear} Odyc.js. All rights reserved.</p>
-	
-		<p class="font text-sm font-light text-muted-foreground">
+		<p class="text-muted-foreground text-sm font-light">
+			© {currentYear} Odyc.js. All rights reserved.
+		</p>
+
+		<p class="font text-muted-foreground text-sm font-light">
 			Made with love and
 			<a href="https://appwrite.io/" class="text-[#FD366E] hover:underline" target="_blank">
 				Appwrite</a

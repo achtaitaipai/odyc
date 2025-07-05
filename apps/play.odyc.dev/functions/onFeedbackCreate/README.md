@@ -24,21 +24,21 @@ Sample `200` Response:
 
 ```json
 {
-  "motto": "Build like a team of hundreds_",
-  "learn": "https://appwrite.io/docs",
-  "connect": "https://appwrite.io/discord",
-  "getInspired": "https://builtwith.appwrite.io"
+	"motto": "Build like a team of hundreds_",
+	"learn": "https://appwrite.io/docs",
+	"connect": "https://appwrite.io/discord",
+	"getInspired": "https://builtwith.appwrite.io"
 }
 ```
 
 ## ⚙️ Configuration
 
-| Setting           | Value         |
-| ----------------- | ------------- |
-| Runtime           | Go (1.23)     |
-| Entrypoint        | `main.go`     |
-| Permissions       | `any`         |
-| Timeout (Seconds) | 15            |
+| Setting           | Value     |
+| ----------------- | --------- |
+| Runtime           | Go (1.23) |
+| Entrypoint        | `main.go` |
+| Permissions       | `any`     |
+| Timeout (Seconds) | 15        |
 
 ## 🔒 Environment Variables
 

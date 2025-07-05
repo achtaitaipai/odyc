@@ -1,99 +1,99 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button/index.js'
-	import SunIcon from '@lucide/svelte/icons/sun'
-	import MoonIcon from '@lucide/svelte/icons/moon'
-	import UserIcon from '@lucide/svelte/icons/user'
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js'
-	import { Textarea } from '$lib/components/ui/textarea/index.js'
-	import html2canvas from 'html2canvas-pro'
-	import { toggleMode } from 'mode-watcher'
-	import IconCamera from '@lucide/svelte/icons/camera'
-	import IconCheck from '@lucide/svelte/icons/check'
-	import IconLoader from '@lucide/svelte/icons/loader-2'
-	import { Backend } from '$lib/backend'
-	import { goto, invalidate } from '$app/navigation'
-	import { DefaultProfilePicture, Dependencies } from '$lib/constants'
-	import { toast } from 'svelte-sonner'
-	import { stores } from '$lib/stores.svelte'
-	import Sprite from './plaint/Sprite.svelte'
-	import { buttonVariants } from '$lib/components/ui/button/index.js'
-	import { Input } from '$lib/components/ui/input/index.js'
-	import { Label } from '$lib/components/ui/label/index.js'
-	import * as Popover from '$lib/components/ui/popover/index.js'
+	import { Button } from '$lib/components/ui/button/index.js';
+	import SunIcon from '@lucide/svelte/icons/sun';
+	import MoonIcon from '@lucide/svelte/icons/moon';
+	import UserIcon from '@lucide/svelte/icons/user';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import { Textarea } from '$lib/components/ui/textarea/index.js';
+	import html2canvas from 'html2canvas-pro';
+	import { toggleMode } from 'mode-watcher';
+	import IconCamera from '@lucide/svelte/icons/camera';
+	import IconCheck from '@lucide/svelte/icons/check';
+	import IconLoader from '@lucide/svelte/icons/loader-2';
+	import { Backend } from '$lib/backend';
+	import { goto, invalidate } from '$app/navigation';
+	import { DefaultProfilePicture, Dependencies } from '$lib/constants';
+	import { toast } from 'svelte-sonner';
+	import { stores } from '$lib/stores.svelte';
+	import Sprite from './plaint/Sprite.svelte';
+	import { buttonVariants } from '$lib/components/ui/button/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
 
-	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
-	const ctrlKey = isMac ? 'Cmd' : 'Ctrl'
+	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+	const ctrlKey = isMac ? 'Cmd' : 'Ctrl';
 
-	let isLoading = false
+	let isLoading = false;
 
 	async function onLogout() {
-		isLoading = true
+		isLoading = true;
 		try {
-			await Backend.signOut()
-			await invalidate(Dependencies.USER)
-			goto('/')
+			await Backend.signOut();
+			await invalidate(Dependencies.USER);
+			goto('/');
 		} catch (err: any) {
-			toast.error(err.message)
+			toast.error(err.message);
 		} finally {
-			isLoading = false
+			isLoading = false;
 		}
 	}
 
 	function onFeedbackCancel() {
-		feedbackText = ''
-		screenshotBlob = null
-		feedbackHasScreenshot = false
-		isScreenshotLoading = false
-		setIsFeedbackOpen(false)
+		feedbackText = '';
+		screenshotBlob = null;
+		feedbackHasScreenshot = false;
+		isScreenshotLoading = false;
+		setIsFeedbackOpen(false);
 	}
 
-	let feedbackText = $state('')
-	let isFeedbackLoading = $state(false)
+	let feedbackText = $state('');
+	let isFeedbackLoading = $state(false);
 	async function onFeedbackSubmit() {
-		isFeedbackLoading = true
+		isFeedbackLoading = true;
 		try {
-			let fileId = ''
+			let fileId = '';
 			if (screenshotBlob) {
-				const file = await Backend.createFeedbackFile(screenshotBlob)
-				fileId = file.$id
+				const file = await Backend.createFeedbackFile(screenshotBlob);
+				fileId = file.$id;
 			}
 
-			await Backend.createFeedback(feedbackText, fileId)
-			toast.success('Feedback submitted successfully.')
-			setIsFeedbackOpen(false)
-			feedbackText = ''
-			screenshotBlob = null
-			feedbackHasScreenshot = false
-			isScreenshotLoading = false
+			await Backend.createFeedback(feedbackText, fileId);
+			toast.success('Feedback submitted successfully.');
+			setIsFeedbackOpen(false);
+			feedbackText = '';
+			screenshotBlob = null;
+			feedbackHasScreenshot = false;
+			isScreenshotLoading = false;
 		} catch (err: any) {
-			toast.error(err.message)
+			toast.error(err.message);
 		} finally {
-			isFeedbackLoading = false
+			isFeedbackLoading = false;
 		}
 	}
 
-	let isFeedbackOpen = $state(false)
+	let isFeedbackOpen = $state(false);
 	function setIsFeedbackOpen(value: boolean) {
-		isFeedbackOpen = value
+		isFeedbackOpen = value;
 	}
 
-	let feedbackHasScreenshot = $state(false)
-	let isScreenshotLoading = $state(false)
-	let screenshotBlob = $state<null | Blob>(null)
+	let feedbackHasScreenshot = $state(false);
+	let isScreenshotLoading = $state(false);
+	let screenshotBlob = $state<null | Blob>(null);
 	function makeScreenshot() {
-		isScreenshotLoading = true
+		isScreenshotLoading = true;
 		html2canvas(document.body, {
 			logging: false,
 			ignoreElements: (element) => {
-				return element.id === 'feedback-popover'
+				return element.id === 'feedback-popover';
 			}
 		}).then(function (canvas) {
 			canvas.toBlob((blob) => {
-				screenshotBlob = blob
-				feedbackHasScreenshot = true
-				isScreenshotLoading = false
-			})
-		})
+				screenshotBlob = blob;
+				feedbackHasScreenshot = true;
+				isScreenshotLoading = false;
+			});
+		});
 	}
 </script>
 
