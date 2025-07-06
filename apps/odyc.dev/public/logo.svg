@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">
+  <rect width="1" height="1" x="1" y="0" fill="#f06595"></rect>
+  <rect width="1" height="1" x="2" y="0" fill="#212529"></rect>
+  <rect width="1" height="1" x="3" y="0" fill="#f06595"></rect>
+  <rect width="1" height="1" x="0" y="1" fill="#fcc419"></rect>
+  <rect width="1" height="1" x="1" y="1" fill="#f06595"></rect>
+  <rect width="1" height="1" x="2" y="1" fill="#f06595"></rect>
+  <rect width="1" height="1" x="3" y="1" fill="#f06595"></rect>
+  <rect width="1" height="1" x="3" y="2" fill="#f06595"></rect>
+  <rect width="1" height="1" x="7" y="2" fill="#f06595"></rect>
+  <rect width="1" height="1" x="2" y="3" fill="#f06595"></rect>
+  <rect width="1" height="1" x="3" y="3" fill="#f06595"></rect>
+  <rect width="1" height="1" x="4" y="3" fill="#f06595"></rect>
+  <rect width="1" height="1" x="5" y="3" fill="#f06595"></rect>
+  <rect width="1" height="1" x="6" y="3" fill="#f06595"></rect>
+  <rect width="1" height="1" x="7" y="3" fill="#f06595"></rect>
+  <rect width="1" height="1" x="2" y="4" fill="#f06595"></rect>
+  <rect width="1" height="1" x="3" y="4" fill="#f06595"></rect>
+  <rect width="1" height="1" x="4" y="4" fill="#f06595"></rect>
+  <rect width="1" height="1" x="5" y="4" fill="#f06595"></rect>
+  <rect width="1" height="1" x="6" y="4" fill="#f06595"></rect>
+  <rect width="1" height="1" x="2" y="5" fill="#f06595"></rect>
+  <rect width="1" height="1" x="3" y="5" fill="#f06595"></rect>
+  <rect width="1" height="1" x="4" y="5" fill="#f06595"></rect>
+  <rect width="1" height="1" x="5" y="5" fill="#f06595"></rect>
+  <rect width="1" height="1" x="4" y="6" fill="#ff922b"></rect>
+  <rect width="1" height="1" x="3" y="7" fill="#ff922b"></rect>
+  <rect width="1" height="1" x="4" y="7" fill="#ff922b"></rect>
+</svg>

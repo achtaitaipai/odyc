@@ -40,6 +40,20 @@ export async function getDocsSummary(locale: Locale) {
 	return Object.entries(summary)
 }
 
+export async function getDocsPosts(locale: Locale) {
+	const items: { title: string; url: string; slug: string }[] = []
+	const posts = (await getCollection('docs')).filter(
+		(el) => getLocaleByPath(el.id) === locale,
+	)
+	for (let i = 0; i < posts.length; i++) {
+		const post = posts[i]
+		const slug = getDocsPostSlug(post, locale)
+		const url = getAbsoluteLocaleUrl(locale, `/docs/${slug}`)
+		items.push({ title: post.data.title, url, slug })
+	}
+	return items
+}
+
 export function getDocsPostSlug(post: CollectionEntry<'docs'>, locale: Locale) {
 	let slug = post.id
 		.replace(/\d+-/g, '') // Remove "1--", "2--", etc.

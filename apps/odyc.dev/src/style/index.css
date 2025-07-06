@@ -3,6 +3,7 @@
 
 @theme {
 	--color-accent: var(--color-pink-500);
+	--font-pixel: 'Pixelify Sans Variable', system-ui;
 }
 
 * {
@@ -16,4 +17,9 @@
 
 ::-webkit-scrollbar-thumb {
 	background-color: var(--color-gray-400);
+}
+
+@utility pixelated {
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
 }
