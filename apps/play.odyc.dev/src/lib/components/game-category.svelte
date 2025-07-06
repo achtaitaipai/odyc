@@ -1,19 +1,17 @@
 <script lang="ts">
-	import GameCardsStateful from './game-cards-stateful.svelte';
+	import { goto } from '$app/navigation';
+	import type { Games } from '$lib/appwrite';
+	import { Backend } from '$lib/backend';
+	import * as Pagination from '$lib/components/ui/pagination/index.js';
+	import { generateGametName } from '$lib/generateGameName';
 	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-	import { MediaQuery } from 'svelte/reactivity';
-	import * as Pagination from '$lib/components/ui/pagination/index.js';
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 	import { Query, type Models } from 'appwrite';
-	import type { Games } from '$lib/appwrite';
-	import Button from './ui/button/button.svelte';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
-	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { toast } from 'svelte-sonner';
-	import { Backend } from '$lib/backend';
-	import { goto } from '$app/navigation';
+	import { MediaQuery } from 'svelte/reactivity';
+	import GameCardsStateful from './game-cards-stateful.svelte';
+	import Button from './ui/button/button.svelte';
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
@@ -32,18 +30,17 @@
 
 	let games = $derived(props.games);
 
-	let gameName = $state('');
 	let isLoading = $state(false);
 
 	async function onPageChange(page: number) {
 		games = await Backend.listGames([...props.queries, Query.offset(perPage * (page - 1))]);
 	}
 
-	async function onCreateGame(event: Event) {
-		event.preventDefault();
+	async function createGame() {
 		isLoading = true;
 		try {
-			const game = await Backend.createGame(gameName);
+			const game = await Backend.createGame(generateGametName());
+			isLoading = false;
 			goto('/dashboard/games/' + game.$id);
 			toast.success('Game successfully created!');
 		} catch (error: any) {
@@ -58,37 +55,12 @@
 		<h1 class="font-title flex-shrink-0 text-3xl">{props.title ?? 'Unnamed Category'}</h1>
 
 		{#if props.allowCreate}
-			<Dialog.Root>
-				<Dialog.Trigger>
-					<Button type="button">Create game</Button>
-				</Dialog.Trigger>
-				<Dialog.Content class="sm:max-w-[425px]">
-					<form onsubmit={onCreateGame}>
-						<Dialog.Header class="mb-2">
-							<Dialog.Title>Create new game</Dialog.Title>
-							<Dialog.Description>A beginning of something amazing.</Dialog.Description>
-						</Dialog.Header>
-
-						<Separator />
-
-						<div class="grid gap-4 py-4">
-							<div class="flex w-full max-w-sm flex-col gap-1.5">
-								<Label for="game-name">Game name</Label>
-								<Input
-									required={true}
-									bind:value={gameName}
-									type="text"
-									id="game-name"
-									placeholder="Awesome game"
-								/>
-							</div>
-						</div>
-						<Dialog.Footer>
-							<Button disabled={isLoading} type="submit">Create</Button>
-						</Dialog.Footer>
-					</form>
-				</Dialog.Content>
-			</Dialog.Root>
+			<Button type="button" disabled={isLoading} onclick={createGame}>
+				{#if isLoading}
+					<Loader2Icon class="animate-spin" />
+				{/if}
+				Create game</Button
+			>
 		{/if}
 	</div>
 	<div class="flex flex-col gap-4 md:gap-6">
