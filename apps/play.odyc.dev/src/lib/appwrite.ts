@@ -26,4 +26,5 @@ export type CommunityHighlights = Models.Document & {
 export type Profiles = Models.Document & {
 	name: string;
 	avatarPixels: string | null;
+	description: string | null;
 };

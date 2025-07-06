@@ -187,6 +187,14 @@
 					"array": false,
 					"size": 255,
 					"default": null
+				},
+				{
+					"key": "description",
+					"type": "string",
+					"required": false,
+					"array": false,
+					"size": 10000,
+					"default": null
 				}
 			],
 			"indexes": []
@@ -227,13 +235,13 @@
 			"logging": true,
 			"framework": "sveltekit",
 			"timeout": 30,
-			"installCommand": "npm install",
-			"buildCommand": "npm run build",
-			"outputDirectory": "./build",
-			"specification": "s-1vcpu-512mb",
+			"installCommand": "npm install && npm run build",
+			"buildCommand": "cd apps/play.odyc.dev && npm install && npm run build && cd ../../",
+			"outputDirectory": "./apps/play.odyc.dev/build",
+			"specification": "s-4vcpu-4gb",
 			"buildRuntime": "node-22",
 			"adapter": "static",
-			"fallbackFile": "index.html",
+			"fallbackFile": "./index.html",
 			"path": "sites/odyc"
 		}
 	],

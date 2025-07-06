@@ -187,10 +187,11 @@ export class Backend {
 		return await this.listGames([Query.equal('$id', highlightIds), Query.orderDesc('$createdAt')]);
 	}
 
-	static async updateProfile(profileId: string, name: string, sprite: string) {
+	static async updateProfile(profileId: string, name: string, sprite: string, description: string) {
 		return await this.#databases.updateDocument<Profiles>('main', 'profiles', profileId, {
 			name,
-			avatarPixels: sprite
+			avatarPixels: sprite,
+			description
 		});
 	}
 

@@ -18,8 +18,10 @@
 
 	let originalName = $state(stores.profile?.name ?? '');
 	let originalSprite = $state(stores.profile?.avatarPixels);
+	let originalDescription = $state(stores.profile?.description ?? '');
 
 	let name = $state(stores.profile?.name ?? '');
+	let description = $state(stores.profile?.description ?? '');
 	let sprite = $state(stores.profile?.avatarPixels ?? DefaultProfilePicture);
 
 	let isLoading = $state(false);
@@ -35,11 +37,12 @@
 		isLoading = true;
 
 		try {
-			await Backend.updateProfile(stores.profile?.$id ?? '', name, sprite);
+			await Backend.updateProfile(stores.profile?.$id ?? '', name, sprite, description);
 			await invalidate(Dependencies.PROFILE);
 			toast.success('Profile updated successfully.');
 			originalName = name;
 			originalSprite = sprite;
+			originalDescription = description;
 		} catch (err: any) {
 			toast.error(err.message);
 		} finally {
@@ -84,6 +87,16 @@
 							<Input id="name" type="text" bind:value={name} placeholder="Awesome gamer" required />
 						</div>
 						<div class="grid gap-2">
+							<Label for="description">Description</Label>
+							<Input
+								id="description"
+								type="text"
+								bind:value={description}
+								placeholder="I love making ..."
+								required
+							/>
+						</div>
+						<div class="grid gap-2">
 							<Label class="text-center">Profile picture</Label>
 							<Card.Root class="w-[max-content] rounded-md">
 								<Card.Content class="flex flex-col items-center gap-4">
@@ -99,7 +112,10 @@
 				</Card.Content>
 				<Card.Footer class="w-full flex-col items-end gap-2">
 					<Button
-						disabled={isLoading || (name === originalName && sprite === originalSprite)}
+						disabled={isLoading ||
+							(name === originalName &&
+								sprite === originalSprite &&
+								description === originalDescription)}
 						type="submit">Update profile</Button
 					>
 				</Card.Footer>

@@ -2,7 +2,8 @@ export enum Dependencies {
 	USER = 'dependency:user',
 	PROFILE = 'dependency:profile',
 	GAMES = 'dependency:games',
-	HIGHLIGHTS = 'dependency:highlights'
+	HIGHLIGHTS = 'dependency:highlights',
+	PROFILES = 'dependency:profiles'
 }
 
 export const DefaultProfilePicture = `
