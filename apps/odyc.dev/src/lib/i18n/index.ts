@@ -1,4 +1,5 @@
 import { translations } from './ui'
+import type { AstroConfig } from 'astro'
 
 export type Locale = (typeof locales)[number]
 
@@ -22,4 +23,35 @@ export function getLocaleByPath(path: string): Locale {
 	//@ts-ignore
 	if (locales.includes(lang)) return lang as Locale
 	return defaultLocale
+}
+
+/**
+ * Get the equivalent of the passed URL for the passed locale.
+ */
+export function localizedUrl(url: URL, locale: string | undefined): URL {
+	url = new URL(url)
+	if (locale === defaultLocale) locale = ''
+
+	const [_leadingSlash, baseSegment] = url.pathname.split('/')
+	const htmlExt = '.html'
+	const isRootHtml = baseSegment?.endsWith(htmlExt)
+	const baseSlug = isRootHtml
+		? baseSegment?.slice(0, -1 * htmlExt.length)
+		: baseSegment
+	if (baseSlug && locales.includes(baseSlug as Locale)) {
+		if (locale) {
+			url.pathname = url.pathname.replace(baseSlug, locale)
+		} else if (isRootHtml) {
+			url.pathname = '/index.html'
+		} else {
+			url.pathname = url.pathname.replace('/' + baseSlug, '')
+		}
+	} else if (locale) {
+		if (baseSegment === 'index.html') {
+			url.pathname = '/' + locale + '.html'
+		} else {
+			url.pathname = '/' + locale + url.pathname
+		}
+	}
+	return url
 }

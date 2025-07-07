@@ -2,6 +2,7 @@
 import { getDocsPosts } from '#lib/docsPost.ts'
 import { getLocaleByPath } from '#lib/i18n/index.ts'
 import { getAbsoluteLocaleUrl } from 'astro:i18n'
+import SelectLanguage from '#components/SelectLanguage.astro'
 
 const locale = getLocaleByPath(Astro.url.pathname)
 const docsPosts = await getDocsPosts(locale)
@@ -17,11 +18,18 @@ const docsPosts = await getDocsPosts(locale)
 		<img src="/logo.png" alt="" class="pixelated h-8" />
 		<span class="font-pixel text-xl"> Odyc.js </span>
 	</a>
-	<nav class="ms-auto flex items-center gap-4">
-		<a href="https://play.odyc.dev" class="hover:text-accent">Play</a>
-		<a href={docsPosts[0].url} class="hover:text-accent">Docs</a>
+	<nav class="ms-6 flex items-center gap-4">
+		<a href={docsPosts[0].url} class="hover:text-accent text-neutral-500"
+			>Docs</a
+		>
+		<a href="https://play.odyc.dev" class="hover:text-accent text-neutral-500"
+			>Play</a
+		>
 	</nav>
 
+	<div class="ms-auto">
+		<SelectLanguage />
+	</div>
 	<nav class="ms-4 flex gap-4 border-l border-neutral-400 ps-4">
 		<a href="https://discord.gg/aKHm2Ap9W5" title="discord">
 			<svg
@@ -55,17 +63,6 @@ const docsPosts = await getDocsPosts(locale)
 			>
 		</a>
 	</nav>
-	<div>
-		<select
-			class="bg-base-100 text-base-content hover:border-border border-border/60 ring-ring w-52 cursor-pointer rounded border px-2 py-2 pr-10 text-sm text-ellipsis focus:ring-1"
-		>
-			<option selected>Choose a country</option>
-			<option value="US">United States</option>
-			<option value="CA">Canada</option>
-			<option value="FR">France</option>
-			<option value="DE">Germany</option>
-		</select>
-	</div>
 </header>
 
 <style is:global>

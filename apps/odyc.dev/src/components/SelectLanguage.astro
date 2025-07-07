@@ -1,0 +1,68 @@
+---
+import { languages } from '#lib/i18n/index.ts'
+import { getLocaleByPath, localizedUrl } from '#lib/i18n/index.ts'
+
+const options = Object.entries(languages).map(([locale, lang]) => ({
+	label: lang,
+	value: localizedUrl(Astro.url, locale).pathname,
+	locale,
+}))
+const currentLocale = getLocaleByPath(Astro.url.pathname)
+---
+
+<c-lang-select>
+	<label class="relative flex items-center gap-1">
+		<span class="sr-only">langue</span>
+		<select
+			class="cursor-pointer appearance-none border-0 bg-transparent py-3 ps-2 pe-8"
+			autocomplete="off"
+		>
+			{
+				options.map(({ value, label, locale }) => (
+					<option value={value} selected={currentLocale === locale}>
+						{label}
+					</option>
+				))
+			}
+		</select>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke-width="1.5"
+			stroke="currentColor"
+			class="absolute top-1/2 right-2 size-4 -translate-y-1/2"
+		>
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
+		</svg>
+	</label>
+</c-lang-select>
+
+<script>
+	class LangSelect extends HTMLElement {
+		#select: HTMLSelectElement
+		constructor() {
+			super()
+			this.#select = this.querySelector('select')!
+		}
+
+		connectedCallback() {
+			this.#select.addEventListener('change', this.#handleChange)
+		}
+
+		disconnectedCallback() {
+			this.#select.removeEventListener('change', this.#handleChange)
+		}
+
+		#handleChange = (e: Event) => {
+			if (e.currentTarget instanceof HTMLSelectElement) {
+				window.location.pathname = e.currentTarget.value
+			}
+		}
+	}
+
+	customElements.define('c-lang-select', LangSelect)
+</script>
