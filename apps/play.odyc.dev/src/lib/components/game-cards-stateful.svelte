@@ -25,6 +25,10 @@
 			return undefined;
 		}
 
+		if (fileId.startsWith('/')) {
+			return fileId;
+		}
+
 		return Backend.getSceenshotPreview(fileId);
 	}
 

@@ -201,6 +201,7 @@ export class Backend {
 			slug: slugify(name).toLowerCase(),
 			ownerProfileId: stores.profile?.$id,
 			code,
+			thumbnailFileId: '/screenshot.png',
 			version: PUBLIC_ODYC_VERSION ?? 'latest'
 		};
 		try {
