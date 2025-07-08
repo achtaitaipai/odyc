@@ -7,31 +7,39 @@ const { locale, currentSlug } = Astro.props
 const summary = await getDocsSummary(locale)
 ---
 
-<aside class="sticky top-0 h-screen w-sm px-4 py-6">
-	<div class="h-full overflow-hidden rounded-md border ps-4 pt-4 pb-2">
-		<ul class="h-full space-y-4 overflow-auto">
-			{
-				summary.map(([category, items]) => (
-					<li>
-						<span class="text-lg font-bold">{category}</span>
-						<ul class="mt-1 space-y-1 ps-0.5">
-							{items.map((el) => (
-								<li>
-									<a
-										href={el.url}
-										class:list={[
-											'hover:text-accent',
-											el.slug === currentSlug && 'text-accent underline',
-										]}
-									>
-										{el.title}
-									</a>
-								</li>
-							))}
-						</ul>
-					</li>
-				))
-			}
-		</ul>
-	</div>
+<aside
+	class="bg-base-100 sticky top-[var(--header-height)] left-0 h-[calc(100dvh_-_var(--header-height))] w-2xs overflow-auto border-r border-gray-200 dark:border-gray-700"
+>
+	<ul class="h-full space-y-4 overflow-auto px-8 pb-12">
+		{
+			summary.map(([category, items]) => (
+				<li>
+					<span class="text-lg font-bold">{category}</span>
+					<ul class="mt-1 space-y-1 ps-0.5">
+						{items.map((el) => (
+							<li>
+								<a
+									href={el.url}
+									class:list={[
+										'hover:text-accent',
+										el.slug === currentSlug
+											? 'text-accent underline'
+											: 'text-gray-600 dark:text-gray-300',
+									]}
+								>
+									{el.title}
+								</a>
+							</li>
+						))}
+					</ul>
+				</li>
+			))
+		}
+	</ul>
 </aside>
+
+<style>
+	aside {
+		/* height: calc(100dvh - var(--header-height)); */
+	}
+</style>
