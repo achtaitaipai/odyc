@@ -13,7 +13,13 @@ const locale = getLocaleByPath(Astro.url.pathname)
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Odycjs</title>
+		<script is:inline>
+			const isDark = localStorage.getItem('theme') === 'dark'
+			document.firstElementChild.classList.toggle('dark', isDark)
+		</script>
 	</head>
-	<Header />
-	<slot />
+	<body class="dark:bg-gray-950 dark:text-gray-100">
+		<Header />
+		<slot />
+	</body>
 </html>

@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
 	--color-accent: var(--color-pink-500);
 	--font-pixel: 'Pixelify Sans Variable', system-ui;
