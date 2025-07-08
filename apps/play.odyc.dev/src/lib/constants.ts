@@ -73,3 +73,20 @@ export const DefaultCode = `const game = createGame({
 	xxxxxxxx
 	\`
 });`;
+
+export const TemplateGroups = [
+	{
+		title: 'Getting started',
+		templates: [
+			{ label: 'Hello world', value: 'hello-world' },
+			{ label: 'Collisions', value: 'sollisions' }
+		]
+	},
+	{
+		title: 'Advanced',
+		templates: [
+			{ label: 'Dialog', value: 'dialog' },
+			{ label: 'Sounds', value: 'sounds' }
+		]
+	}
+];

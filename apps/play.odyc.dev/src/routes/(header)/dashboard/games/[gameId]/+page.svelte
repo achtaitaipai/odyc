@@ -15,7 +15,7 @@
 	import type { PageProps } from './$types';
 	import { Slider } from '$lib/components/ui/slider/index.js';
 	import * as Card from '$lib/components/ui/card';
-	import { DefaultCode, Dependencies } from '$lib/constants';
+	import { DefaultCode, Dependencies, TemplateGroups } from '$lib/constants';
 	import { mode } from 'mode-watcher';
 	import { toast } from 'svelte-sonner';
 	import { Backend } from '$lib/backend';
@@ -449,6 +449,34 @@ ${code}
 	function setShowSoundEditor(value: boolean) {
 		showSoundEditor = value;
 	}
+
+	let showExamples = $state(false);
+	function setShowExamples(value: boolean) {
+		showExamples = value;
+	}
+
+	let templateOpen = $state(false);
+	let templateValue = $state('');
+	let templateLabel = $state('');
+	let templateRef = $state<HTMLButtonElement>(null!);
+	function closeAndFocusTemplateTrigger() {
+		templateOpen = false;
+		tick().then(() => {
+			templateRef.focus();
+		});
+	}
+
+	function onTemplateSelect() {
+		if (!templateValue) {
+			toast.error('Please select a template.');
+			return;
+		}
+
+		showExamples = false;
+		templateOpen = false;
+
+		// TODO: Set code in editor, and possibly mark saved as false
+	}
 </script>
 
 <div class="mx-auto mb-3 h-full w-full max-w-7xl p-4 lg:p-6">
@@ -555,7 +583,7 @@ ${code}
 						</div>
 					</Menubar.Item>
 					<Menubar.Separator />
-					<Menubar.Item>Use template...</Menubar.Item>
+					<Menubar.Item onclick={() => setShowExamples(true)}>Load example...</Menubar.Item>
 				</Menubar.Content>
 			</Menubar.Menu>
 
@@ -884,5 +912,58 @@ ${code}
 		<Separator />
 
 		<Sound />
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root open={showExamples} onOpenChange={setShowExamples}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header>
+			<Dialog.Title>Load code example</Dialog.Title>
+			<Dialog.Description>
+				Start off game from an example, or learn best practices.
+			</Dialog.Description>
+		</Dialog.Header>
+		<div class="grid gap-4 py-4">
+			<Popover.Root bind:open={templateOpen}>
+				<Popover.Trigger bind:ref={templateRef}>
+					{#snippet child({ props })}
+						<Button {...props} variant="outline" class="w-full justify-between" role="combobox">
+							{templateLabel || 'Select a template...'}
+							<ChevronsUpDownIcon class="opacity-50" />
+						</Button>
+					{/snippet}
+				</Popover.Trigger>
+				<Popover.Content class="w-[200px] p-0">
+					<Command.Root>
+						<Command.Input placeholder="Search templates..." />
+						<Command.List>
+							<Command.Empty>No template found.</Command.Empty>
+							{#each TemplateGroups as group (group.title)}
+								<Command.Group heading={group.title}>
+									{#each group.templates as template (template.value)}
+										<Command.Item
+											value={template.value}
+											onSelect={() => {
+												templateValue = template.value;
+												templateLabel = template.label;
+												closeAndFocusTemplateTrigger();
+											}}
+										>
+											<CheckIcon
+												class={cn(templateValue !== template.value && 'text-transparent')}
+											/>
+											{template.label}
+										</Command.Item>
+									{/each}
+								</Command.Group>
+							{/each}
+						</Command.List>
+					</Command.Root>
+				</Popover.Content>
+			</Popover.Root>
+		</div>
+		<Dialog.Footer>
+			<Button type="button" onclick={onTemplateSelect}>Load</Button>
+		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
