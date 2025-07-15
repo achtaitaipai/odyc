@@ -3,7 +3,6 @@ category: Helpers
 title: Vector2 Helpers
 ---
 
-# Vector2 Helpers
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 

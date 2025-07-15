@@ -3,7 +3,6 @@ category: World
 title: Title & End Screens
 ---
 
-# Title & End Screens
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
