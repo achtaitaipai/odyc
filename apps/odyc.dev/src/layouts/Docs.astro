@@ -4,7 +4,7 @@ import DocSummary from '#components/DocSummary.astro'
 import type { Locale } from '#lib/i18n/index.ts'
 import { getDocsPostSlug } from '#lib/docsPost.ts'
 import type { CollectionEntry } from 'astro:content'
-import TableOfContents from '#components/TableOfContents.astro'
+import TableOfContents from '#components/TableOfContents/index.astro'
 export type Props = {
 	post: CollectionEntry<'docs'>
 	locale: Locale
@@ -15,11 +15,11 @@ const currentSlug = getDocsPostSlug(post, locale)
 ---
 
 <BaseLayout>
-	<div class="flex">
+	<div class="flex gap-8">
 		<DocSummary {locale} {currentSlug} />
-		<main class="prose dark:prose-invert pb-64">
+		<main class="prose dark:prose-invert pt-8 pb-64">
+			<h1 id="_top">{post.data.title}</h1>
 			<Content />
-			<pre>{JSON.stringify(headings)}</pre>
 		</main>
 		<TableOfContents {headings} />
 	</div>
