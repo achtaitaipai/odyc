@@ -1,0 +1,23 @@
+---
+import type { TocEntry } from './toc.ts'
+
+export type Props = {
+	items: TocEntry[]
+}
+
+const { items } = Astro.props
+---
+
+{
+	items.map(({ slug, text, children }) => (
+		<li>
+			<a
+				href={'#' + slug}
+				class="hover:text-accent data-current:text-accent text-gray-600 dark:text-gray-300"
+			>
+				{text}
+			</a>
+			<ul class="ps-2">{children && <Astro.self items={children} />}</ul>
+		</li>
+	))
+}

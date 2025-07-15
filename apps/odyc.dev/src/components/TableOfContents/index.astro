@@ -1,0 +1,74 @@
+---
+import { getToc } from './toc.ts'
+import type { MarkdownHeading } from 'astro'
+import TocEntries from './_TocEntries.astro'
+
+export type Props = {
+	headings: MarkdownHeading[]
+}
+
+const { headings } = Astro.props
+
+const items = [
+	{ text: 'Overview', deepth: 2, slug: '_top' },
+	...getToc(headings),
+]
+---
+
+<nav class="sticky top-[var(--header-height)] h-full pt-8">
+	<strong class="text-lg font-bold">On this page</strong>
+	<c-toc class="contents">
+		<ul>
+			<TocEntries {items} />
+		</ul>
+	</c-toc>
+</nav>
+
+<script>
+	class Toc extends HTMLElement {
+		#links: NodeListOf<HTMLAnchorElement>
+		#headings: HTMLHeadingElement[] = []
+		#observer: IntersectionObserver
+
+		constructor() {
+			super()
+
+			this.#links = this.querySelectorAll('a')
+			for (const link of this.#links) {
+				const target = new URL(link.href).hash
+				if (!target) continue
+				const heading = document.getElementById(target.replace('#', ''))
+				if (!(heading instanceof HTMLHeadingElement)) continue
+				this.#headings.push(heading)
+			}
+
+			this.#observer = new IntersectionObserver(this.#observerCallback, {
+				// Negative bottom margin means heading needs to be towards top of viewport to trigger intersection.
+				rootMargin: '0% 0% -80%',
+			})
+		}
+
+		connectedCallback() {
+			this.#headings.forEach((el) => this.#observer.observe(el))
+		}
+
+		disconnectedCallback() {
+			this.#headings.forEach((el) => this.#observer.unobserve(el))
+		}
+
+		#observerCallback: IntersectionObserverCallback = (entries) => {
+			for (const { target, isIntersecting } of entries) {
+				if (!isIntersecting) continue
+				console.log(target)
+				this.#links.forEach((el) => {
+					if (el.href.endsWith('#' + target.id))
+						el.setAttribute('data-current', 'true')
+					else el.removeAttribute('data-current')
+				})
+				break
+			}
+		}
+	}
+
+	customElements.define('c-toc', Toc)
+</script>
