@@ -92,7 +92,7 @@
 		if (hasChangedCode) {
 			if (
 				!confirm(
-					'Are you sure you want to leave this page? You have unsaved changes that will be lost.'
+					stores.t('editor.unsavedChangesWarning')
 				)
 			) {
 				cancel();
@@ -255,7 +255,7 @@ ${code}
 			const file = await Backend.createScreenshotFile(screenshot);
 			await Backend.updateGameCode(game.$id, code, file.$id);
 			await invalidate(Dependencies.GAMES);
-			toast.success('Game code successfully saved.');
+			toast.success(stores.t('editor.codeSavedSuccess'));
 			hasChangedCode = false;
 		} catch (error: any) {
 			toast.error(error.message);
@@ -276,7 +276,7 @@ ${code}
 		try {
 			const newGame = await Backend.createGame(saveAsName, code);
 			await invalidate(Dependencies.GAMES);
-			toast.success('Game successfully copied.');
+			toast.success(stores.t('editor.gameCopiedSuccess'));
 			setShowSaveAsDialog(false);
 			await goto('/dashboard/games/' + newGame.$id);
 		} catch (error: any) {
@@ -298,7 +298,7 @@ ${code}
 		isDeleting = true;
 		try {
 			await Backend.deleteGame(game.$id);
-			toast.success('Game successfully deleted.');
+			toast.success(stores.t('editor.gameDeletedSuccess'));
 			await goto('/dashboard/overview');
 			await invalidate(Dependencies.GAMES);
 		} catch (error: any) {
@@ -337,7 +337,7 @@ ${code}
 		isChangingVersion = true;
 		try {
 			await Backend.updateGameVersion(game.$id, versionSelected ?? PUBLIC_ODYC_VERSION ?? 'latest');
-			toast.success('Game version successfully changed.');
+			toast.success(stores.t('editor.versionChangedSuccess'));
 			await invalidate(Dependencies.GAMES);
 			showVersionDialog = false;
 		} catch (error: any) {
@@ -360,7 +360,7 @@ ${code}
 		isChangingUrl = true;
 		try {
 			await Backend.updateGameUrl(game.$id, gameUrl);
-			toast.success('Game URL successfully changed.');
+			toast.success(stores.t('editor.urlChangedSuccess'));
 			await invalidate(Dependencies.GAMES);
 			showUrlDialog = false;
 		} catch (error: any) {
@@ -386,7 +386,7 @@ ${code}
 		isChangingDescription = true;
 		try {
 			await Backend.updateGameDescription(game.$id, description, howToPlay);
-			toast.success('Game description successfully changed.');
+			toast.success(stores.t('editor.descriptionChangedSuccess'));
 			await invalidate(Dependencies.GAMES);
 			showDescriptionDialog = false;
 		} catch (error: any) {
@@ -409,7 +409,7 @@ ${code}
 		isRenaming = true;
 		try {
 			await Backend.updateGameName(game.$id, renameName);
-			toast.success('Game successfully renamed.');
+			toast.success(stores.t('editor.gameRenamedSuccess'));
 			await invalidate(Dependencies.GAMES);
 			showRenameDialog = false;
 		} catch (error: any) {
@@ -434,14 +434,14 @@ ${code}
 
 	function onSpriteCopy() {
 		navigator.clipboard.writeText(spriteEditor);
-		toast.success('Sprite copied to clipboard.');
+		toast.success(stores.t('editor.spriteCopiedSuccess'));
 		setShowSpriteEditor(false);
 	}
 
 	function onLoadSprite() {
 		navigator.clipboard.readText().then((text) => {
 			spriteEditor = text;
-			toast.success('Sprite loaded from clipboard.');
+			toast.success(stores.t('editor.spriteLoadedSuccess'));
 		});
 	}
 
@@ -468,7 +468,7 @@ ${code}
 
 	function onTemplateSelect() {
 		if (!templateValue) {
-			toast.error('Please select a template.');
+			toast.error(stores.t('editor.selectTemplateError'));
 			return;
 		}
 
@@ -483,7 +483,7 @@ ${code}
 	<Breadcrumb.Root class="mb-3">
 		<Breadcrumb.List>
 			<Breadcrumb.Item>
-				<Breadcrumb.Link href="/dashboard/overview">Home</Breadcrumb.Link>
+				<Breadcrumb.Link href="/dashboard/overview">{stores.t('nav.home')}</Breadcrumb.Link>
 			</Breadcrumb.Item>
 			<Breadcrumb.Separator />
 			<Breadcrumb.Item>
@@ -504,7 +504,7 @@ ${code}
 							class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-500"
 						></div>
 					{/if}
-					File
+					{stores.t('editor.file')}
 				</Menubar.Trigger>
 				<Menubar.Content>
 					<Menubar.Item onclick={onSaveCodeStart} class="flex items-center justify-start gap-2">
@@ -516,7 +516,7 @@ ${code}
 								<div class="size-3 transform rounded-full bg-yellow-500"></div>
 							</div>
 						{/if}
-						<span class="w-full">Save</span>
+						<span class="w-full">{stores.t('editor.save')}</span>
 						<div class="flex items-center justify-end gap-0.5">
 							<kbd
 								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
@@ -530,7 +530,7 @@ ${code}
 					</Menubar.Item>
 
 					<Menubar.Item onclick={() => setShowSaveAsDialog(true)}>
-						<span class="w-full">Save as...</span>
+						<span class="w-full">{stores.t('editor.saveAs')}</span>
 						<div class="flex items-center justify-end gap-0.5">
 							<kbd
 								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
@@ -548,7 +548,7 @@ ${code}
 					</Menubar.Item>
 
 					<Menubar.Item onclick={onDownload}>
-						<span class="w-full">Download</span>
+						<span class="w-full">{stores.t('editor.download')}</span>
 						<div class="flex items-center justify-end gap-0.5">
 							<kbd
 								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
@@ -566,7 +566,7 @@ ${code}
 					</Menubar.Item>
 					<Menubar.Separator />
 					<Menubar.Item onclick={onFormat}>
-						<span class="w-full">Format code</span>
+						<span class="w-full">{stores.t('editor.formatCode')}</span>
 						<div class="flex items-center justify-end gap-0.5">
 							<kbd
 								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
@@ -583,15 +583,15 @@ ${code}
 						</div>
 					</Menubar.Item>
 					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowExamples(true)}>Load example...</Menubar.Item>
+					<Menubar.Item onclick={() => setShowExamples(true)}>{stores.t('editor.loadExample')}</Menubar.Item>
 				</Menubar.Content>
 			</Menubar.Menu>
 
 			<Menubar.Menu>
-				<Menubar.Trigger>Edit</Menubar.Trigger>
+				<Menubar.Trigger>{stores.t('editor.edit')}</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item onclick={() => setShowSpriteEditor(true)}>Sprite</Menubar.Item>
-					<Menubar.Item onclick={() => setShowSoundEditor(true)}>Sound</Menubar.Item>
+					<Menubar.Item onclick={() => setShowSpriteEditor(true)}>{stores.t('editor.sprite')}</Menubar.Item>
+					<Menubar.Item onclick={() => setShowSoundEditor(true)}>{stores.t('editor.sound')}</Menubar.Item>
 				</Menubar.Content>
 			</Menubar.Menu>
 
@@ -605,39 +605,39 @@ ${code}
 							class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-red-500"
 						></div>
 					{/if}
-					<span>View</span>
+					<span>{stores.t('editor.view')}</span>
 				</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item onclick={onFullscreen}>Open in fullscreen</Menubar.Item>
+					<Menubar.Item onclick={onFullscreen}>{stores.t('editor.openFullscreen')}</Menubar.Item>
 					<Menubar.Separator />
-					<Menubar.Item onclick={onScreenshot}>Take a screenshot</Menubar.Item>
+					<Menubar.Item onclick={onScreenshot}>{stores.t('editor.takeScreenshot')}</Menubar.Item>
 					{#if isRecording}
 						<Menubar.Item onclick={stopRecording} class="flex items-center justify-start gap-2">
 							<div class="relative">
 								<div class="absolute size-3 transform animate-ping rounded-full bg-red-500"></div>
 								<div class="size-3 transform rounded-full bg-red-500"></div>
 							</div>
-							<span>Stop video recording</span></Menubar.Item
+							<span>{stores.t('editor.stopVideoRecording')}</span></Menubar.Item
 						>
 					{:else}
-						<Menubar.Item onclick={startRecording}>Start video recording</Menubar.Item>
+						<Menubar.Item onclick={startRecording}>{stores.t('editor.startVideoRecording')}</Menubar.Item>
 					{/if}
 				</Menubar.Content>
 			</Menubar.Menu>
 
 			<Menubar.Menu>
-				<Menubar.Trigger>Settings</Menubar.Trigger>
+				<Menubar.Trigger>{stores.t('editor.settings')}</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item onclick={() => setShowRenameDialog(true)}>Change name</Menubar.Item>
-					<Menubar.Item onclick={() => setShowUrlDialog(true)}>Change URL</Menubar.Item>
+					<Menubar.Item onclick={() => setShowRenameDialog(true)}>{stores.t('editor.changeName')}</Menubar.Item>
+					<Menubar.Item onclick={() => setShowUrlDialog(true)}>{stores.t('editor.changeURL')}</Menubar.Item>
 					<Menubar.Item onclick={() => setShowDescriptionDialog(true)}
-						>Change Description</Menubar.Item
+						>{stores.t('editor.changeDescription')}</Menubar.Item
 					>
 					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowVersionDialog(true)}>Change Version</Menubar.Item>
+					<Menubar.Item onclick={() => setShowVersionDialog(true)}>{stores.t('editor.changeVersion')}</Menubar.Item>
 					<Menubar.Separator />
 					<Menubar.Item onclick={() => setShowDeleteDialog(true)} variant="destructive"
-						>Delete project</Menubar.Item
+						>{stores.t('editor.deleteProject')}</Menubar.Item
 					>
 				</Menubar.Content>
 			</Menubar.Menu>
@@ -663,7 +663,7 @@ ${code}
 						class="h-full w-full"
 						id="preview"
 						src={(PUBLIC_IFRAME_ENDPOINT ?? '/iframe') + '?version=' + game.version}
-						title="Game preview"
+						title={stores.t('editor.gamePreview')}
 					></iframe>
 				</div>
 			</Card.Content>
@@ -675,26 +675,26 @@ ${code}
 	<Dialog.Content class="sm:max-w-[425px]">
 		<form onsubmit={onSaveAs}>
 			<Dialog.Header class="mb-2">
-				<Dialog.Title>Save as new game</Dialog.Title>
-				<Dialog.Description>Make a copy of this game.</Dialog.Description>
+				<Dialog.Title>{stores.t('editor.saveAsNewGame')}</Dialog.Title>
+				<Dialog.Description>{stores.t('editor.saveAsDescription')}</Dialog.Description>
 			</Dialog.Header>
 
 			<Separator />
 
 			<div class="grid gap-4 py-4">
 				<div class="flex w-full max-w-sm flex-col gap-1.5">
-					<Label for="game-name">Game name</Label>
+					<Label for="game-name">{stores.t('editor.gameName')}</Label>
 					<Input
 						required={true}
 						bind:value={saveAsName}
 						type="text"
 						id="game-name"
-						placeholder="Awesome game"
+						placeholder={stores.t('editor.gameNamePlaceholder')}
 					/>
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button disabled={isSavingAs} type="submit">Create</Button>
+				<Button disabled={isSavingAs} type="submit">{stores.t('ui.create')}</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>
@@ -704,26 +704,26 @@ ${code}
 	<Dialog.Content class="sm:max-w-[425px]">
 		<form onsubmit={onRename}>
 			<Dialog.Header class="mb-2">
-				<Dialog.Title>Rename your game</Dialog.Title>
-				<Dialog.Description>Change name of your game.</Dialog.Description>
+				<Dialog.Title>{stores.t('editor.renameGameTitle')}</Dialog.Title>
+				<Dialog.Description>{stores.t('editor.renameGameDescription')}</Dialog.Description>
 			</Dialog.Header>
 
 			<Separator />
 
 			<div class="grid gap-4 py-4">
 				<div class="flex w-full max-w-sm flex-col gap-1.5">
-					<Label for="game-name">Game name</Label>
+					<Label for="game-name">{stores.t('editor.gameName')}</Label>
 					<Input
 						required={true}
 						bind:value={renameName}
 						type="text"
 						id="game-name"
-						placeholder="Awesome game"
+						placeholder={stores.t('editor.gameNamePlaceholder')}
 					/>
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button disabled={isRenaming} type="submit">Update</Button>
+				<Button disabled={isRenaming} type="submit">{stores.t('ui.update')}</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>
@@ -733,9 +733,9 @@ ${code}
 	<Dialog.Content class="sm:max-w-[425px]">
 		<form onsubmit={onChangeUrl}>
 			<Dialog.Header class="mb-2">
-				<Dialog.Title>Change game's URL</Dialog.Title>
+				<Dialog.Title>{stores.t('editor.changeGameUrlTitle')}</Dialog.Title>
 				<Dialog.Description
-					>Change public URL you can share to let others play your game.</Dialog.Description
+					>{stores.t('editor.changeGameUrlDescription')}</Dialog.Description
 				>
 			</Dialog.Header>
 
@@ -743,7 +743,7 @@ ${code}
 
 			<div class="grid gap-4 py-4">
 				<div class="flex w-full max-w-sm flex-col gap-1.5">
-					<Label for="game-url">Game URL</Label>
+					<Label for="game-url">{stores.t('editor.gameUrlLabel')}</Label>
 
 					<div class="flex items-center gap-1">
 						<Input
@@ -751,13 +751,13 @@ ${code}
 							bind:value={gameUrl}
 							type="text"
 							id="game-url"
-							placeholder="awesome-game"
+							placeholder={stores.t('editor.gameUrlPlaceholder')}
 						/>
 					</div>
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button disabled={isChangingUrl} type="submit">Update</Button>
+				<Button disabled={isChangingUrl} type="submit">{stores.t('ui.update')}</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>
@@ -767,9 +767,9 @@ ${code}
 	<Dialog.Content class="sm:max-w-[425px]">
 		<form onsubmit={onChangeVersion}>
 			<Dialog.Header class="mb-2">
-				<Dialog.Title>Upgrade your game version</Dialog.Title>
+				<Dialog.Title>{stores.t('editor.upgradeVersionTitle')}</Dialog.Title>
 				<Dialog.Description
-					>Increase or lower Odyc.js engine version used in your game.</Dialog.Description
+					>{stores.t('editor.upgradeVersionDescription')}</Dialog.Description
 				>
 			</Dialog.Header>
 
@@ -777,7 +777,7 @@ ${code}
 
 			<div class="grid gap-4 py-4">
 				<div class="flex w-full max-w-sm flex-col gap-1.5">
-					<Label for="game-url">Odyc.js version</Label>
+					<Label for="game-url">{stores.t('editor.odycVersionLabel')}</Label>
 
 					<div class="flex items-center gap-1">
 						<Popover.Root bind:open={versionOpen}>
@@ -789,16 +789,16 @@ ${code}
 										class="w-[200px] justify-between"
 										role="combobox"
 									>
-										{versionValue || 'Select a version...'}
+										{versionValue || stores.t('editor.selectVersionPlaceholder')}
 										<ChevronsUpDownIcon class="opacity-50" />
 									</Button>
 								{/snippet}
 							</Popover.Trigger>
 							<Popover.Content class="w-[200px] p-0">
 								<Command.Root>
-									<Command.Input placeholder="Search versions..." />
+									<Command.Input placeholder={stores.t('editor.searchVersions')} />
 									<Command.List>
-										<Command.Empty>No version found.</Command.Empty>
+										<Command.Empty>{stores.t('editor.noVersionFound')}</Command.Empty>
 										<Command.Group value="versions">
 											{#each versions as version (version.value)}
 												<Command.Item
@@ -823,7 +823,7 @@ ${code}
 				</div>
 			</div>
 			<Dialog.Footer>
-				<Button disabled={isChangingVersion} type="submit">Update</Button>
+				<Button disabled={isChangingVersion} type="submit">{stores.t('ui.update')}</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>
@@ -833,32 +833,32 @@ ${code}
 	<Sheet.Content>
 		<form onsubmit={onChangeDescription}>
 			<Sheet.Header>
-				<Sheet.Title>Edit game description</Sheet.Title>
+				<Sheet.Title>{stores.t('editor.editDescriptionTitle')}</Sheet.Title>
 				<Sheet.Description>
-					Describe story of your game, rules, and how to play in general.
+					{stores.t('editor.editDescriptionDescription')}
 				</Sheet.Description>
 			</Sheet.Header>
 
 			<div class="grid flex-1 auto-rows-min gap-6 px-4">
 				<div class="grid gap-3">
-					<Label for="description" class="text-right">Description</Label>
+					<Label for="description" class="text-right">{stores.t('editor.descriptionLabel')}</Label>
 					<Textarea
 						bind:value={description}
 						id="description"
-						placeholder="Short description of your game."
+						placeholder={stores.t('editor.descriptionPlaceholder')}
 					/>
 				</div>
 				<div class="grid gap-3">
-					<Label for="howToPlay" class="text-right">How to play</Label>
+					<Label for="howToPlay" class="text-right">{stores.t('editor.howToPlayLabel')}</Label>
 					<Textarea
 						bind:value={howToPlay}
 						id="howToPlay"
-						placeholder="Controls and rules of your game."
+						placeholder={stores.t('editor.howToPlayPlaceholder')}
 					/>
 				</div>
 			</div>
 			<Sheet.Footer>
-				<Button type="submit" variant="outline">Update</Button>
+				<Button type="submit" variant="outline">{stores.t('ui.update')}</Button>
 			</Sheet.Footer>
 		</form>
 	</Sheet.Content>
@@ -867,15 +867,14 @@ ${code}
 <AlertDialog.Root open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+			<AlertDialog.Title>{stores.t('editor.deleteConfirmTitle')}</AlertDialog.Title>
 			<AlertDialog.Description>
-				Deleted game cannot be recovered. We highly recommend to download it to your PC first, just
-				in case.
-			</AlertDialog.Description>
+				{stores.t('editor.deleteConfirmDescription')}
+				</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}>Continue</AlertDialog.Action>
+			<AlertDialog.Cancel>{stores.t('ui.cancel')}</AlertDialog.Cancel>
+			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}>{stores.t('games.continue')}</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
@@ -883,8 +882,8 @@ ${code}
 <Dialog.Root open={showSpriteEditor} onOpenChange={setShowSpriteEditor}>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header class="mb-2">
-			<Dialog.Title>Sprite editor</Dialog.Title>
-			<Dialog.Description>Simple painting tool to illustrate Odyc sprites</Dialog.Description>
+			<Dialog.Title>{stores.t('editor.spriteEditorTitle')}</Dialog.Title>
+			<Dialog.Description>{stores.t('editor.spriteEditorDescription')}</Dialog.Description>
 		</Dialog.Header>
 
 		<Separator />
@@ -897,8 +896,8 @@ ${code}
 		/>
 
 		<Dialog.Footer>
-			<Button type="button" variant="outline" onclick={onLoadSprite}>Load from clipboard</Button>
-			<Button type="button" onclick={onSpriteCopy}>Copy</Button>
+			<Button type="button" variant="outline" onclick={onLoadSprite}>{stores.t('editor.loadFromClipboard')}</Button>
+			<Button type="button" onclick={onSpriteCopy}>{stores.t('editor.copy')}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
@@ -906,7 +905,7 @@ ${code}
 <Dialog.Root open={showSoundEditor} onOpenChange={setShowSoundEditor}>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header class="mb-2">
-			<Dialog.Title>Sound editor</Dialog.Title>
+			<Dialog.Title>{stores.t('editor.soundEditorTitle')}</Dialog.Title>
 		</Dialog.Header>
 
 		<Separator />
@@ -918,9 +917,9 @@ ${code}
 <Dialog.Root open={showExamples} onOpenChange={setShowExamples}>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header>
-			<Dialog.Title>Load code example</Dialog.Title>
+			<Dialog.Title>{stores.t('editor.loadCodeExampleTitle')}</Dialog.Title>
 			<Dialog.Description>
-				Start off game from an example, or learn best practices.
+				{stores.t('editor.loadCodeExampleDescription')}
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
@@ -928,16 +927,16 @@ ${code}
 				<Popover.Trigger bind:ref={templateRef}>
 					{#snippet child({ props })}
 						<Button {...props} variant="outline" class="w-full justify-between" role="combobox">
-							{templateLabel || 'Select a template...'}
+							{templateLabel || stores.t('editor.selectTemplatePlaceholder')}
 							<ChevronsUpDownIcon class="opacity-50" />
 						</Button>
 					{/snippet}
 				</Popover.Trigger>
 				<Popover.Content class="w-[200px] p-0">
 					<Command.Root>
-						<Command.Input placeholder="Search templates..." />
+						<Command.Input placeholder={stores.t('editor.searchTemplates')} />
 						<Command.List>
-							<Command.Empty>No template found.</Command.Empty>
+							<Command.Empty>{stores.t('editor.noTemplateFound')}</Command.Empty>
 							{#each TemplateGroups as group (group.title)}
 								<Command.Group heading={group.title}>
 									{#each group.templates as template (template.value)}
@@ -963,7 +962,7 @@ ${code}
 			</Popover.Root>
 		</div>
 		<Dialog.Footer>
-			<Button type="button" onclick={onTemplateSelect}>Load</Button>
+			<Button type="button" onclick={onTemplateSelect}>{stores.t('editor.load')}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
