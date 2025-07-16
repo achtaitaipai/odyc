@@ -15,6 +15,8 @@
 	import { Backend } from '$lib/backend';
 	import { invalidate } from '$app/navigation';
 	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+	import * as Select from '$lib/components/ui/select/index.js';
+	import { defaultLocale, languages, locales, type Locale } from '$lib/i18n';
 
 	let originalName = $state(stores.profile?.name ?? '');
 	let originalSprite = $state(stores.profile?.avatarPixels);
@@ -52,7 +54,10 @@
 
 	let originalVimModeEnabled = $state(stores.user?.prefs?.vimModeEnabled);
 	let vimModeEnabled = $state(stores.user?.prefs?.vimModeEnabled ?? false);
+	let originalSelectedLocale = $state(stores.user?.prefs.selectedLocale);
+	let selectedLocale: Locale = $state(stores.user?.prefs?.selectedLocale ?? defaultLocale);
 	let isLoadingPrefs = $state(false);
+
 	async function onPrefsSave(event: Event) {
 		event.preventDefault();
 
@@ -60,9 +65,11 @@
 
 		try {
 			await Backend.updateVimModePrefs(vimModeEnabled);
+			await Backend.updateSelectedLocalePrefs(selectedLocale);
 			await invalidate(Dependencies.USER);
 			toast.success('Preferences updated successfully.');
 			originalVimModeEnabled = vimModeEnabled;
+			originalSelectedLocale = selectedLocale;
 		} catch (err: any) {
 			toast.error(err.message);
 		} finally {
@@ -72,7 +79,7 @@
 </script>
 
 <div class="mx-auto w-full max-w-4xl p-3">
-	<h1 class="font-title my-6 flex-shrink-0 text-3xl">Settings</h1>
+	<h1 class="font-title my-6 flex-shrink-0 text-3xl">{stores.t('settings')}</h1>
 	<div class="flex flex-col gap-6">
 		<form onsubmit={onSave}>
 			<Card.Root class="w-full">
@@ -130,20 +137,38 @@
 				</Card.Header>
 				<Card.Content>
 					<div class="flex flex-col gap-6">
-						<div class="flex items-start gap-3">
-							<Checkbox id="vim-mode" bind:checked={vimModeEnabled} />
+						<div class="flex flex-col gap-6">
 							<div class="grid gap-2">
-								<Label for="vim-mode">Enable Vim mode</Label>
-								<p class="text-muted-foreground text-sm">
-									Toggles support for Vim keybindings in code editor.
-								</p>
+								<Label>Preferred language</Label>
+								<Select.Root type="single" name="locale" bind:value={selectedLocale}>
+									<Select.Trigger class="w-[180px]">{languages[selectedLocale]}</Select.Trigger>
+									<Select.Content>
+										{#each locales as locale}
+											<Select.Item value={locale} label={languages[locale]} />
+										{/each}
+									</Select.Content>
+								</Select.Root>
+							</div>
+						</div>
+
+						<div class="flex flex-col gap-6">
+							<div class="flex items-start gap-3">
+								<Checkbox id="vim-mode" bind:checked={vimModeEnabled} />
+								<div class="grid gap-2">
+									<Label for="vim-mode">Enable Vim mode</Label>
+									<p class="text-muted-foreground text-sm">
+										Toggles support for Vim keybindings in code editor.
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>
 				</Card.Content>
 				<Card.Footer class="w-full flex-col items-end gap-2">
 					<Button
-						disabled={isLoadingPrefs || vimModeEnabled === originalVimModeEnabled}
+						disabled={isLoadingPrefs ||
+							(vimModeEnabled === originalVimModeEnabled &&
+								selectedLocale === originalSelectedLocale)}
 						type="submit">Update preferences</Button
 					>
 				</Card.Footer>
