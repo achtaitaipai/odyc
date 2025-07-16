@@ -31,7 +31,7 @@
 	const hotkeys = [
 		{
 			id: 'home',
-			title: 'Dashboard',
+			title: stores.t('nav.dashboard'),
 			hotkey: 'cmd+d',
 			mdIcon: 'apps',
 			handler: () => {
@@ -40,7 +40,7 @@
 		},
 		{
 			id: 'my-profile',
-			title: 'My profile',
+			title: stores.t('nav.myProfile'),
 			hotkey: 'cmd+p',
 			mdIcon: 'person',
 			handler: () => {
@@ -49,7 +49,7 @@
 		},
 		{
 			id: 'settings',
-			title: 'Settings',
+			title: stores.t('settings'),
 			hotkey: 'cmd+e',
 			mdIcon: 'settings',
 			handler: () => {
@@ -61,7 +61,7 @@
 	if (games.total > 0) {
 		hotkeys.push({
 			id: 'open-game',
-			title: 'Open game in editor ...',
+			title: stores.t('commands.openGame'),
 			hotkey: 'cmd+g',
 			mdIcon: 'gamepad',
 			children: games.documents.map((game) => {
@@ -91,4 +91,4 @@
 
 {@render children()}
 
-<ninja-keys class={theme} placeholder="Type a command..."></ninja-keys>
+<ninja-keys class={theme} placeholder={stores.t('commands.placeholder')}></ninja-keys>

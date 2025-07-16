@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { page } from '$app/state';
+	import { stores } from '$lib/stores.svelte';
 
 	function parseError(error: any): {
 		title: string;
@@ -84,7 +85,7 @@
 					{/if}
 				</div>
 
-				<a href="/"><Button type="button" class="">Back to homepage</Button></a>
+				<a href="/"><Button type="button" class="">{stores.t('ui.backToHomepage')}</Button></a>
 			</div>
 		</div>
 	</div>
