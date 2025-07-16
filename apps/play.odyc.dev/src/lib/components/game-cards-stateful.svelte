@@ -103,11 +103,11 @@
 						<DropdownMenu.Content class="w-56" align="start">
 							<DropdownMenu.Group>
 								<DropdownMenu.Item
-									><a href={`/dashboard/games/${game.$id}`}>Open in editor</a></DropdownMenu.Item
+									><a href={`/dashboard/games/${game.$id}`}>{stores.t('games.openInEditor')}</a></DropdownMenu.Item
 								>
 
 								<DropdownMenu.Item onclick={onDeleteButton} variant="destructive">
-									{isShiftPressed ? 'Delete instantly' : 'Delete'}
+									{isShiftPressed ? stores.t('games.delete') : stores.t('games.delete')}
 
 									<DropdownMenu.Shortcut>⇧</DropdownMenu.Shortcut>
 								</DropdownMenu.Item>
@@ -128,15 +128,14 @@
 <AlertDialog.Root open={isDeletionOpen} onOpenChange={(open) => setDeletionOpen(open)}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+			<AlertDialog.Title>{stores.t('games.deleteConfirm')}</AlertDialog.Title>
 			<AlertDialog.Description>
-				Deleted game cannot be recovered. We highly recommend to download it to your PC first, just
-				in case.
+				{stores.t('games.deleteDescription')}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
-			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}>Continue</AlertDialog.Action>
+			<AlertDialog.Cancel>{stores.t('games.cancel')}</AlertDialog.Cancel>
+			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}>{stores.t('games.continue')}</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>

@@ -4,6 +4,7 @@
 	import IconPlayerPlayFilled from '@tabler/icons-svelte/icons/player-play-filled';
 	import type { Models } from 'appwrite';
 	import type { Games, Profiles } from '$lib/appwrite';
+	import { stores } from '$lib/stores.svelte';
 
 	const {
 		games,
@@ -21,14 +22,14 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	<h1 class="font-title text-3xl">Featured Games</h1>
+	<h1 class="font-title text-3xl">{stores.t('games.featured')}</h1>
 
 	{#if games.documents.length === 0}
 		<Card.Root class="flex h-full justify-center border-dashed bg-transparent">
 			<Card.Header>
-				<Card.Title class="font-title text-2xl font-light">No games are featured</Card.Title>
+				<Card.Title class="font-title text-2xl font-light">{stores.t('games.noFeatured')}</Card.Title>
 				<Card.Description
-					>We manually feature games we consider enjoyable to play. Stay tuned for first games!</Card.Description
+					>{stores.t('games.noFeaturedDescription')}</Card.Description
 				>
 			</Card.Header>
 		</Card.Root>
@@ -39,14 +40,14 @@
 			<Card.Header>
 				<Card.Title class="font-title text-2xl font-light">{game.name}</Card.Title>
 				<Card.Description
-					>Developed by <a href={`/profiles/${getOwner(game)?.$id}`} class="text-primary underline"
+					>{stores.t('games.developedBy')} <a href={`/profiles/${getOwner(game)?.$id}`} class="text-primary underline"
 						>{getOwner(game)?.name}</a
 					>
 				</Card.Description>
 				<Card.Action>
 					<a href={`/g/${game.slug}`}>
 						<Button class="" variant="outline"
-							>Play now<IconPlayerPlayFilled class="text-muted-foreground" /></Button
+							>{stores.t('games.playNow')}<IconPlayerPlayFilled class="text-muted-foreground" /></Button
 						>
 					</a>
 				</Card.Action>

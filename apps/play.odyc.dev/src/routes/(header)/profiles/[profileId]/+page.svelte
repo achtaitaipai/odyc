@@ -5,6 +5,7 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { DefaultProfilePicture } from '$lib/constants.js';
 	import * as Card from '$lib/components/ui/card/index.js';
+	import { stores } from '$lib/stores.svelte';
 
 	const { data } = $props();
 
@@ -25,11 +26,14 @@
 	<Breadcrumb.Root class="mb-3">
 		<Breadcrumb.List>
 			<Breadcrumb.Item>
-				<Breadcrumb.Link href="/dashboard/overview">Home</Breadcrumb.Link>
+				<Breadcrumb.Link href="/dashboard/overview">{stores.t('nav.home')}</Breadcrumb.Link>
 			</Breadcrumb.Item>
 			<Breadcrumb.Separator />
 			<Breadcrumb.Item>
-				<Breadcrumb.Page>{(profile.name ?? 'Anonymous') + "'s profile"}</Breadcrumb.Page>
+				<Breadcrumb.Page
+					>{(profile.name ?? stores.t('profile.anonymous')) +
+						stores.t('profile.userProfile')}</Breadcrumb.Page
+				>
 			</Breadcrumb.Item>
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
@@ -45,15 +49,15 @@
 				</div>
 				<div>
 					<h1 class="font-title flex-shrink-0 text-3xl font-light">
-						{profile.name ?? 'Anonymous'}
+						{profile.name ?? stores.t('profile.anonymous')}
 					</h1>
 					<p class="text-muted-foreground mt-1 text-sm font-light">
 						Joined {dateToString(profile.$createdAt)}
 					</p>
 					<p class="text-muted-foreground text-sm">
 						<span class="text-primary mr-2 text-2xl">{games.total}</span>{games.total === 1
-							? 'Game'
-							: 'Games'} created
+							? stores.t('profile.gameCreated')
+							: stores.t('profile.gamesCreated')}
 					</p>
 
 					{#if profile.description}
@@ -72,9 +76,9 @@
 		<GameCategory
 			{games}
 			queries={gamesQueries}
-			title={(profile.name ?? 'Anonymous') + "'s games"}
+			title={(profile.name ?? stores.t('profile.anonymous')) + stores.t('profile.userGames')}
 			allowCreate={false}
-			><GameCardsEmpty description="This user has not yet created any games."></GameCardsEmpty>
+			><GameCardsEmpty description={stores.t('profile.noGamesYet')}></GameCardsEmpty>
 		</GameCategory>
 	</div>
 </div>
