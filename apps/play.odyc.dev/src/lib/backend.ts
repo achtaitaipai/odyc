@@ -15,11 +15,13 @@ import slugify from 'slugify';
 import { stores } from './stores.svelte';
 import { PUBLIC_ODYC_VERSION } from '$env/static/public';
 import { generateAvatar } from './avatar';
+import type { Locale } from './i18n';
 
 type BackendPrefs = {
 	theme?: string;
 	profileId?: string;
 	vimModeEnabled?: boolean;
+	selectedLocale?: Locale;
 };
 export type BackendUser = Models.User<BackendPrefs>;
 
@@ -90,6 +92,11 @@ export class Backend {
 	static async updateVimModePrefs(enabled: boolean) {
 		const prefs = await this.#account.getPrefs();
 		return await this.#account.updatePrefs<BackendPrefs>({ ...prefs, vimModeEnabled: enabled });
+	}
+
+	static async updateSelectedLocalePrefs(locale: Locale) {
+		const prefs = await this.#account.getPrefs();
+		return await this.#account.updatePrefs<BackendPrefs>({ ...prefs, selectedLocale: locale });
 	}
 
 	static async getProfile(profileId: string) {
