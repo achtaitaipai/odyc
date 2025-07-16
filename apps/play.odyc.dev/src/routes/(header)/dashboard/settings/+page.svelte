@@ -41,7 +41,7 @@
 		try {
 			await Backend.updateProfile(stores.profile?.$id ?? '', name, sprite, description);
 			await invalidate(Dependencies.PROFILE);
-			toast.success('Profile updated successfully.');
+			toast.success(stores.t('notifications.profileUpdated'));
 			originalName = name;
 			originalSprite = sprite;
 			originalDescription = description;
@@ -67,7 +67,7 @@
 			await Backend.updateVimModePrefs(vimModeEnabled);
 			await Backend.updateSelectedLocalePrefs(selectedLocale);
 			await invalidate(Dependencies.USER);
-			toast.success('Preferences updated successfully.');
+			toast.success(stores.t('notifications.preferencesUpdated'));
 			originalVimModeEnabled = vimModeEnabled;
 			originalSelectedLocale = selectedLocale;
 		} catch (err: any) {
@@ -84,17 +84,17 @@
 		<form onsubmit={onSave}>
 			<Card.Root class="w-full">
 				<Card.Header>
-					<Card.Title>Profile settings</Card.Title>
-					<Card.Description>Configure your public presence on Odyc.js Play</Card.Description>
+					<Card.Title>{stores.t('profile.settings')}</Card.Title>
+					<Card.Description>{stores.t('profile.settingsDescription')}</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<div class="flex flex-col gap-6">
 						<div class="grid gap-2">
-							<Label for="name">Name</Label>
-							<Input id="name" type="text" bind:value={name} placeholder="Awesome gamer" required />
+							<Label for="name">{stores.t('profile.name')}</Label>
+							<Input id="name" type="text" bind:value={name} placeholder={stores.t('profile.placeholder.name')} required />
 						</div>
 						<div class="grid gap-2">
-							<Label for="description">Description</Label>
+							<Label for="description">{stores.t('profile.description')}</Label>
 							<Input
 								id="description"
 								type="text"
@@ -104,13 +104,13 @@
 							/>
 						</div>
 						<div class="grid gap-2">
-							<Label class="text-center">Profile picture</Label>
+							<Label class="text-center">{stores.t('profile.picture')}</Label>
 							<Card.Root class="w-[max-content] rounded-md">
 								<Card.Content class="flex flex-col items-center gap-4">
 									<Sprite class="aspect-square w-full max-w-40" {sprite} />
 
 									<Button onclick={() => setShowEditor(true)} type="button" variant="outline"
-										>Open editor</Button
+										>{stores.t('profile.openEditor')}</Button
 									>
 								</Card.Content>
 							</Card.Root>
@@ -123,7 +123,7 @@
 							(name === originalName &&
 								sprite === originalSprite &&
 								description === originalDescription)}
-						type="submit">Update profile</Button
+						type="submit">{stores.t('profile.updateProfile')}</Button
 					>
 				</Card.Footer>
 			</Card.Root>
@@ -132,14 +132,14 @@
 		<form onsubmit={onPrefsSave}>
 			<Card.Root class="w-full">
 				<Card.Header>
-					<Card.Title>Account preferences</Card.Title>
-					<Card.Description>Configure settings for your Odyc Play account</Card.Description>
+					<Card.Title>{stores.t('profile.accountPreferences')}</Card.Title>
+					<Card.Description>{stores.t('profile.accountPreferencesDescription')}</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<div class="flex flex-col gap-6">
 						<div class="flex flex-col gap-6">
 							<div class="grid gap-2">
-								<Label>Preferred language</Label>
+								<Label>{stores.t('profile.preferredLanguage')}</Label>
 								<Select.Root type="single" name="locale" bind:value={selectedLocale}>
 									<Select.Trigger class="w-[180px]">{languages[selectedLocale]}</Select.Trigger>
 									<Select.Content>
@@ -155,9 +155,9 @@
 							<div class="flex items-start gap-3">
 								<Checkbox id="vim-mode" bind:checked={vimModeEnabled} />
 								<div class="grid gap-2">
-									<Label for="vim-mode">Enable Vim mode</Label>
+									<Label for="vim-mode">{stores.t('profile.enableVim')}</Label>
 									<p class="text-muted-foreground text-sm">
-										Toggles support for Vim keybindings in code editor.
+										{stores.t('profile.enableVimDescription')}
 									</p>
 								</div>
 							</div>
@@ -169,7 +169,7 @@
 						disabled={isLoadingPrefs ||
 							(vimModeEnabled === originalVimModeEnabled &&
 								selectedLocale === originalSelectedLocale)}
-						type="submit">Update preferences</Button
+						type="submit">{stores.t('profile.updatePreferences')}</Button
 					>
 				</Card.Footer>
 			</Card.Root>
@@ -180,15 +180,15 @@
 <Dialog.Root open={showEditor} onOpenChange={setShowEditor}>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header class="mb-2">
-			<Dialog.Title>Profile picture editor</Dialog.Title>
-			<Dialog.Description>Paint your own avatar.</Dialog.Description>
+			<Dialog.Title>{stores.t('profile.pictureEditor')}</Dialog.Title>
+			<Dialog.Description>{stores.t('profile.pictureEditorDescription')}</Dialog.Description>
 		</Dialog.Header>
 
 		<Separator />
 
 		<Paint bind:sprite />
 		<Dialog.Footer>
-			<Button type="button" onclick={() => setShowEditor(false)}>Close editor</Button>
+			<Button type="button" onclick={() => setShowEditor(false)}>{stores.t('profile.closeEditor')}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

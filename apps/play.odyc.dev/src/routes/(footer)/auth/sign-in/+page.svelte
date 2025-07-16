@@ -14,6 +14,7 @@
 	import * as Alert from '$lib/components/ui/alert/index.js';
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
 	import { toast } from 'svelte-sonner';
+	import { stores } from '$lib/stores.svelte';
 
 	let isLoading = $state(false);
 
@@ -33,7 +34,7 @@
 			try {
 				token = await Backend.signInMagicURL(email);
 				step = 2;
-				toast.success('Email with OTP was sent to your inbox.');
+				toast.success(stores.t('auth.emailSent'));
 			} catch (err: any) {
 				error = err;
 			} finally {
@@ -44,7 +45,7 @@
 				await Backend.signInFinish(token?.userId ?? '', otp);
 				await invalidate(Dependencies.USER);
 
-				toast.success('Successfully signed in. Welcome!');
+				toast.success(stores.t('auth.signInSuccess'));
 			} catch (err: any) {
 				error = err;
 			} finally {
@@ -92,9 +93,9 @@
 								<img src="/logo.png" class="pixelated size-12" alt="Odyc.js Play Logo" />
 							</div>
 						</a>
-						<h1 class="text-xl font-bold">Welcome to Odyc.js Play</h1>
+						<h1 class="text-xl font-bold">{stores.t('auth.welcome')}</h1>
 						<div class="text-muted-foreground text-center text-sm">
-							Learn, code, and publish your first game!
+							{stores.t('auth.welcomeDescription')}
 						</div>
 					</div>
 					<Separator />
@@ -102,7 +103,7 @@
 					{#if step === 1}
 						<div class="flex flex-col gap-6">
 							<div class="grid gap-3">
-								<Label for="login-email">Email</Label>
+								<Label for="login-email">{stores.t('auth.email')}</Label>
 								<Input
 									bind:value={email}
 									id="login-email"
@@ -111,7 +112,7 @@
 									required
 								/>
 							</div>
-							<Button disabled={isLoading} type="submit" class="w-full">Sign in</Button>
+							<Button disabled={isLoading} type="submit" class="w-full">{stores.t('auth.signIn')}</Button>
 						</div>
 					{:else if step === 2}
 						<div class="flex flex-col items-center gap-6">
@@ -138,7 +139,7 @@
 								</InputOTP.Root>
 							</div>
 							<div class="flex w-full flex-col justify-center">
-								<Button disabled={isLoading} type="submit" class="w-full">Continue</Button>
+								<Button disabled={isLoading} type="submit" class="w-full">{stores.t('auth.continue')}</Button>
 								<button onclick={onStepBack}
 									><p class="text-muted-foreground mt-3 text-center text-sm underline">
 										Didn't receive the code?
@@ -158,7 +159,7 @@
 					<div
 						class="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"
 					>
-						<span class="bg-background text-muted-foreground relative z-10 px-2"> Or </span>
+						<span class="bg-background text-muted-foreground relative z-10 px-2"> {stores.t('auth.or')} </span>
 					</div>
 					<div class="grid gap-4 sm:grid-cols-2">
 						<Button
@@ -169,7 +170,7 @@
 							class="!disabled:opacity-50 w-full  border-dashed !bg-transparent"
 						>
 							<IconGhost />
-							Continue as guest
+							{stores.t('auth.anonymousContinue')}
 						</Button>
 						<Button
 							disabled={isLoading}
