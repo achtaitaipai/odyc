@@ -4,6 +4,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import IconGitHub from '@lucide/svelte/icons/github';
 	import { Backend } from '$lib/backend';
+	import { stores } from '$lib/stores.svelte';
 
 	function onSignIn() {
 		Backend.signInGitHub();
@@ -16,14 +17,14 @@
 >
 	<div class="flex flex-col items-center gap-2 text-center md:flex-row md:gap-0 md:text-left">
 		<AlertTriangle class="mr-3 size-5 flex-shrink-0" />
-		<Alert.Title class="flex-shrink-0">You are using guest account!</Alert.Title>
+		<Alert.Title class="flex-shrink-0">{stores.t('auth.guestAccountWarning')}</Alert.Title>
 		<Alert.Description class="text-accent-foreground ml-2">
-			Everything you do is saved, but only this computer can access it.
+			{stores.t('auth.guestAccountDescription')}
 		</Alert.Description>
 	</div>
 
 	<Button onclick={onSignIn} variant="outline" class="text-primary " size="sm">
 		<IconGitHub class="size-4" />
-		Connect with GitHub
+		{stores.t('auth.connectWithGitHub')}
 	</Button>
 </Alert.Root>

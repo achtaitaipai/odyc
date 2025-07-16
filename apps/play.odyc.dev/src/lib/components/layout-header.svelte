@@ -59,7 +59,7 @@
 			}
 
 			await Backend.createFeedback(feedbackText, fileId);
-			toast.success('Feedback submitted successfully.');
+			toast.success(stores.t('feedback.submitSuccess'));
 			setIsFeedbackOpen(false);
 			feedbackText = '';
 			screenshotBlob = null;
@@ -114,26 +114,26 @@
 		<div class="ml-auto flex items-center gap-2">
 			<div id="feedback-popover" data-html2canvas-ignore>
 				<Popover.Root bind:open={isFeedbackOpen}>
-					<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}>Feedback</Popover.Trigger>
+					<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}>{stores.t('nav.feedback')}</Popover.Trigger>
 					<Popover.Content class="w-[25rem]">
 						<div class="grid gap-4">
 							<div class="space-y-2">
-								<h4 class="leading-none font-medium">Let's make Odyc.js better</h4>
+								<h4 class="leading-none font-medium">{stores.t('feedback.title')}</h4>
 								<p class="text-muted-foreground text-sm">
-									Odyc.js evolves with community. Tell us how we can make Odyc.js better for you.
+									{stores.t('feedback.description')}
 								</p>
 							</div>
 							<div class="grid gap-2">
 								<div class="grid w-full gap-1.5">
-									<Label for="support-message" class="text-sm">Tell us about your experience</Label>
+									<Label for="support-message" class="text-sm">{stores.t('feedback.message')}</Label>
 									<Textarea
 										bind:value={feedbackText}
 										class="h-28"
-										placeholder="Type your message here."
+										placeholder={stores.t('feedback.messagePlaceholder')}
 										id="support-message"
 									/>
 									<p class="text-muted-foreground text-xs font-light">
-										Your can tell us about bug you faced, or feature you want to see.
+										{stores.t('feedback.messageHelp')}
 									</p>
 								</div>
 							</div>
@@ -156,14 +156,14 @@
 										<Button disabled={true} variant="secondary" size="icon" class="size-8">
 											<IconCheck />
 										</Button>
-										<p class="text-muted-foreground text-xs">Screenshot included</p>
+										<p class="text-muted-foreground text-xs">{stores.t('feedback.screenshotIncluded')}</p>
 									</div>
 								{/if}
 
 								<div>
-									<Button variant="ghost" onclick={onFeedbackCancel}>Cancel</Button>
+									<Button variant="ghost" onclick={onFeedbackCancel}>{stores.t('ui.cancel')}</Button>
 									<Button disabled={isFeedbackLoading} onclick={onFeedbackSubmit} variant="outline"
-										>Submit</Button
+										>{stores.t('ui.submit')}</Button
 									>
 								</div>
 							</div>
@@ -176,7 +176,7 @@
 				onclick={openCommands}
 				class="bg-primary-foreground border-muted-background flex items-center gap-2 rounded-lg border px-2 py-1.5 pl-3"
 			>
-				<span class="text-muted-foreground text-sm font-light">Type a command...</span>
+				<span class="text-muted-foreground text-sm font-light">{stores.t('commands.placeholder')}</span>
 				<kbd
 					class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none"
 				>
@@ -191,7 +191,7 @@
 				<MoonIcon
 					class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0"
 				/>
-				<span class="sr-only">Toggle theme</span>
+				<span class="sr-only">{stores.t('commands.toggleTheme')}</span>
 			</Button>
 
 			<DropdownMenu.Root>
@@ -211,19 +211,19 @@
 					{#if stores.user}
 						<DropdownMenu.Group>
 							<a href="/dashboard/profile"
-								><DropdownMenu.Item class="">My Profile</DropdownMenu.Item></a
+								><DropdownMenu.Item class="">{stores.t('nav.myProfile')}</DropdownMenu.Item></a
 							>
 							<a href="/dashboard/settings"
-								><DropdownMenu.Item class="">Settings</DropdownMenu.Item></a
+								><DropdownMenu.Item class="">{stores.t('nav.settings')}</DropdownMenu.Item></a
 							>
 							<DropdownMenu.Separator />
 							<button disabled={isLoading} onclick={onLogout} class="w-full">
-								<DropdownMenu.Item class="">Log out</DropdownMenu.Item>
+								<DropdownMenu.Item class="">{stores.t('nav.logout')}</DropdownMenu.Item>
 							</button>
 						</DropdownMenu.Group>
 					{:else}
 						<DropdownMenu.Group>
-							<a href="/auth/sign-in"><DropdownMenu.Item class="">Sign In</DropdownMenu.Item></a>
+							<a href="/auth/sign-in"><DropdownMenu.Item class="">{stores.t('nav.signIn')}</DropdownMenu.Item></a>
 						</DropdownMenu.Group>
 					{/if}
 				</DropdownMenu.Content>
