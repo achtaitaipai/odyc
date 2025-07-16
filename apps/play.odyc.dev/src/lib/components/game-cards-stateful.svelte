@@ -11,6 +11,7 @@
 	import { toast } from 'svelte-sonner';
 	import { goto, invalidate } from '$app/navigation';
 	import { Dependencies } from '$lib/constants';
+	import { stores } from '$lib/stores.svelte';
 
 	const {
 		game
@@ -116,7 +117,8 @@
 				</Card.Title>
 
 				<Card.Description class="mb-2.5 text-xs"
-					>Last modified {dayjs().to(game.$createdAt)}</Card.Description
+					>{stores.t('ui.lastModified')}
+					{dayjs().to(game.$createdAt)}</Card.Description
 				>
 			</div>
 		</Card.Header>

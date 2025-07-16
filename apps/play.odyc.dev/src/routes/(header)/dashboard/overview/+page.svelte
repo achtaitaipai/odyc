@@ -2,6 +2,7 @@
 	import GameCardsEmpty from '$lib/components/game-cards-empty.svelte';
 	import GameCategory from '$lib/components/game-category.svelte';
 	import GameCommunity from '$lib/components/game-community.svelte';
+	import { stores } from '$lib/stores.svelte.js';
 
 	let { data } = $props();
 </script>
@@ -14,17 +15,16 @@
 			games={data.yourGames}
 			queries={data.yourGamesQueries}
 			allowCreate={true}
-			title="Your Games"
+			title={stores.t('overview.yourGames')}
 		>
-			<GameCardsEmpty description="Create your first game!"></GameCardsEmpty>
+			<GameCardsEmpty description={stores.t('overview.createFirstGame')}></GameCardsEmpty>
 		</GameCategory>
 		<GameCategory
 			games={data.collaborationGames}
 			queries={data.collaborationGamesQueries}
-			title="Your Collaborations"
+			title={stores.t('overview.collaborations')}
 			allowCreate={false}
-			><GameCardsEmpty description="You have not yet collaborated on someone else's game."
-			></GameCardsEmpty>
+			><GameCardsEmpty description={stores.t('overview.noCollaboration')}></GameCardsEmpty>
 		</GameCategory>
 		<GameCommunity profiles={data.profiles} games={data.communityHighlights} />
 	</div>

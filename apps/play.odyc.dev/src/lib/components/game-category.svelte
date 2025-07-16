@@ -12,6 +12,7 @@
 	import { MediaQuery } from 'svelte/reactivity';
 	import GameCardsStateful from './game-cards-stateful.svelte';
 	import Button from './ui/button/button.svelte';
+	import { stores } from '$lib/stores.svelte';
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
@@ -59,7 +60,7 @@
 				{#if isLoading}
 					<Loader2Icon class="animate-spin" />
 				{/if}
-				Create game</Button
+				{stores.t('games.create')}</Button
 			>
 		{/if}
 	</div>

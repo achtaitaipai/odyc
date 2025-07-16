@@ -2,6 +2,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import IconQuestionMark from '@tabler/icons-svelte/icons/question-mark';
 	import { Button } from '$lib/components/ui/button/index.js';
+	import { stores } from '$lib/stores.svelte';
 
 	const {
 		description
@@ -19,7 +20,7 @@
 		</div>
 		<div class="mt-2">
 			<Card.Title class="font-title w-full text-center text-2xl font-light"
-				>Nothing here yet</Card.Title
+				>{stores.t('ui.nothingHere')}</Card.Title
 			>
 
 			{#if description}
