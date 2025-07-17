@@ -1,30 +1,31 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button/index.js';
-	import SunIcon from '@lucide/svelte/icons/sun';
-	import MoonIcon from '@lucide/svelte/icons/moon';
-	import UserIcon from '@lucide/svelte/icons/user';
+	import { goto, invalidate } from '$app/navigation';
+	import { Backend } from '$lib/backend';
+	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import html2canvas from 'html2canvas-pro';
-	import { toggleMode } from 'mode-watcher';
+	import { DefaultProfilePicture, Dependencies } from '$lib/constants';
+	import { stores } from '$lib/stores.svelte';
 	import IconCamera from '@lucide/svelte/icons/camera';
 	import IconCheck from '@lucide/svelte/icons/check';
 	import IconLoader from '@lucide/svelte/icons/loader-2';
-	import { Backend } from '$lib/backend';
-	import { goto, invalidate } from '$app/navigation';
-	import { DefaultProfilePicture, Dependencies } from '$lib/constants';
+	import MoonIcon from '@lucide/svelte/icons/moon';
+	import SunIcon from '@lucide/svelte/icons/sun';
+	import UserIcon from '@lucide/svelte/icons/user';
+	import html2canvas from 'html2canvas-pro';
+	import { toggleMode } from 'mode-watcher';
 	import { toast } from 'svelte-sonner';
-	import { stores } from '$lib/stores.svelte';
 	import Sprite from './plaint/Sprite.svelte';
-	import { buttonVariants } from '$lib/components/ui/button/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
-	import * as Popover from '$lib/components/ui/popover/index.js';
+	import CommandPalette from './command-palette.svelte';
 
 	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 	const ctrlKey = isMac ? 'Cmd' : 'Ctrl';
 
 	let isLoading = false;
+
+	let isCommansdOpen = $state(false);
 
 	async function onLogout() {
 		isLoading = true;
@@ -95,11 +96,6 @@
 			});
 		});
 	}
-
-	function openCommands() {
-		const ninja = document.querySelector('ninja-keys') as any;
-		ninja.open();
-	}
 </script>
 
 <header
@@ -114,7 +110,9 @@
 		<div class="ml-auto flex items-center gap-2">
 			<div id="feedback-popover" data-html2canvas-ignore>
 				<Popover.Root bind:open={isFeedbackOpen}>
-					<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}>{stores.t('nav.feedback')}</Popover.Trigger>
+					<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}
+						>{stores.t('nav.feedback')}</Popover.Trigger
+					>
 					<Popover.Content class="w-[25rem]">
 						<div class="grid gap-4">
 							<div class="space-y-2">
@@ -125,7 +123,8 @@
 							</div>
 							<div class="grid gap-2">
 								<div class="grid w-full gap-1.5">
-									<Label for="support-message" class="text-sm">{stores.t('feedback.message')}</Label>
+									<Label for="support-message" class="text-sm">{stores.t('feedback.message')}</Label
+									>
 									<Textarea
 										bind:value={feedbackText}
 										class="h-28"
@@ -156,12 +155,15 @@
 										<Button disabled={true} variant="secondary" size="icon" class="size-8">
 											<IconCheck />
 										</Button>
-										<p class="text-muted-foreground text-xs">{stores.t('feedback.screenshotIncluded')}</p>
+										<p class="text-muted-foreground text-xs">
+											{stores.t('feedback.screenshotIncluded')}
+										</p>
 									</div>
 								{/if}
 
 								<div>
-									<Button variant="ghost" onclick={onFeedbackCancel}>{stores.t('ui.cancel')}</Button>
+									<Button variant="ghost" onclick={onFeedbackCancel}>{stores.t('ui.cancel')}</Button
+									>
 									<Button disabled={isFeedbackLoading} onclick={onFeedbackSubmit} variant="outline"
 										>{stores.t('ui.submit')}</Button
 									>
@@ -173,10 +175,12 @@
 			</div>
 
 			<button
-				onclick={openCommands}
+				onclick={() => (isCommansdOpen = true)}
 				class="bg-primary-foreground border-muted-background flex items-center gap-2 rounded-lg border px-2 py-1.5 pl-3"
 			>
-				<span class="text-muted-foreground text-sm font-light">{stores.t('commands.placeholder')}</span>
+				<span class="text-muted-foreground text-sm font-light"
+					>{stores.t('commands.placeholder')}</span
+				>
 				<kbd
 					class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none"
 				>
@@ -191,7 +195,7 @@
 				<MoonIcon
 					class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0"
 				/>
-				<span class="sr-only">{stores.t('commands.toggleTheme')}</span>
+				<span class="sr-only">{stores.t('ui.toggleTheme')}</span>
 			</Button>
 
 			<DropdownMenu.Root>
@@ -223,7 +227,9 @@
 						</DropdownMenu.Group>
 					{:else}
 						<DropdownMenu.Group>
-							<a href="/auth/sign-in"><DropdownMenu.Item class="">{stores.t('nav.signIn')}</DropdownMenu.Item></a>
+							<a href="/auth/sign-in"
+								><DropdownMenu.Item class="">{stores.t('nav.signIn')}</DropdownMenu.Item></a
+							>
 						</DropdownMenu.Group>
 					{/if}
 				</DropdownMenu.Content>
@@ -231,3 +237,4 @@
 		</div>
 	</div>
 </header>
+<CommandPalette bind:open={isCommansdOpen} />

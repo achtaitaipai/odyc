@@ -168,6 +168,7 @@ export const translations = {
 		'ui.create': 'Create',
 		'ui.loading': 'Loading...',
 		'ui.backToHomepage': 'Back to homepage',
+		'ui.toggleTheme': 'Toggle theme',
 
 		// Feedback
 		'feedback.title': "Let's make Odyc.js better",
@@ -181,8 +182,8 @@ export const translations = {
 
 		// Commands
 		'commands.placeholder': 'Type a command...',
-		'commands.toggleTheme': 'Toggle theme',
 		'commands.openGame': 'Open game in editor ...',
+		'commands.noResult': 'No results found.',
 
 		// Notifications
 		'notifications.profileUpdated': 'Profile updated successfully.',
@@ -368,6 +369,7 @@ export const translations = {
 		'ui.create': 'Créer',
 		'ui.loading': 'Chargement...',
 		'ui.backToHomepage': "Retour à l'accueil",
+		'ui.toggleTheme': 'Basculer le thème',
 
 		// Feedback
 		'feedback.title': 'Améliorons Odyc.js ensemble',
@@ -382,8 +384,8 @@ export const translations = {
 
 		// Commands
 		'commands.placeholder': 'Tapez une commande...',
-		'commands.toggleTheme': 'Basculer le thème',
-		'commands.openGame': "Ouvrir le jeu dans l'éditeur ...",
+		'commands.openGame': "Ouvrir un jeu dans l'éditeur ...",
+		'commands.noResult': 'Aucun résultat ...',
 
 		// Notifications
 		'notifications.profileUpdated': 'Profil mis à jour avec succès.',
