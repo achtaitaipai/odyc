@@ -1,5 +1,3 @@
-import type { Locale } from './index.ts';
-
 export const translations = {
 	en: {
 		// Overview
