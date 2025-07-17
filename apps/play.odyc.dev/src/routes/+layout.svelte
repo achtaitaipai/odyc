@@ -28,6 +28,13 @@
 		}
 	});
 
+	$effect(() => {
+		if (typeof document !== 'undefined') {
+			const locale = stores.user?.prefs?.selectedLocale;
+			if (locale) document.documentElement.lang = locale;
+		}
+	});
+
 	const hotkeys = [
 		{
 			id: 'home',
