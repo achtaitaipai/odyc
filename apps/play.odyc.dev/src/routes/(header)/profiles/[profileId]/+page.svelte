@@ -6,17 +6,19 @@
 	import { DefaultProfilePicture } from '$lib/constants.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { stores } from '$lib/stores.svelte';
+	import { defaultLocale } from '$lib/i18n/index.js';
 
 	const { data } = $props();
 
 	let profile = $derived(data.profile);
 	let games = $derived(data.games);
 	let gamesQueries = $derived(data.gamesQueries);
+	let joinedDate = $derived(dateToString(profile.$createdAt, stores.user?.prefs?.selectedLocale));
 
-	function dateToString(str: string) {
+	function dateToString(str: string, locale = defaultLocale) {
 		const date = new Date(str);
 
-		const formatted = `${date.getDate()} ${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
+		const formatted = `${date.getDate()} ${date.toLocaleString(locale, { month: 'short' })} ${date.getFullYear()}`;
 
 		return formatted;
 	}
@@ -52,10 +54,11 @@
 						{profile.name ?? stores.t('profile.anonymous')}
 					</h1>
 					<p class="text-muted-foreground mt-1 text-sm font-light">
-						Joined {dateToString(profile.$createdAt)}
+						{stores.t('profile.joined')}
+						{joinedDate}
 					</p>
 					<p class="text-muted-foreground text-sm">
-						<span class="text-primary mr-2 text-2xl">{games.total}</span>{games.total === 1
+						<span class="text-primary mr-2 text-2xl">{games.total}</span>{games.total <= 1
 							? stores.t('profile.gameCreated')
 							: stores.t('profile.gamesCreated')}
 					</p>

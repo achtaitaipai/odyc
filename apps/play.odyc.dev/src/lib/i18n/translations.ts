@@ -65,6 +65,7 @@ export const translations = {
 		'profile.userProfile': "'s profile",
 		'profile.noGamesYet': 'This user has not yet created any games.',
 		'profile.placeholder.name': 'Awesome gamer',
+		'profile.joined': 'Joined',
 
 		// Games
 		'games.create': 'Create Game',
@@ -263,6 +264,7 @@ export const translations = {
 		'profile.userProfile': ' - profil',
 		'profile.noGamesYet': "Cet utilisateur n'a pas encore créé de jeux.",
 		'profile.placeholder.name': 'Joueur génial',
+		'profile.joined': 'Rejoint le',
 
 		// Games
 		'games.create': 'Créer un jeu',
