@@ -4,14 +4,14 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import IconDotsVertical from '@tabler/icons-svelte/icons/dots-vertical';
-	import relativeTime from 'dayjs/plugin/relativeTime';
-	import dayjs from 'dayjs';
 	import { Backend } from '$lib/backend';
 	import Button from './ui/button/button.svelte';
 	import { toast } from 'svelte-sonner';
 	import { goto, invalidate } from '$app/navigation';
 	import { Dependencies } from '$lib/constants';
 	import { stores } from '$lib/stores.svelte';
+	import { useDurationFrom } from '$lib/duration';
+	import { defaultLocale } from '$lib/i18n';
 
 	const {
 		game
@@ -19,7 +19,7 @@
 		game: Games;
 	} = $props();
 
-	dayjs.extend(relativeTime);
+	let durationFrom = $derived(useDurationFrom(stores.user?.prefs?.selectedLocale ?? defaultLocale));
 
 	function getPreview(fileId: string) {
 		if (!fileId) {
@@ -61,7 +61,7 @@
 		isDeleting = true;
 		try {
 			await Backend.deleteGame(game.$id);
-			toast.success('Game successfully deleted.');
+			toast.success(stores.t('editor.gameDeletedSuccess'));
 			await goto('/dashboard/overview');
 			await invalidate(Dependencies.GAMES);
 		} catch (error: any) {
@@ -103,11 +103,12 @@
 						<DropdownMenu.Content class="w-56" align="start">
 							<DropdownMenu.Group>
 								<DropdownMenu.Item
-									><a href={`/dashboard/games/${game.$id}`}>{stores.t('games.openInEditor')}</a></DropdownMenu.Item
+									><a href={`/dashboard/games/${game.$id}`}>{stores.t('games.openInEditor')}</a
+									></DropdownMenu.Item
 								>
 
 								<DropdownMenu.Item onclick={onDeleteButton} variant="destructive">
-									{isShiftPressed ? stores.t('games.delete') : stores.t('games.delete')}
+									{isShiftPressed ? stores.t('games.deleteInstantly') : stores.t('games.delete')}
 
 									<DropdownMenu.Shortcut>⇧</DropdownMenu.Shortcut>
 								</DropdownMenu.Item>
@@ -118,7 +119,7 @@
 
 				<Card.Description class="mb-2.5 text-xs"
 					>{stores.t('ui.lastModified')}
-					{dayjs().to(game.$createdAt)}</Card.Description
+					{durationFrom(game.$createdAt)}</Card.Description
 				>
 			</div>
 		</Card.Header>
@@ -135,7 +136,9 @@
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>{stores.t('games.cancel')}</AlertDialog.Cancel>
-			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}>{stores.t('games.continue')}</AlertDialog.Action>
+			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}
+				>{stores.t('games.continue')}</AlertDialog.Action
+			>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
