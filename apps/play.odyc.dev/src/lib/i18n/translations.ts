@@ -33,10 +33,11 @@ export const translations = {
 		'auth.enterCode': 'Enter the 6-digit code sent to your email',
 		'auth.anonymousContinue': 'Continue as guest',
 		'auth.guestAccountWarning': 'You are using guest account!',
-		'auth.guestAccountDescription': 'Everything you do is saved, but only this computer can access it.',
+		'auth.guestAccountDescription':
+			'Everything you do is saved, but only this computer can access it.',
 		'auth.connectWithGitHub': 'Connect with GitHub',
 		'auth.newHere': 'Are you new here?',
-		'auth.firstTimeConnecting': 'If it\'s your first time connecting with GitHub, please',
+		'auth.firstTimeConnecting': "If it's your first time connecting with GitHub, please",
 		'auth.signInToExisting': 'Sign in to existing account',
 
 		// Settings & Profile
@@ -69,13 +70,16 @@ export const translations = {
 		'games.create': 'Create Game',
 		'games.openInEditor': 'Open in editor',
 		'games.delete': 'Delete',
+		'games.deleteInstantly': 'Delete instantly',
 		'games.deleteConfirm': 'Are you absolutely sure?',
-		'games.deleteDescription': 'This action cannot be undone. This will permanently delete your game and remove all associated data.',
+		'games.deleteDescription':
+			'This action cannot be undone. This will permanently delete your game and remove all associated data.',
 		'games.cancel': 'Cancel',
 		'games.continue': 'Continue',
 		'games.featured': 'Featured Games',
 		'games.noFeatured': 'No games are featured',
-		'games.noFeaturedDescription': 'We manually feature games we consider enjoyable to play. Stay tuned for first games!',
+		'games.noFeaturedDescription':
+			'We manually feature games we consider enjoyable to play. Stay tuned for first games!',
 		'games.developedBy': 'Developed by',
 		'games.playNow': 'Play now',
 
@@ -115,15 +119,19 @@ export const translations = {
 		'editor.spriteCopiedSuccess': 'Sprite copied to clipboard.',
 		'editor.spriteLoadedSuccess': 'Sprite loaded from clipboard.',
 		'editor.selectTemplateError': 'Please select a template.',
-		'editor.unsavedChangesWarning': 'Are you sure you want to leave this page? You have unsaved changes that will be lost.',
+		'editor.unsavedChangesWarning':
+			'Are you sure you want to leave this page? You have unsaved changes that will be lost.',
 		'editor.renameGameTitle': 'Rename your game',
 		'editor.renameGameDescription': 'Change name of your game.',
-		'editor.changeGameUrlTitle': 'Change game\'s URL',
-		'editor.changeGameUrlDescription': 'Change public URL you can share to let others play your game.',
+		'editor.changeGameUrlTitle': "Change game's URL",
+		'editor.changeGameUrlDescription':
+			'Change public URL you can share to let others play your game.',
 		'editor.upgradeVersionTitle': 'Upgrade your game version',
-		'editor.upgradeVersionDescription': 'Increase or lower Odyc.js engine version used in your game.',
+		'editor.upgradeVersionDescription':
+			'Increase or lower Odyc.js engine version used in your game.',
 		'editor.editDescriptionTitle': 'Edit game description',
-		'editor.editDescriptionDescription': 'Describe story of your game, rules, and how to play in general.',
+		'editor.editDescriptionDescription':
+			'Describe story of your game, rules, and how to play in general.',
 		'editor.descriptionLabel': 'Description',
 		'editor.descriptionPlaceholder': 'Short description of your game.',
 		'editor.howToPlayLabel': 'How to play',
@@ -135,7 +143,8 @@ export const translations = {
 		'editor.gameUrlLabel': 'Game URL',
 		'editor.gameUrlPlaceholder': 'awesome-game',
 		'editor.deleteConfirmTitle': 'Are you absolutely sure?',
-		'editor.deleteConfirmDescription': 'Deleted game cannot be recovered. We highly recommend to download it to your PC first, just in case.',
+		'editor.deleteConfirmDescription':
+			'Deleted game cannot be recovered. We highly recommend to download it to your PC first, just in case.',
 		'editor.spriteEditorTitle': 'Sprite editor',
 		'editor.spriteEditorDescription': 'Simple painting tool to illustrate Odyc sprites',
 		'editor.loadFromClipboard': 'Load from clipboard',
@@ -163,7 +172,8 @@ export const translations = {
 
 		// Feedback
 		'feedback.title': "Let's make Odyc.js better",
-		'feedback.description': 'Odyc.js evolves with community. Tell us how we can make Odyc.js better for you.',
+		'feedback.description':
+			'Odyc.js evolves with community. Tell us how we can make Odyc.js better for you.',
 		'feedback.message': 'Tell us about your experience',
 		'feedback.messagePlaceholder': 'Type your message here.',
 		'feedback.messageHelp': 'Your can tell us about bug you faced, or feature you want to see.',
@@ -218,12 +228,13 @@ export const translations = {
 		'auth.emailSent': 'Un email avec le code OTP a été envoyé dans votre boîte de réception.',
 		'auth.signInSuccess': 'Connexion réussie. Bienvenue !',
 		'auth.enterCode': 'Entrez le code à 6 chiffres envoyé à votre email',
-		'auth.anonymousContinue': 'Continuer en tant qu\'invité',
+		'auth.anonymousContinue': "Continuer en tant qu'invité",
 		'auth.guestAccountWarning': 'Vous utilisez un compte invité !',
-		'auth.guestAccountDescription': 'Tout ce que vous faites est sauvegardé, mais seul cet ordinateur peut y accéder.',
+		'auth.guestAccountDescription':
+			'Tout ce que vous faites est sauvegardé, mais seul cet ordinateur peut y accéder.',
 		'auth.connectWithGitHub': 'Se connecter avec GitHub',
 		'auth.newHere': 'Vous êtes nouveau ici ?',
-		'auth.firstTimeConnecting': 'Si c\'est votre première connexion avec GitHub, veuillez',
+		'auth.firstTimeConnecting': "Si c'est votre première connexion avec GitHub, veuillez",
 		'auth.signInToExisting': 'Se connecter au compte existant',
 
 		// Settings & Profile
@@ -237,32 +248,36 @@ export const translations = {
 		'profile.picture': 'Photo de profil',
 		'profile.pictureEditor': 'Éditeur de photo de profil',
 		'profile.pictureEditorDescription': 'Dessinez votre propre avatar.',
-		'profile.openEditor': 'Ouvrir l\'éditeur',
-		'profile.closeEditor': 'Fermer l\'éditeur',
+		'profile.openEditor': "Ouvrir l'éditeur",
+		'profile.closeEditor': "Fermer l'éditeur",
 		'profile.updateProfile': 'Mettre à jour le profil',
 		'profile.updatePreferences': 'Mettre à jour les préférences',
 		'profile.preferredLanguage': 'Langue préférée',
 		'profile.enableVim': 'Activer le mode Vim',
-		'profile.enableVimDescription': 'Active le support des raccourcis clavier Vim dans l\'éditeur de code.',
+		'profile.enableVimDescription':
+			"Active le support des raccourcis clavier Vim dans l'éditeur de code.",
 		'profile.anonymous': 'Anonyme',
 		'profile.gamesCreated': 'Jeux créés',
 		'profile.gameCreated': 'Jeu créé',
 		'profile.userGames': ' - jeux',
 		'profile.userProfile': ' - profil',
-		'profile.noGamesYet': 'Cet utilisateur n\'a pas encore créé de jeux.',
+		'profile.noGamesYet': "Cet utilisateur n'a pas encore créé de jeux.",
 		'profile.placeholder.name': 'Joueur génial',
 
 		// Games
 		'games.create': 'Créer un jeu',
-		'games.openInEditor': 'Ouvrir dans l\'éditeur',
+		'games.openInEditor': "Ouvrir dans l'éditeur",
 		'games.delete': 'Supprimer',
+		'games.deleteInstantly': 'Supprimer instantanément',
 		'games.deleteConfirm': 'Êtes-vous absolument sûr ?',
-		'games.deleteDescription': 'Cette action ne peut pas être annulée. Cela supprimera définitivement votre jeu et toutes les données associées.',
+		'games.deleteDescription':
+			'Cette action ne peut pas être annulée. Cela supprimera définitivement votre jeu et toutes les données associées.',
 		'games.cancel': 'Annuler',
 		'games.continue': 'Continuer',
 		'games.featured': 'Jeux mis en avant',
-		'games.noFeatured': 'Aucun jeu n\'est mis en avant',
-		'games.noFeaturedDescription': 'Nous mettons manuellement en avant les jeux que nous considérons comme agréables à jouer. Restez à l\'écoute pour les premiers jeux !',
+		'games.noFeatured': "Aucun jeu n'est mis en avant",
+		'games.noFeaturedDescription':
+			"Nous mettons manuellement en avant les jeux que nous considérons comme agréables à jouer. Restez à l'écoute pour les premiers jeux !",
 		'games.developedBy': 'Développé par',
 		'games.playNow': 'Jouer maintenant',
 
@@ -279,11 +294,11 @@ export const translations = {
 		'editor.sprite': 'Sprite',
 		'editor.sound': 'Son',
 		'editor.openFullscreen': 'Ouvrir en plein écran',
-		'editor.takeScreenshot': 'Prendre une capture d\'écran',
-		'editor.startVideoRecording': 'Démarrer l\'enregistrement vidéo',
-		'editor.stopVideoRecording': 'Arrêter l\'enregistrement vidéo',
+		'editor.takeScreenshot': "Prendre une capture d'écran",
+		'editor.startVideoRecording': "Démarrer l'enregistrement vidéo",
+		'editor.stopVideoRecording': "Arrêter l'enregistrement vidéo",
 		'editor.changeName': 'Changer le nom',
-		'editor.changeURL': 'Changer l\'URL',
+		'editor.changeURL': "Changer l'URL",
 		'editor.changeDescription': 'Changer la description',
 		'editor.changeVersion': 'Changer la version',
 		'editor.deleteProject': 'Supprimer le projet',
@@ -302,15 +317,19 @@ export const translations = {
 		'editor.spriteCopiedSuccess': 'Sprite copié dans le presse-papiers.',
 		'editor.spriteLoadedSuccess': 'Sprite chargé depuis le presse-papiers.',
 		'editor.selectTemplateError': 'Veuillez sélectionner un modèle.',
-		'editor.unsavedChangesWarning': 'Êtes-vous sûr de vouloir quitter cette page ? Vous avez des modifications non sauvegardées qui seront perdues.',
+		'editor.unsavedChangesWarning':
+			'Êtes-vous sûr de vouloir quitter cette page ? Vous avez des modifications non sauvegardées qui seront perdues.',
 		'editor.renameGameTitle': 'Renommer votre jeu',
 		'editor.renameGameDescription': 'Changer le nom de votre jeu.',
-		'editor.changeGameUrlTitle': 'Changer l\'URL du jeu',
-		'editor.changeGameUrlDescription': 'Changer l\'URL publique que vous pouvez partager pour permettre aux autres de jouer à votre jeu.',
+		'editor.changeGameUrlTitle': "Changer l'URL du jeu",
+		'editor.changeGameUrlDescription':
+			"Changer l'URL publique que vous pouvez partager pour permettre aux autres de jouer à votre jeu.",
 		'editor.upgradeVersionTitle': 'Mettre à niveau la version de votre jeu',
-		'editor.upgradeVersionDescription': 'Augmenter ou diminuer la version du moteur Odyc.js utilisée dans votre jeu.',
+		'editor.upgradeVersionDescription':
+			'Augmenter ou diminuer la version du moteur Odyc.js utilisée dans votre jeu.',
 		'editor.editDescriptionTitle': 'Modifier la description du jeu',
-		'editor.editDescriptionDescription': 'Décrivez l\'histoire de votre jeu, les règles et comment jouer en général.',
+		'editor.editDescriptionDescription':
+			"Décrivez l'histoire de votre jeu, les règles et comment jouer en général.",
 		'editor.descriptionLabel': 'Description',
 		'editor.descriptionPlaceholder': 'Description courte de votre jeu.',
 		'editor.howToPlayLabel': 'Comment jouer',
@@ -322,14 +341,16 @@ export const translations = {
 		'editor.gameUrlLabel': 'URL du jeu',
 		'editor.gameUrlPlaceholder': 'jeu-genial',
 		'editor.deleteConfirmTitle': 'Êtes-vous absolument sûr ?',
-		'editor.deleteConfirmDescription': 'Le jeu supprimé ne peut pas être récupéré. Nous recommandons fortement de le télécharger sur votre PC d\'abord, juste au cas où.',
+		'editor.deleteConfirmDescription':
+			"Le jeu supprimé ne peut pas être récupéré. Nous recommandons fortement de le télécharger sur votre PC d'abord, juste au cas où.",
 		'editor.spriteEditorTitle': 'Éditeur de sprite',
 		'editor.spriteEditorDescription': 'Outil de peinture simple pour illustrer les sprites Odyc',
 		'editor.loadFromClipboard': 'Charger depuis le presse-papiers',
 		'editor.copy': 'Copier',
 		'editor.soundEditorTitle': 'Éditeur de son',
 		'editor.loadCodeExampleTitle': 'Charger un exemple de code',
-		'editor.loadCodeExampleDescription': 'Commencez votre jeu à partir d\'un exemple, ou apprenez les meilleures pratiques.',
+		'editor.loadCodeExampleDescription':
+			"Commencez votre jeu à partir d'un exemple, ou apprenez les meilleures pratiques.",
 		'editor.selectTemplatePlaceholder': 'Sélectionnez un modèle...',
 		'editor.searchTemplates': 'Rechercher des modèles...',
 		'editor.noTemplateFound': 'Aucun modèle trouvé.',
@@ -346,21 +367,23 @@ export const translations = {
 		'ui.delete': 'Supprimer',
 		'ui.create': 'Créer',
 		'ui.loading': 'Chargement...',
-		'ui.backToHomepage': 'Retour à l\'accueil',
+		'ui.backToHomepage': "Retour à l'accueil",
 
 		// Feedback
 		'feedback.title': 'Améliorons Odyc.js ensemble',
-		'feedback.description': 'Odyc.js évolue avec la communauté. Dites-nous comment nous pouvons améliorer Odyc.js pour vous.',
+		'feedback.description':
+			'Odyc.js évolue avec la communauté. Dites-nous comment nous pouvons améliorer Odyc.js pour vous.',
 		'feedback.message': 'Parlez-nous de votre expérience',
 		'feedback.messagePlaceholder': 'Tapez votre message ici.',
-		'feedback.messageHelp': 'Vous pouvez nous parler d\'un bug rencontré, ou d\'une fonctionnalité que vous aimeriez voir.',
-		'feedback.screenshotIncluded': 'Capture d\'écran incluse',
+		'feedback.messageHelp':
+			"Vous pouvez nous parler d'un bug rencontré, ou d'une fonctionnalité que vous aimeriez voir.",
+		'feedback.screenshotIncluded': "Capture d'écran incluse",
 		'feedback.submitSuccess': 'Commentaires soumis avec succès.',
 
 		// Commands
 		'commands.placeholder': 'Tapez une commande...',
 		'commands.toggleTheme': 'Basculer le thème',
-		'commands.openGame': 'Ouvrir le jeu dans l\'éditeur ...',
+		'commands.openGame': "Ouvrir le jeu dans l'éditeur ...",
 
 		// Notifications
 		'notifications.profileUpdated': 'Profil mis à jour avec succès.',
