@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { Switch } from '$lib/components/ui/switch/index.js';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
+	import RotateIcon from '@lucide/svelte/icons/rotate-cw';
 	import * as Command from '$lib/components/ui/command/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { cn } from '$lib/utils.js';
@@ -13,7 +15,6 @@
 	import { onMount, tick } from 'svelte';
 	import OdycVersions from '$lib/versions.json';
 	import type { PageProps } from './$types';
-	import { Slider } from '$lib/components/ui/slider/index.js';
 	import * as Card from '$lib/components/ui/card';
 	import { DefaultCode, Dependencies, TemplateGroups } from '$lib/constants';
 	import { mode } from 'mode-watcher';
@@ -154,8 +155,12 @@
 		});
 	});
 
-	function updateCode() {
+	function updateCode(force = false) {
 		hasChangedCode = code !== initialCode;
+
+		if (!autoRefresh && !force) {
+			return;
+		}
 
 		// @ts-expect-error It exists, not sure why types dont see it
 		const contentWindow = preview?.contentWindow;
@@ -485,6 +490,11 @@ ${code}
 		code = newCode;
 		updateCode();
 	}
+
+	let autoRefresh = $state(true);
+	function onForceRefresh() {
+		updateCode(true);
+	}
 </script>
 
 <div class="mx-auto mb-3 h-full w-full max-w-7xl p-4 lg:p-6">
@@ -500,170 +510,188 @@ ${code}
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
 
-	<div class="mb-3 w-[max-content]">
-		<Menubar.Root>
-			<Menubar.Menu>
-				<Menubar.Trigger class="relative">
-					{#if hasChangedCode}
-						<div
-							class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform animate-ping rounded-full bg-yellow-500"
-						></div>
-						<div
-							class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-500"
-						></div>
-					{/if}
-					{stores.t('editor.file')}
-				</Menubar.Trigger>
-				<Menubar.Content>
-					<Menubar.Item onclick={onSaveCodeStart} class="flex items-center justify-start gap-2">
+	<div class="mb-3 grid grid-cols-12 gap-6">
+		<div class="col-span-6 flex w-full flex-col items-center gap-3 sm:flex-row">
+			<Menubar.Root>
+				<Menubar.Menu>
+					<Menubar.Trigger class="relative">
 						{#if hasChangedCode}
-							<div class="relative">
-								<div
-									class="absolute size-3 transform animate-ping rounded-full bg-yellow-500"
-								></div>
-								<div class="size-3 transform rounded-full bg-yellow-500"></div>
-							</div>
+							<div
+								class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform animate-ping rounded-full bg-yellow-500"
+							></div>
+							<div
+								class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-500"
+							></div>
 						{/if}
-						<span class="w-full">{stores.t('editor.save')}</span>
-						<div class="flex items-center justify-end gap-0.5">
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>{ctrlKey}</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>S</kbd
-							>
-						</div>
-					</Menubar.Item>
-
-					<Menubar.Item onclick={() => setShowSaveAsDialog(true)}>
-						<span class="w-full">{stores.t('editor.saveAs')}</span>
-						<div class="flex items-center justify-end gap-0.5">
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>{ctrlKey}</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>Shift</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>S</kbd
-							>
-						</div>
-					</Menubar.Item>
-
-					<Menubar.Item onclick={onDownload}>
-						<span class="w-full">{stores.t('editor.download')}</span>
-						<div class="flex items-center justify-end gap-0.5">
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>{ctrlKey}</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>Shift</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>D</kbd
-							>
-						</div>
-					</Menubar.Item>
-					<Menubar.Separator />
-					<Menubar.Item onclick={onFormat}>
-						<span class="w-full">{stores.t('editor.formatCode')}</span>
-						<div class="flex items-center justify-end gap-0.5">
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>{ctrlKey}</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>Shift</kbd
-							>
-							<kbd
-								class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
-								>F</kbd
-							>
-						</div>
-					</Menubar.Item>
-					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowExamples(true)}
-						>{stores.t('editor.loadExample')}</Menubar.Item
-					>
-				</Menubar.Content>
-			</Menubar.Menu>
-
-			<Menubar.Menu>
-				<Menubar.Trigger>{stores.t('editor.edit')}</Menubar.Trigger>
-				<Menubar.Content>
-					<Menubar.Item onclick={() => setShowSpriteEditor(true)}
-						>{stores.t('editor.sprite')}</Menubar.Item
-					>
-					<Menubar.Item onclick={() => setShowSoundEditor(true)}
-						>{stores.t('editor.sound')}</Menubar.Item
-					>
-				</Menubar.Content>
-			</Menubar.Menu>
-
-			<Menubar.Menu>
-				<Menubar.Trigger class="relative">
-					{#if isRecording}
-						<div
-							class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform animate-ping rounded-full bg-red-500"
-						></div>
-						<div
-							class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-red-500"
-						></div>
-					{/if}
-					<span>{stores.t('editor.view')}</span>
-				</Menubar.Trigger>
-				<Menubar.Content>
-					<Menubar.Item onclick={onFullscreen}>{stores.t('editor.openFullscreen')}</Menubar.Item>
-					<Menubar.Separator />
-					<Menubar.Item onclick={onScreenshot}>{stores.t('editor.takeScreenshot')}</Menubar.Item>
-					{#if isRecording}
-						<Menubar.Item onclick={stopRecording} class="flex items-center justify-start gap-2">
-							<div class="relative">
-								<div class="absolute size-3 transform animate-ping rounded-full bg-red-500"></div>
-								<div class="size-3 transform rounded-full bg-red-500"></div>
+						{stores.t('editor.file')}
+					</Menubar.Trigger>
+					<Menubar.Content>
+						<Menubar.Item onclick={onSaveCodeStart} class="flex items-center justify-start gap-2">
+							{#if hasChangedCode}
+								<div class="relative">
+									<div
+										class="absolute size-3 transform animate-ping rounded-full bg-yellow-500"
+									></div>
+									<div class="size-3 transform rounded-full bg-yellow-500"></div>
+								</div>
+							{/if}
+							<span class="w-full">{stores.t('editor.save')}</span>
+							<div class="flex items-center justify-end gap-0.5">
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>{ctrlKey}</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>S</kbd
+								>
 							</div>
-							<span>{stores.t('editor.stopVideoRecording')}</span></Menubar.Item
-						>
-					{:else}
-						<Menubar.Item onclick={startRecording}
-							>{stores.t('editor.startVideoRecording')}</Menubar.Item
-						>
-					{/if}
-				</Menubar.Content>
-			</Menubar.Menu>
+						</Menubar.Item>
 
-			<Menubar.Menu>
-				<Menubar.Trigger>{stores.t('editor.settings')}</Menubar.Trigger>
-				<Menubar.Content>
-					<Menubar.Item onclick={() => setShowRenameDialog(true)}
-						>{stores.t('editor.changeName')}</Menubar.Item
-					>
-					<Menubar.Item onclick={() => setShowUrlDialog(true)}
-						>{stores.t('editor.changeURL')}</Menubar.Item
-					>
-					<Menubar.Item onclick={() => setShowDescriptionDialog(true)}
-						>{stores.t('editor.changeDescription')}</Menubar.Item
-					>
-					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowVersionDialog(true)}
-						>{stores.t('editor.changeVersion')}</Menubar.Item
-					>
-					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowDeleteDialog(true)} variant="destructive"
-						>{stores.t('editor.deleteProject')}</Menubar.Item
-					>
-				</Menubar.Content>
-			</Menubar.Menu>
-		</Menubar.Root>
+						<Menubar.Item onclick={() => setShowSaveAsDialog(true)}>
+							<span class="w-full">{stores.t('editor.saveAs')}</span>
+							<div class="flex items-center justify-end gap-0.5">
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>{ctrlKey}</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>Shift</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>S</kbd
+								>
+							</div>
+						</Menubar.Item>
+
+						<Menubar.Item onclick={onDownload}>
+							<span class="w-full">{stores.t('editor.download')}</span>
+							<div class="flex items-center justify-end gap-0.5">
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>{ctrlKey}</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>Shift</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>D</kbd
+								>
+							</div>
+						</Menubar.Item>
+						<Menubar.Separator />
+						<Menubar.Item onclick={onFormat}>
+							<span class="w-full">{stores.t('editor.formatCode')}</span>
+							<div class="flex items-center justify-end gap-0.5">
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>{ctrlKey}</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>Shift</kbd
+								>
+								<kbd
+									class="bg-background text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-3 pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none"
+									>F</kbd
+								>
+							</div>
+						</Menubar.Item>
+						<Menubar.Separator />
+						<Menubar.Item onclick={() => setShowExamples(true)}
+							>{stores.t('editor.loadExample')}</Menubar.Item
+						>
+					</Menubar.Content>
+				</Menubar.Menu>
+
+				<Menubar.Menu>
+					<Menubar.Trigger>{stores.t('editor.edit')}</Menubar.Trigger>
+					<Menubar.Content>
+						<Menubar.Item onclick={() => setShowSpriteEditor(true)}
+							>{stores.t('editor.sprite')}</Menubar.Item
+						>
+						<Menubar.Item onclick={() => setShowSoundEditor(true)}
+							>{stores.t('editor.sound')}</Menubar.Item
+						>
+					</Menubar.Content>
+				</Menubar.Menu>
+
+				<Menubar.Menu>
+					<Menubar.Trigger class="relative">
+						{#if isRecording}
+							<div
+								class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform animate-ping rounded-full bg-red-500"
+							></div>
+							<div
+								class="absolute top-0 right-0 size-3 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-red-500"
+							></div>
+						{/if}
+						<span>{stores.t('editor.view')}</span>
+					</Menubar.Trigger>
+					<Menubar.Content>
+						<Menubar.Item onclick={onFullscreen}>{stores.t('editor.openFullscreen')}</Menubar.Item>
+						<Menubar.Separator />
+						<Menubar.Item onclick={onScreenshot}>{stores.t('editor.takeScreenshot')}</Menubar.Item>
+						{#if isRecording}
+							<Menubar.Item onclick={stopRecording} class="flex items-center justify-start gap-2">
+								<div class="relative">
+									<div class="absolute size-3 transform animate-ping rounded-full bg-red-500"></div>
+									<div class="size-3 transform rounded-full bg-red-500"></div>
+								</div>
+								<span>{stores.t('editor.stopVideoRecording')}</span></Menubar.Item
+							>
+						{:else}
+							<Menubar.Item onclick={startRecording}
+								>{stores.t('editor.startVideoRecording')}</Menubar.Item
+							>
+						{/if}
+					</Menubar.Content>
+				</Menubar.Menu>
+
+				<Menubar.Menu>
+					<Menubar.Trigger>{stores.t('editor.settings')}</Menubar.Trigger>
+					<Menubar.Content>
+						<Menubar.Item onclick={() => setShowRenameDialog(true)}
+							>{stores.t('editor.changeName')}</Menubar.Item
+						>
+						<Menubar.Item onclick={() => setShowUrlDialog(true)}
+							>{stores.t('editor.changeURL')}</Menubar.Item
+						>
+						<Menubar.Item onclick={() => setShowDescriptionDialog(true)}
+							>{stores.t('editor.changeDescription')}</Menubar.Item
+						>
+						<Menubar.Separator />
+						<Menubar.Item onclick={() => setShowVersionDialog(true)}
+							>{stores.t('editor.changeVersion')}</Menubar.Item
+						>
+						<Menubar.Separator />
+						<Menubar.Item onclick={() => setShowDeleteDialog(true)} variant="destructive"
+							>{stores.t('editor.deleteProject')}</Menubar.Item
+						>
+					</Menubar.Content>
+				</Menubar.Menu>
+			</Menubar.Root>
+		</div>
+		<div class="col-span-6 flex w-full justify-end gap-4">
+			<div class="flex items-center space-x-2">
+				<Switch bind:checked={autoRefresh} id="auto-refresh" />
+				<Label for="auto-refresh">Auto-refresh</Label>
+			</div>
+
+			<Button
+				onclick={onForceRefresh}
+				disabled={autoRefresh}
+				variant="outline"
+				size="icon"
+				class="size-8"
+			>
+				<RotateIcon />
+			</Button>
+		</div>
 	</div>
 
 	<div class="grid h-full grid-cols-12 gap-4">

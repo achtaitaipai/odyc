@@ -16,7 +16,6 @@
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 
-	const perPage = 4;
 	const siblingCount = $derived(isDesktop.current ? 1 : 0);
 
 	type Props = {
@@ -25,9 +24,12 @@
 		allowCreate: boolean;
 		queries: string[];
 		children: any;
+		perPage?: number;
 	};
 
 	const props: Props = $props();
+
+	const perPage = props.perPage ?? 4;
 
 	let games = $derived(props.games);
 

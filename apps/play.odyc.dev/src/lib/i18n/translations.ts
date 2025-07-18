@@ -155,6 +155,7 @@ export const translations = {
 		'editor.searchTemplates': 'Search templates...',
 		'editor.noTemplateFound': 'No template found.',
 		'editor.load': 'Load',
+		'editor.autoRefresh': 'Auto-refresh',
 
 		// UI Elements
 		'ui.nothingHere': 'Nothing here yet',
@@ -356,6 +357,7 @@ export const translations = {
 		'editor.searchTemplates': 'Rechercher des modèles...',
 		'editor.noTemplateFound': 'Aucun modèle trouvé.',
 		'editor.load': 'Charger',
+		'editor.autoRefresh': 'Actualisation automatique',
 
 		// UI Elements
 		'ui.nothingHere': 'Rien pour le moment',

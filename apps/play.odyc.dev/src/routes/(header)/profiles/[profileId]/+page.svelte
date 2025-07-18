@@ -78,6 +78,7 @@
 	<div class="@container/main mx-auto mt-6 flex w-full max-w-7xl flex-1 flex-col gap-12">
 		<GameCategory
 			{games}
+			perPage={12}
 			queries={gamesQueries}
 			title={(profile.name ?? stores.t('profile.anonymous')) + stores.t('profile.userGames')}
 			allowCreate={false}
