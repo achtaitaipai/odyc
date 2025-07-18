@@ -584,6 +584,12 @@ ${code}
 							</div>
 						</Menubar.Item>
 						<Menubar.Separator />
+						<Menubar.Item>
+							<span class="w-full">{stores.t('editor.share')}</span>
+						</Menubar.Item><Menubar.Item disabled={true}>
+							<span class="w-full">{stores.t('editor.collaborate')}</span>
+						</Menubar.Item>
+						<Menubar.Separator />
 						<Menubar.Item onclick={onFormat}>
 							<span class="w-full">{stores.t('editor.formatCode')}</span>
 							<div class="flex items-center justify-end gap-0.5">
