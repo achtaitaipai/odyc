@@ -27,10 +27,10 @@
 	{#if games.documents.length === 0}
 		<Card.Root class="flex h-full justify-center border-dashed bg-transparent">
 			<Card.Header>
-				<Card.Title class="font-title text-2xl font-light">{stores.t('games.noFeatured')}</Card.Title>
-				<Card.Description
-					>{stores.t('games.noFeaturedDescription')}</Card.Description
+				<Card.Title class="font-title text-2xl font-light"
+					>{stores.t('games.noFeatured')}</Card.Title
 				>
+				<Card.Description>{stores.t('games.noFeaturedDescription')}</Card.Description>
 			</Card.Header>
 		</Card.Root>
 	{/if}
@@ -40,14 +40,17 @@
 			<Card.Header>
 				<Card.Title class="font-title text-2xl font-light">{game.name}</Card.Title>
 				<Card.Description
-					>{stores.t('games.developedBy')} <a href={`/profiles/${getOwner(game)?.$id}`} class="text-primary underline"
+					>{stores.t('games.developedBy')}
+					<a href={`/profiles/${getOwner(game)?.$id}`} class="text-primary underline"
 						>{getOwner(game)?.name}</a
 					>
 				</Card.Description>
 				<Card.Action>
 					<a href={`/g/${game.slug}`}>
 						<Button class="" variant="outline"
-							>{stores.t('games.playNow')}<IconPlayerPlayFilled class="text-muted-foreground" /></Button
+							>{stores.t('games.playNow')}<IconPlayerPlayFilled
+								class="text-muted-foreground"
+							/></Button
 						>
 					</a>
 				</Card.Action>

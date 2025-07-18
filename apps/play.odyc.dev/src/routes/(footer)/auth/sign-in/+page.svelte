@@ -112,7 +112,9 @@
 									required
 								/>
 							</div>
-							<Button disabled={isLoading} type="submit" class="w-full">{stores.t('auth.signIn')}</Button>
+							<Button disabled={isLoading} type="submit" class="w-full"
+								>{stores.t('auth.signIn')}</Button
+							>
 						</div>
 					{:else if step === 2}
 						<div class="flex flex-col items-center gap-6">
@@ -139,7 +141,9 @@
 								</InputOTP.Root>
 							</div>
 							<div class="flex w-full flex-col justify-center">
-								<Button disabled={isLoading} type="submit" class="w-full">{stores.t('auth.continue')}</Button>
+								<Button disabled={isLoading} type="submit" class="w-full"
+									>{stores.t('auth.continue')}</Button
+								>
 								<button onclick={onStepBack}
 									><p class="text-muted-foreground mt-3 text-center text-sm underline">
 										Didn't receive the code?
@@ -159,7 +163,9 @@
 					<div
 						class="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"
 					>
-						<span class="bg-background text-muted-foreground relative z-10 px-2"> {stores.t('auth.or')} </span>
+						<span class="bg-background text-muted-foreground relative z-10 px-2">
+							{stores.t('auth.or')}
+						</span>
 					</div>
 					<div class="grid gap-4 sm:grid-cols-2">
 						<Button

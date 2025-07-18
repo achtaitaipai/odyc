@@ -91,7 +91,13 @@
 					<div class="flex flex-col gap-6">
 						<div class="grid gap-2">
 							<Label for="name">{stores.t('profile.name')}</Label>
-							<Input id="name" type="text" bind:value={name} placeholder={stores.t('profile.placeholder.name')} required />
+							<Input
+								id="name"
+								type="text"
+								bind:value={name}
+								placeholder={stores.t('profile.placeholder.name')}
+								required
+							/>
 						</div>
 						<div class="grid gap-2">
 							<Label for="description">{stores.t('profile.description')}</Label>
@@ -188,7 +194,9 @@
 
 		<Paint bind:sprite />
 		<Dialog.Footer>
-			<Button type="button" onclick={() => setShowEditor(false)}>{stores.t('profile.closeEditor')}</Button>
+			<Button type="button" onclick={() => setShowEditor(false)}
+				>{stores.t('profile.closeEditor')}</Button
+			>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

@@ -23,7 +23,7 @@
 	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 	const ctrlKey = isMac ? 'Cmd' : 'Ctrl';
 
-	let isLoading = false;
+	let isLoading = $state(false);
 
 	let isCommansdOpen = $state(false);
 

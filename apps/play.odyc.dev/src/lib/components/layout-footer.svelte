@@ -14,10 +14,15 @@
 
 	<div class="relative inline-flex w-[fit-content] gap-6 font-light">
 		<a class="hover:underline" href="/">{stores.t('nav.dashboard')}</a>
-		<a class="hover:underline" href="https://odyc.dev/" target="_blank">{stores.t('nav.documentation')}</a>
-		<a class="hover:underline" href="https://github.com/achtaitaipai/odyc" target="_blank">{stores.t('nav.github')}</a
+		<a class="hover:underline" href="https://odyc.dev/" target="_blank"
+			>{stores.t('nav.documentation')}</a
 		>
-		<a class="hover:underline" href="https://discord.gg/fH53NGAmr4" target="_blank">{stores.t('nav.discord')}</a>
+		<a class="hover:underline" href="https://github.com/achtaitaipai/odyc" target="_blank"
+			>{stores.t('nav.github')}</a
+		>
+		<a class="hover:underline" href="https://discord.gg/fH53NGAmr4" target="_blank"
+			>{stores.t('nav.discord')}</a
+		>
 	</div>
 
 	<Separator />

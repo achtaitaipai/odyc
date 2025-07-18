@@ -78,15 +78,63 @@ export const TemplateGroups = [
 	{
 		title: 'Getting started',
 		templates: [
-			{ label: 'Hello world', value: 'hello-world' },
-			{ label: 'Collisions', value: 'sollisions' }
+			{
+				label: 'Hello world',
+				value: 'hello-world',
+				code: `const game = createGame({
+	player: {
+		sprite: '5',
+		position: [1, 0]
+	},
+	map: '...',
+	screenWidth: 3,
+  screenHeight: 1
+});`
+			},
+			{
+				label: 'Collisions',
+				value: 'collisions',
+				code: `const game = createGame({
+  player: {
+    sprite: '6',
+    position: [1, 0]
+  },
+  map: '...',
+  screenWidth: 3,
+  screenHeight: 1
+});`
+			}
 		]
 	},
 	{
 		title: 'Advanced',
 		templates: [
-			{ label: 'Dialog', value: 'dialog' },
-			{ label: 'Sounds', value: 'sounds' }
+			{
+				label: 'Dialog',
+				value: 'dialog',
+				code: `const game = createGame({
+  player: {
+    sprite: '7',
+    position: [1, 0]
+  },
+  map: '...',
+  screenWidth: 3,
+  screenHeight: 1
+});`
+			},
+			{
+				label: 'Sounds',
+				value: 'sounds',
+				code: `const game = createGame({
+  player: {
+    sprite: '8',
+    position: [1, 0]
+  },
+  map: '...',
+  screenWidth: 3,
+  screenHeight: 1
+});`
+			}
 		]
 	}
 ];

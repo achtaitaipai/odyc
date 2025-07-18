@@ -90,11 +90,7 @@
 
 	beforeNavigate(({ cancel }) => {
 		if (hasChangedCode) {
-			if (
-				!confirm(
-					stores.t('editor.unsavedChangesWarning')
-				)
-			) {
+			if (!confirm(stores.t('editor.unsavedChangesWarning'))) {
 				cancel();
 			}
 		}
@@ -475,7 +471,19 @@ ${code}
 		showExamples = false;
 		templateOpen = false;
 
-		// TODO: Set code in editor, and possibly mark saved as false
+		let newCode = '';
+
+		for (const group of TemplateGroups) {
+			for (const template of group.templates) {
+				if (template.value === templateValue) {
+					newCode = template.code;
+					break;
+				}
+			}
+		}
+
+		code = newCode;
+		updateCode();
 	}
 </script>
 
@@ -583,15 +591,21 @@ ${code}
 						</div>
 					</Menubar.Item>
 					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowExamples(true)}>{stores.t('editor.loadExample')}</Menubar.Item>
+					<Menubar.Item onclick={() => setShowExamples(true)}
+						>{stores.t('editor.loadExample')}</Menubar.Item
+					>
 				</Menubar.Content>
 			</Menubar.Menu>
 
 			<Menubar.Menu>
 				<Menubar.Trigger>{stores.t('editor.edit')}</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item onclick={() => setShowSpriteEditor(true)}>{stores.t('editor.sprite')}</Menubar.Item>
-					<Menubar.Item onclick={() => setShowSoundEditor(true)}>{stores.t('editor.sound')}</Menubar.Item>
+					<Menubar.Item onclick={() => setShowSpriteEditor(true)}
+						>{stores.t('editor.sprite')}</Menubar.Item
+					>
+					<Menubar.Item onclick={() => setShowSoundEditor(true)}
+						>{stores.t('editor.sound')}</Menubar.Item
+					>
 				</Menubar.Content>
 			</Menubar.Menu>
 
@@ -620,7 +634,9 @@ ${code}
 							<span>{stores.t('editor.stopVideoRecording')}</span></Menubar.Item
 						>
 					{:else}
-						<Menubar.Item onclick={startRecording}>{stores.t('editor.startVideoRecording')}</Menubar.Item>
+						<Menubar.Item onclick={startRecording}
+							>{stores.t('editor.startVideoRecording')}</Menubar.Item
+						>
 					{/if}
 				</Menubar.Content>
 			</Menubar.Menu>
@@ -628,13 +644,19 @@ ${code}
 			<Menubar.Menu>
 				<Menubar.Trigger>{stores.t('editor.settings')}</Menubar.Trigger>
 				<Menubar.Content>
-					<Menubar.Item onclick={() => setShowRenameDialog(true)}>{stores.t('editor.changeName')}</Menubar.Item>
-					<Menubar.Item onclick={() => setShowUrlDialog(true)}>{stores.t('editor.changeURL')}</Menubar.Item>
+					<Menubar.Item onclick={() => setShowRenameDialog(true)}
+						>{stores.t('editor.changeName')}</Menubar.Item
+					>
+					<Menubar.Item onclick={() => setShowUrlDialog(true)}
+						>{stores.t('editor.changeURL')}</Menubar.Item
+					>
 					<Menubar.Item onclick={() => setShowDescriptionDialog(true)}
 						>{stores.t('editor.changeDescription')}</Menubar.Item
 					>
 					<Menubar.Separator />
-					<Menubar.Item onclick={() => setShowVersionDialog(true)}>{stores.t('editor.changeVersion')}</Menubar.Item>
+					<Menubar.Item onclick={() => setShowVersionDialog(true)}
+						>{stores.t('editor.changeVersion')}</Menubar.Item
+					>
 					<Menubar.Separator />
 					<Menubar.Item onclick={() => setShowDeleteDialog(true)} variant="destructive"
 						>{stores.t('editor.deleteProject')}</Menubar.Item
@@ -734,9 +756,7 @@ ${code}
 		<form onsubmit={onChangeUrl}>
 			<Dialog.Header class="mb-2">
 				<Dialog.Title>{stores.t('editor.changeGameUrlTitle')}</Dialog.Title>
-				<Dialog.Description
-					>{stores.t('editor.changeGameUrlDescription')}</Dialog.Description
-				>
+				<Dialog.Description>{stores.t('editor.changeGameUrlDescription')}</Dialog.Description>
 			</Dialog.Header>
 
 			<Separator />
@@ -768,9 +788,7 @@ ${code}
 		<form onsubmit={onChangeVersion}>
 			<Dialog.Header class="mb-2">
 				<Dialog.Title>{stores.t('editor.upgradeVersionTitle')}</Dialog.Title>
-				<Dialog.Description
-					>{stores.t('editor.upgradeVersionDescription')}</Dialog.Description
-				>
+				<Dialog.Description>{stores.t('editor.upgradeVersionDescription')}</Dialog.Description>
 			</Dialog.Header>
 
 			<Separator />
@@ -870,11 +888,13 @@ ${code}
 			<AlertDialog.Title>{stores.t('editor.deleteConfirmTitle')}</AlertDialog.Title>
 			<AlertDialog.Description>
 				{stores.t('editor.deleteConfirmDescription')}
-				</AlertDialog.Description>
+			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>{stores.t('ui.cancel')}</AlertDialog.Cancel>
-			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}>{stores.t('games.continue')}</AlertDialog.Action>
+			<AlertDialog.Action onclick={onDelete} disabled={isDeleting}
+				>{stores.t('games.continue')}</AlertDialog.Action
+			>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
@@ -896,7 +916,9 @@ ${code}
 		/>
 
 		<Dialog.Footer>
-			<Button type="button" variant="outline" onclick={onLoadSprite}>{stores.t('editor.loadFromClipboard')}</Button>
+			<Button type="button" variant="outline" onclick={onLoadSprite}
+				>{stores.t('editor.loadFromClipboard')}</Button
+			>
 			<Button type="button" onclick={onSpriteCopy}>{stores.t('editor.copy')}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
@@ -941,6 +963,7 @@ ${code}
 								<Command.Group heading={group.title}>
 									{#each group.templates as template (template.value)}
 										<Command.Item
+											keywords={[template.value, template.label]}
 											value={template.value}
 											onSelect={() => {
 												templateValue = template.value;
