@@ -1,5 +1,6 @@
 ---
 import { getLocaleByPath, useTranslations } from '#lib/i18n/index.ts'
+import MetaKey from './MetaKey.astro'
 
 const locale = getLocaleByPath(Astro.url.pathname)
 const t = useTranslations(locale)
@@ -28,9 +29,7 @@ const t = useTranslations(locale)
 
 		<span
 			class="flex gap-1 rounded border px-1.5 text-sm text-gray-400 group-hover:text-pink-400"
-			><kbd class="DocSearch-Button-Key">⌘</kbd><kbd
-				class="DocSearch-Button-Key">K</kbd
-			></span
+			><kbd><MetaKey /></kbd><kbd>K</kbd></span
 		>
 	</button>
 
@@ -65,6 +64,7 @@ const t = useTranslations(locale)
 				this.#openBtn.addEventListener('click', this.#handleClickBtn)
 				this.#dialog.addEventListener('close', this.#handleClose)
 				document.addEventListener('keydown', this.#handleKeydown)
+
 				//@ts-ignore
 				new PagefindUI({
 					element: this.#searchContainer,

@@ -1,0 +1,14 @@
+<c-meta-key> </c-meta-key>
+
+<script>
+	customElements.define(
+		'c-meta-key',
+		class MetaKey extends HTMLElement {
+			constructor() {
+				super()
+				const isMac = /Mac|iPhone|iPod|iPad/i.test(navigator.platform)
+				this.innerHTML = isMac ? '⌘' : 'Ctrl'
+			}
+		},
+	)
+</script>
