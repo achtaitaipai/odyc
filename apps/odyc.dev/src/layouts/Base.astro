@@ -13,6 +13,11 @@ const locale = getLocaleByPath(Astro.url.pathname)
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Odycjs</title>
+		<!-- Pagefind -->
+		<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+		<script is:inline src="/pagefind/pagefind-ui.js"></script>
+
+		<!-- handle dark theme -->
 		<script is:inline>
 			const isDark = localStorage.getItem('theme') === 'dark'
 			document.firstElementChild.classList.toggle('dark', isDark)

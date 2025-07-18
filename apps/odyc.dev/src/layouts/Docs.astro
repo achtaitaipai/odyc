@@ -17,7 +17,7 @@ const currentSlug = getDocsPostSlug(post, locale)
 <BaseLayout>
 	<div class="flex gap-8">
 		<DocSummary {locale} {currentSlug} />
-		<main class="prose dark:prose-invert pt-8 pb-64">
+		<main class="prose dark:prose-invert pt-8 pb-64" data-pagefind-body>
 			<h1 id="_top">{post.data.title}</h1>
 			<Content />
 		</main>

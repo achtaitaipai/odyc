@@ -1,6 +1,7 @@
 ---
 import { getDocsSummary } from '#lib/docsPost.ts'
 import type { Locale } from '#lib/i18n/index.ts'
+import Search from './Search.astro'
 
 export type Props = { locale: Locale; currentSlug: string }
 const { locale, currentSlug } = Astro.props
@@ -8,9 +9,12 @@ const summary = await getDocsSummary(locale)
 ---
 
 <aside
-	class="bg-base-100 sticky top-[var(--header-height)] left-0 h-[calc(100dvh_-_var(--header-height))] w-2xs overflow-auto border-r border-gray-200 pt-8 dark:border-gray-700"
+	class="bg-base-100 sticky top-[var(--header-height)] left-0 flex h-[calc(100dvh_-_var(--header-height))] w-2xs flex-col gap-6 border-r border-gray-200 pt-8 dark:border-gray-700"
 >
-	<ul class="h-full space-y-4 overflow-auto px-8 pb-12">
+	<div class="shrink-0 ps-8">
+		<Search />
+	</div>
+	<ul class="h-full min-h-0 grow space-y-4 overflow-auto px-8 pb-12">
 		{
 			summary.map(([category, items]) => (
 				<li>
