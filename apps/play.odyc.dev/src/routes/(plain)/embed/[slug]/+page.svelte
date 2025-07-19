@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PUBLIC_IFRAME_ENDPOINT } from '$env/static/public';
-	import type { PageProps } from '../$types';
+	import type { PageProps } from './$types';
 	import { stores } from '$lib/stores.svelte';
 	import { DefaultCode } from '$lib/constants';
 
@@ -21,8 +21,6 @@
 		preview = document.getElementById('preview') as HTMLCanvasElement;
 
 		if (preview) {
-			console.log(game.version);
-			console.log(typeof game.code);
 			// @ts-expect-error It exists, not sure why types dont see it
 			const contentWindow = preview?.contentWindow;
 			contentWindow?.postMessage(

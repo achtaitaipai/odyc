@@ -38,8 +38,8 @@
 
 	const game = $derived(data.game);
 
-	const initialCode = game.code ? game.code : DefaultCode;
-	let code = $state(initialCode);
+	const initialCode = $derived(game.code ? game.code : DefaultCode);
+	let code = $derived(initialCode);
 	let editor: Editor;
 
 	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
@@ -270,7 +270,7 @@ ${code}
 		showSaveAsDialog = value;
 	}
 
-	let saveAsName = $state(game.name ? game.name + ' (copy)' : '');
+	let saveAsName = $derived(game.name ? game.name + ' (copy)' : '');
 	let isSavingAs = $state(false);
 	async function onSaveAs() {
 		if (isSavingAs) return;
@@ -323,7 +323,7 @@ ${code}
 		};
 	});
 	let versionOpen = $state(false);
-	let versionValue = $state(game.version);
+	let versionValue = $derived(game.version);
 	let versionRef = $state<HTMLButtonElement>(null!);
 	const versionSelected = $derived(versions.find((f) => f.value === versionValue)?.label);
 	function closeAndFocusVersionsTrigger() {
@@ -355,7 +355,7 @@ ${code}
 		showUrlDialog = value;
 	}
 
-	let gameUrl = $state(game.slug);
+	let gameUrl = $derived(game.slug);
 	let isChangingUrl = $state(false);
 	async function onChangeUrl() {
 		if (isChangingUrl) return;
@@ -378,8 +378,8 @@ ${code}
 		showDescriptionDialog = value;
 	}
 
-	let description = $state(game.description ?? '');
-	let howToPlay = $state(game.howToPlay ?? '');
+	let description = $derived(game.description ?? '');
+	let howToPlay = $derived(game.howToPlay ?? '');
 	let isChangingDescription = $state(false);
 	async function onChangeDescription(event: Event) {
 		event.preventDefault();
@@ -404,7 +404,7 @@ ${code}
 		showRenameDialog = value;
 	}
 
-	let renameName = $state(game.name);
+	let renameName = $derived(game.name);
 	let isRenaming = $state(false);
 	async function onRename() {
 		if (isRenaming) return;

@@ -16,8 +16,8 @@
 
 	const game = $derived(data.game);
 
-	let descriptionChunks = $state(game?.description?.split('\n') ?? ['No description available.']);
-	let howToPlayChunks = $state(game?.howToPlay?.split('\n') ?? ['No instructions available.']);
+	let descriptionChunks = $derived(game?.description?.split('\n') ?? ['No description available.']);
+	let howToPlayChunks = $derived(game?.howToPlay?.split('\n') ?? ['No instructions available.']);
 
 	let preview: HTMLCanvasElement | null = $state(null);
 
