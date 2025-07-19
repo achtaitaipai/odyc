@@ -5,64 +5,75 @@
 	const { data } = $props();
 
 	function sendScreenshot() {
-		const canvasOutput = document.createElement('canvas')!;
-		const ctx = canvasOutput.getContext('2d')!;
+		try {
+			const canvasOutput = document.createElement('canvas')!;
+			const ctx = canvasOutput.getContext('2d')!;
 
-		const canvasIds = [
-			'odyc-renderer-canvas',
-			'odyc-dialog-canvas',
-			'odyc-prompt-canvas',
-			'odyc-filter-canvas',
-			'odyc-message-canvas'
-		];
+			const canvasIds = [
+				'odyc-renderer-canvas',
+				'odyc-dialog-canvas',
+				'odyc-prompt-canvas',
+				'odyc-filter-canvas',
+				'odyc-message-canvas'
+			];
 
-		const allCanvases = canvasIds.map(
-			(id) => document.querySelector<HTMLCanvasElement>('canvas.' + id)!
-		);
+			const allCanvases = canvasIds.map(
+				(id) => document.querySelector<HTMLCanvasElement>('canvas.' + id)!
+			);
 
-		let maxSize = 0;
-		allCanvases.forEach((canvas) => {
-			maxSize = Math.max(maxSize, canvas?.width, canvas?.height);
-		});
+			let maxSize = 0;
+			allCanvases.forEach((canvas) => {
+				maxSize = Math.max(maxSize, canvas?.width, canvas?.height);
+			});
 
-		const visibleFrames: HTMLCanvasElement[] = [];
-		for (const canvas of allCanvases) {
-			if (canvas && canvas.style.display !== 'none') {
-				visibleFrames.push(canvas);
+			const visibleFrames: HTMLCanvasElement[] = [];
+			for (const canvas of allCanvases) {
+				if (canvas && canvas.style.display !== 'none') {
+					visibleFrames.push(canvas);
+				}
 			}
-		}
 
-		if (visibleFrames.length === 0) {
-			throw new Error('No visible canvas frames found for screenshot');
-		}
+			if (visibleFrames.length === 0) {
+				throw new Error('No visible canvas frames found for screenshot');
+			}
 
-		canvasOutput.width = maxSize;
-		canvasOutput.height = maxSize;
+			canvasOutput.width = maxSize;
+			canvasOutput.height = maxSize;
 
-		ctx.fillStyle = 'white';
-		ctx.fillRect(0, 0, maxSize, maxSize);
-		ctx.imageSmoothingEnabled = false;
+			ctx.fillStyle = 'white';
+			ctx.fillRect(0, 0, maxSize, maxSize);
+			ctx.imageSmoothingEnabled = false;
 
-		for (const canvas of visibleFrames) {
-			const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
-			const scaledWidth = canvas.width * scale;
-			const scaledHeight = canvas.height * scale;
+			for (const canvas of visibleFrames) {
+				const scale = Math.min(maxSize / canvas.width, maxSize / canvas.height);
+				const scaledWidth = canvas.width * scale;
+				const scaledHeight = canvas.height * scale;
 
-			const x = (maxSize - scaledWidth) / 2;
-			const y = (maxSize - scaledHeight) / 2;
+				const x = (maxSize - scaledWidth) / 2;
+				const y = (maxSize - scaledHeight) / 2;
 
-			ctx.drawImage(canvas, x, y, scaledWidth, scaledHeight);
-		}
+				ctx.drawImage(canvas, x, y, scaledWidth, scaledHeight);
+			}
 
-		canvasOutput.toBlob((blob) => {
+			canvasOutput.toBlob((blob) => {
+				window.parent.postMessage(
+					{
+						type: 'on-canvas-blob',
+						detail: { blob }
+					},
+					'*'
+				);
+			});
+		} catch (error) {
+			console.error('Error sending screenshot:', error);
 			window.parent.postMessage(
 				{
 					type: 'on-canvas-blob',
-					detail: { blob }
+					detail: { blob: null }
 				},
 				'*'
 			);
-		});
+		}
 	}
 
 	function evalCode(code: string) {

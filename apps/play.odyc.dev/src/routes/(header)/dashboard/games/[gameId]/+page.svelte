@@ -253,10 +253,14 @@ ${code}
 		getGameBlob();
 	}
 
-	async function onSaveCodeFinish(screenshot: Blob) {
+	async function onSaveCodeFinish(screenshot: Blob | null) {
 		try {
-			const file = await Backend.createScreenshotFile(screenshot);
-			await Backend.updateGameCode(game.$id, code, file.$id);
+			if (screenshot) {
+				const file = await Backend.createScreenshotFile(screenshot);
+				await Backend.updateGameCode(game.$id, code, file.$id);
+			} else {
+				await Backend.updateGameCode(game.$id, code, undefined);
+			}
 			await invalidate(Dependencies.GAMES);
 			toast.success(stores.t('editor.codeSavedSuccess'));
 			hasChangedCode = false;
