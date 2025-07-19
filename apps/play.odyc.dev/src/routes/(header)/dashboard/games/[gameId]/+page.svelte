@@ -3,6 +3,8 @@
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
+	import CopyIcon from '@lucide/svelte/icons/copy';
+	import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
 	import RotateIcon from '@lucide/svelte/icons/rotate-cw';
 	import * as Command from '$lib/components/ui/command/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
@@ -495,6 +497,33 @@ ${code}
 	function onForceRefresh() {
 		updateCode(true);
 	}
+
+	let isShareModalOpen = $state(false);
+	function setShareModalOpen(open: boolean) {
+		isShareModalOpen = open;
+	}
+
+	function onOpenEmbed() {
+		const embedUrl = `${window.location.origin}/embed/${game.$id}`;
+		window.open(embedUrl, '_blank')?.focus();
+	}
+
+	function onOpenPublic() {
+		const url = `${window.location.origin}/g/${game.$id}`;
+		window.open(url, '_blank')?.focus();
+	}
+
+	function onCopyPublic() {
+		const url = `${window.location.origin}/g/${game.$id}`;
+		navigator.clipboard.writeText(url);
+		toast.success(stores.t('editor.urlCopied'));
+	}
+
+	function onCopyEmbed() {
+		const embed = `<iframe src="${window.location.origin}/embed/${game.$id}"></iframe>`;
+		navigator.clipboard.writeText(embed);
+		toast.success(stores.t('editor.embedCopied'));
+	}
 </script>
 
 <div class="mx-auto mb-3 h-full w-full max-w-7xl p-4 lg:p-6">
@@ -510,8 +539,8 @@ ${code}
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
 
-	<div class="mb-3 grid grid-cols-12 gap-6">
-		<div class="col-span-6 flex w-full flex-col items-center gap-3 sm:flex-row">
+	<div class="mb-3 grid grid-cols-6 gap-6 sm:grid-cols-12">
+		<div class="col-span-6 w-[fit-content]">
 			<Menubar.Root>
 				<Menubar.Menu>
 					<Menubar.Trigger class="relative">
@@ -584,7 +613,7 @@ ${code}
 							</div>
 						</Menubar.Item>
 						<Menubar.Separator />
-						<Menubar.Item>
+						<Menubar.Item onclick={() => (isShareModalOpen = true)}>
 							<span class="w-full">{stores.t('editor.share')}</span>
 						</Menubar.Item><Menubar.Item disabled={true}>
 							<span class="w-full">{stores.t('editor.collaborate')}</span>
@@ -682,7 +711,7 @@ ${code}
 				</Menubar.Menu>
 			</Menubar.Root>
 		</div>
-		<div class="col-span-6 flex w-full justify-end gap-4">
+		<div class="col-span-6 flex w-full gap-4 sm:justify-end">
 			<div class="flex items-center space-x-2">
 				<Switch bind:checked={autoRefresh} id="auto-refresh" />
 				<Label for="auto-refresh">Auto-refresh</Label>
@@ -1020,6 +1049,83 @@ ${code}
 		</div>
 		<Dialog.Footer>
 			<Button type="button" onclick={onTemplateSelect}>{stores.t('editor.load')}</Button>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root open={isShareModalOpen} onOpenChange={setShareModalOpen}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header>
+			<Dialog.Title>{stores.t('editor.shareTitle')}</Dialog.Title>
+			<Dialog.Description>
+				{stores.t('editor.shareDescription')}
+			</Dialog.Description>
+		</Dialog.Header>
+		<div class="grid gap-4 py-4">
+			<div class="grid items-center gap-2">
+				<Label for="share-embed" class="text-right">{stores.t('editor.shareEmbedLabel')}</Label>
+
+				<div class="flex items-center">
+					<Input
+						readonly={true}
+						id="share-embed"
+						value={`<iframe src="${window.location.origin}/embed/${game.$id}"></iframe>`}
+						class="border-r-background col-span-3 rounded-r-none"
+					/>
+					<div class="flex h-full">
+						<Button
+							onclick={onOpenEmbed}
+							variant="outline"
+							size="icon"
+							class="size-8 h-[36px] flex-shrink-0 rounded-none"
+						>
+							<ExternalLinkIcon />
+						</Button>
+						<Button
+							onclick={onCopyEmbed}
+							variant="outline"
+							size="icon"
+							class="size-8 h-[36px] flex-shrink-0 rounded-l-none"
+						>
+							<CopyIcon />
+						</Button>
+					</div>
+				</div>
+			</div>
+			<div class="grid gap-2">
+				<Label for="share-url" class="text-right">{stores.t('editor.sharePlayableUrlLabel')}</Label>
+				<div class="flex items-center">
+					<Input
+						readonly={true}
+						id="share-url"
+						value={`${window.location.origin}/g/${game.$id}`}
+						class="border-r-background col-span-3 rounded-r-none"
+					/>
+					<div class="flex h-full">
+						<Button
+							onclick={onOpenPublic}
+							variant="outline"
+							size="icon"
+							class="size-8 h-[36px] flex-shrink-0 rounded-none"
+						>
+							<ExternalLinkIcon />
+						</Button>
+						<Button
+							onclick={onCopyPublic}
+							variant="outline"
+							size="icon"
+							class="size-8 h-[36px] flex-shrink-0 rounded-l-none"
+						>
+							<CopyIcon />
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<Dialog.Footer>
+			<Button onclick={() => setShareModalOpen(false)} variant="outline" type="button"
+				>{stores.t('editor.close')}</Button
+			>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

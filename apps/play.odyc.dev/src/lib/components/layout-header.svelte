@@ -101,13 +101,15 @@
 <header
 	class="flex shrink-0 items-center gap-2 border-b py-3 transition-[width,height] ease-linear"
 >
-	<div class="mx-auto flex w-full max-w-7xl items-center gap-1 px-4 lg:gap-2 lg:px-6">
+	<div
+		class="mx-auto mt-1 flex w-full max-w-7xl flex-col items-center gap-3 px-4 sm:mt-0 sm:flex-row lg:px-6"
+	>
 		<a href="/" class="flex items-center gap-2">
 			<img src="/logo.png" alt="Odyc.js Logo" class="pixelated h-5 w-5" />
 
 			<h1 class="font-pixel text-2xl font-medium">Odyc.js</h1>
 		</a>
-		<div class="ml-auto flex items-center gap-2">
+		<div class="flex items-center gap-2 sm:ml-auto">
 			<div id="feedback-popover" data-html2canvas-ignore>
 				<Popover.Root bind:open={isFeedbackOpen}>
 					<Popover.Trigger class={buttonVariants({ variant: 'ghost' })}

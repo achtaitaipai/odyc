@@ -158,6 +158,13 @@ export const translations = {
 		'editor.noTemplateFound': 'No template found.',
 		'editor.load': 'Load',
 		'editor.autoRefresh': 'Auto-refresh',
+		'editor.urlCopied': 'Playable URL copied to clipboard',
+		'editor.embedCopied': 'HTML embed code copied to clipboard',
+		'editor.shareTitle': 'Share game',
+		'editor.shareDescription': 'Share your game with others, or embed it on your website.',
+		'editor.sharePlayableUrlLabel': 'Playable URL',
+		'editor.shareEmbedLabel': 'Embed HTML',
+		'editor.close': 'Close',
 
 		// UI Elements
 		'ui.nothingHere': 'Nothing here yet',
@@ -362,6 +369,14 @@ export const translations = {
 		'editor.noTemplateFound': 'Aucun modèle trouvé.',
 		'editor.load': 'Charger',
 		'editor.autoRefresh': 'Actualisation automatique',
+		'editor.urlCopied': 'URL jouable copiée dans le presse-papiers',
+		'editor.embedCopied': "Code d'intégration HTML copié dans le presse-papiers",
+		'editor.shareTitle': 'Partager le jeu',
+		'editor.shareDescription':
+			"Partagez votre jeu avec d'autres ou intégrez-le sur votre site web.",
+		'editor.sharePlayableUrlLabel': 'URL jouable',
+		'editor.shareEmbedLabel': 'Intégrer HTML',
+		'editor.close': 'Fermer',
 
 		// UI Elements
 		'ui.nothingHere': 'Rien pour le moment',
