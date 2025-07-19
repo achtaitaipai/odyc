@@ -49,7 +49,7 @@
 	"collections": [
 		{
 			"$id": "games",
-			"$permissions": ["create(\"users\")"],
+			"$permissions": ["create(\"users\")", "read(\"any\")"],
 			"databaseId": "main",
 			"name": "games",
 			"enabled": true,
