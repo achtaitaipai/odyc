@@ -27,7 +27,7 @@
 
 	<Separator />
 	<div
-		class="i mx-auto mt-4 flex w-full max-w-7xl flex-col items-center justify-between gap-3 text-lg sm:flex-row"
+		class="i mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-6 text-lg sm:flex-row"
 	>
 		<p class="text-muted-foreground text-sm font-light">
 			© {currentYear} Odyc.js. {stores.t('footer.allRightsReserved')}

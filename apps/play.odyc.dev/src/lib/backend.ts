@@ -130,6 +130,18 @@ export class Backend {
 	static async getGame(gameId: string) {
 		return await this.#databases.getDocument<Games>('main', 'games', gameId);
 	}
+	static async getGameBySlug(slug: string) {
+		const result = await this.#databases.listDocuments<Games>('main', 'games', [
+			Query.limit(1),
+			Query.equal('slug', slug)
+		]);
+
+		if (!result.documents[0]) {
+			throw new Error(`Game with slug ${slug} not found`);
+		}
+
+		return result.documents[0];
+	}
 	static async updateGameCode(gameId: string, code: string, thumbnailFileId?: string) {
 		return await this.#databases.updateDocument<Games>('main', 'games', gameId, {
 			code,

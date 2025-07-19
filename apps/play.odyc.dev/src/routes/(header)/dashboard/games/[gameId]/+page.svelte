@@ -504,23 +504,23 @@ ${code}
 	}
 
 	function onOpenEmbed() {
-		const embedUrl = `${window.location.origin}/embed/${game.$id}`;
+		const embedUrl = `${window.location.origin}/embed/${game.slug}`;
 		window.open(embedUrl, '_blank')?.focus();
 	}
 
 	function onOpenPublic() {
-		const url = `${window.location.origin}/g/${game.$id}`;
+		const url = `${window.location.origin}/g/${game.slug}`;
 		window.open(url, '_blank')?.focus();
 	}
 
 	function onCopyPublic() {
-		const url = `${window.location.origin}/g/${game.$id}`;
+		const url = `${window.location.origin}/g/${game.slug}`;
 		navigator.clipboard.writeText(url);
 		toast.success(stores.t('editor.urlCopied'));
 	}
 
 	function onCopyEmbed() {
-		const embed = `<iframe src="${window.location.origin}/embed/${game.$id}"></iframe>`;
+		const embed = `<iframe src="${window.location.origin}/embed/${game.slug}"></iframe>`;
 		navigator.clipboard.writeText(embed);
 		toast.success(stores.t('editor.embedCopied'));
 	}
@@ -1069,7 +1069,7 @@ ${code}
 					<Input
 						readonly={true}
 						id="share-embed"
-						value={`<iframe src="${window.location.origin}/embed/${game.$id}"></iframe>`}
+						value={`<iframe src="${window.location.origin}/embed/${game.slug}"></iframe>`}
 						class="border-r-background col-span-3 rounded-r-none"
 					/>
 					<div class="flex h-full">
@@ -1098,7 +1098,7 @@ ${code}
 					<Input
 						readonly={true}
 						id="share-url"
-						value={`${window.location.origin}/g/${game.$id}`}
+						value={`${window.location.origin}/g/${game.slug}`}
 						class="border-r-background col-span-3 rounded-r-none"
 					/>
 					<div class="flex h-full">
