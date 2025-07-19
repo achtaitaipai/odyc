@@ -222,8 +222,7 @@
 	function onDownload() {
 		const fileName = slugify(game.name).toLowerCase() + '.html';
 
-		const htmlCode = `
-		<!DOCTYPE html>
+		const htmlCode = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
