@@ -68,6 +68,7 @@ export const translations = {
 		// Games
 		'games.create': 'Create Game',
 		'games.openInEditor': 'Open in editor',
+		'games.openPlayableUrl': 'Open playable URL',
 		'games.delete': 'Delete',
 		'games.deleteInstantly': 'Delete instantly',
 		'games.deleteConfirm': 'Are you absolutely sure?',
@@ -206,7 +207,12 @@ export const translations = {
 
 		// Footer
 		'footer.allRightsReserved': 'All rights reserved.',
-		'footer.madeWithLove': 'Made with love and'
+		'footer.madeWithLove': 'Made with love and',
+
+		// Public playable URL
+		'publicUrl.howToPlay': 'How to play',
+		'publicUrl.fullscreen': 'Play in fullscreen',
+		'publicUrl.fork': 'Fork and edit'
 	},
 	fr: {
 		// Overview
@@ -278,6 +284,7 @@ export const translations = {
 		// Games
 		'games.create': 'Créer un jeu',
 		'games.openInEditor': "Ouvrir dans l'éditeur",
+		'games.openPlayableUrl': 'Ouvrir le lien jouable',
 		'games.delete': 'Supprimer',
 		'games.deleteInstantly': 'Supprimer instantanément',
 		'games.deleteConfirm': 'Êtes-vous absolument sûr ?',
@@ -419,6 +426,11 @@ export const translations = {
 
 		// Footer
 		'footer.allRightsReserved': 'Tous droits réservés.',
-		'footer.madeWithLove': 'Fait avec amour et'
+		'footer.madeWithLove': 'Fait avec amour et',
+
+		// Public playable URL
+		'publicUrl.howToPlay': 'Comment jouer',
+		'publicUrl.fullscreen': 'Jouer en plein écran',
+		'publicUrl.fork': 'Fork et éditer'
 	}
 } as const;

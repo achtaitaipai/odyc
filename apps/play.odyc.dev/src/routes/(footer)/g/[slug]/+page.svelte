@@ -1,25 +1,23 @@
 <script lang="ts">
 	import { PUBLIC_IFRAME_ENDPOINT } from '$env/static/public';
-	import type { PageProps } from '../$types';
+	import type { PageProps } from './$types';
 	import { stores } from '$lib/stores.svelte';
 	import { DefaultCode } from '$lib/constants';
 	import * as Card from '$lib/components/ui/card';
+	import CloneIcon from '@lucide/svelte/icons/git-fork';
+	import FullscreenIcon from '@lucide/svelte/icons/maximize';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
+	import { toast } from 'svelte-sonner';
+	import { Backend } from '$lib/backend';
+	import { goto } from '$app/navigation';
 
 	let { data }: PageProps = $props();
 
 	const game = $derived(data.game);
 
-	let descriptionChunks = game.description.split('\n');
-	let howToPlayChunks = game.howToPlay.split('\n');
-
-	if (descriptionChunks.length === 0) {
-		descriptionChunks = ['No description available.'];
-	}
-
-	if (howToPlayChunks.length === 0) {
-		howToPlayChunks = ['No instructions available.'];
-	}
+	let descriptionChunks = $state(game?.description?.split('\n') ?? ['No description available.']);
+	let howToPlayChunks = $state(game?.howToPlay?.split('\n') ?? ['No instructions available.']);
 
 	let preview: HTMLCanvasElement | null = $state(null);
 
@@ -47,6 +45,26 @@
 				},
 				'*'
 			);
+		}
+	}
+
+	function onFullscreen() {
+		const preview = document.getElementById('preview') as HTMLCanvasElement;
+		preview?.requestFullscreen();
+	}
+
+	let isCloning = $state(false);
+	async function onClone() {
+		isCloning = true;
+
+		try {
+			const newGame = await Backend.cloneGame(game);
+			goto(`/dashboard/games/${newGame.$id}`);
+			toast.success('Game cloned successfully.');
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			isCloning = false;
 		}
 	}
 </script>
@@ -80,6 +98,27 @@
 			</div>
 
 			<div class="col-span-6 h-full w-full">
+				<div class="mb-4 flex flex-col gap-3 md:flex-row">
+					<Button variant="outline" type="button" onclick={onFullscreen}>
+						<FullscreenIcon />
+						{stores.t('publicUrl.fullscreen')}</Button
+					>
+
+					{#if stores.user}
+						<Button variant="outline" type="button" disabled={isCloning} onclick={onClone}>
+							<CloneIcon />
+							{stores.t('publicUrl.fork')}</Button
+						>
+					{:else}
+						<a href="/auth/sign-in">
+							<Button variant="outline" type="button">
+								<CloneIcon />
+								{stores.t('publicUrl.fork')}</Button
+							>
+						</a>
+					{/if}
+				</div>
+
 				<Card.Root class="col-span-12 p-0 md:col-span-6">
 					<Card.Content class="h-full p-4">
 						<h1 class="font-title mb-3 flex-shrink-0 text-3xl">{game.name}</h1>
@@ -92,7 +131,9 @@
 							{/if}
 						{/each}
 
-						<h1 class="font-title mt-6 mb-3 flex-shrink-0 text-3xl font-light">How to play</h1>
+						<h1 class="font-title mt-6 mb-3 flex-shrink-0 text-3xl font-light">
+							{stores.t('publicUrl.howToPlay')}
+						</h1>
 						{#each howToPlayChunks as chunk}
 							{#if !chunk}
 								<div class="h-4"></div>

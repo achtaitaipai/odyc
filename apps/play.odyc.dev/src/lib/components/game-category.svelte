@@ -25,6 +25,7 @@
 		queries: string[];
 		children: any;
 		perPage?: number;
+		linkToPublic?: boolean;
 	};
 
 	const props: Props = $props();
@@ -73,7 +74,7 @@
 			{/if}
 
 			{#each games.documents as game (game.$id)}
-				<GameCardsStateful {game} />
+				<GameCardsStateful linkToPublic={props.linkToPublic} {game} />
 			{/each}
 		</div>
 	</div>

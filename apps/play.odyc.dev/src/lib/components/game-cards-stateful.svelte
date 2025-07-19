@@ -14,9 +14,11 @@
 	import { defaultLocale } from '$lib/i18n';
 
 	const {
-		game
+		game,
+		linkToPublic
 	}: {
 		game: Games;
+		linkToPublic?: boolean;
 	} = $props();
 
 	let durationFrom = $derived(useDurationFrom(stores.user?.prefs?.selectedLocale ?? defaultLocale));
@@ -74,7 +76,7 @@
 
 <svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
 
-<a href={`/dashboard/games/${game.$id}`}>
+<a href={linkToPublic ? `/g/${game.slug}` : `/dashboard/games/${game.$id}`}>
 	<Card.Root class="flex  justify-center overflow-hidden p-0">
 		<Card.Header class="p-0">
 			<img
@@ -104,6 +106,11 @@
 							<DropdownMenu.Group>
 								<DropdownMenu.Item
 									><a href={`/dashboard/games/${game.$id}`}>{stores.t('games.openInEditor')}</a
+									></DropdownMenu.Item
+								>
+
+								<DropdownMenu.Item
+									><a href={`/g/${game.slug}`}>{stores.t('games.openPlayableUrl')}</a
 									></DropdownMenu.Item
 								>
 

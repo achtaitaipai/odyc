@@ -214,13 +214,29 @@ export class Backend {
 		});
 	}
 
-	static async createGame(name: string, code = '') {
+	static async cloneGame(game: Games) {
+		const obj = JSON.parse(JSON.stringify(game));
+
+		for (const key in obj) {
+			if (key.startsWith('$')) {
+				delete obj[key];
+			}
+		}
+
+		obj.ownerProfileId = stores.profile?.$id;
+		obj.slug = ID.unique();
+		obj.name = obj.name + ' (Clone)';
+
+		return await this.#databases.createDocument<Games>('main', 'games', obj.slug, obj);
+	}
+
+	static async createGame(name: string, code = '', thumbnailFileId = '') {
 		const game = {
 			name,
 			slug: slugify(name).toLowerCase(),
 			ownerProfileId: stores.profile?.$id,
 			code,
-			thumbnailFileId: '/screenshot.png',
+			thumbnailFileId: thumbnailFileId ? thumbnailFileId : '/screenshot.png',
 			version: PUBLIC_ODYC_VERSION ?? 'latest'
 		};
 		try {
