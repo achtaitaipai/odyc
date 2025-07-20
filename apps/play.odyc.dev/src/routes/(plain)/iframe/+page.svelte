@@ -129,9 +129,4 @@
 
 <svelte:head>
 	<script defer src={`https://www.unpkg.com/odyc@${data.version}/dist/index.global.js`}></script>
-	<style>
-		.odyc-touchEvent {
-			display: none !important;
-		}
-	</style>
 </svelte:head>
