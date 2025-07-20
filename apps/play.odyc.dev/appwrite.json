@@ -287,6 +287,22 @@
 			"entrypoint": "main.go",
 			"commands": "",
 			"path": "functions/onFeedbackCreate"
+		},
+		{
+			"$id": "ogImage",
+			"name": "ogImage",
+			"runtime": "node-22",
+			"specification": "s-1vcpu-1gb",
+			"execute": ["any"],
+			"events": [],
+			"scopes": [],
+			"schedule": "",
+			"timeout": 15,
+			"enabled": true,
+			"logging": true,
+			"entrypoint": "dist/main.js",
+			"commands": "npm run bundle",
+			"path": "functions/ogImage"
 		}
 	]
 }
