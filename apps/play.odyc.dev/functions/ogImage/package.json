@@ -9,17 +9,14 @@
     "build": "babel src --out-dir dist",
     "bundle": "npm install && npm run build"
   },
-  "dependencies": {
-    "@vercel/og": "^0.7.2",
-    "node-appwrite": "^14.1.0",
-    "react": "^19.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.28.0",
     "@babel/core": "^7.28.0",
     "@babel/plugin-transform-react-jsx": "^7.27.1",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
-    "prettier": "^3.2.5"
+    "react": "^19.1.0",
+    "prettier": "^3.2.5",
+    "@vercel/og": "^0.7.2"
   }
 }
