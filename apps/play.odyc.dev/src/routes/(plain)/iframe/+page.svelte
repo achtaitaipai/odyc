@@ -124,6 +124,12 @@
 		}
 	});
 
+	document.addEventListener('keydown', (event) => {
+		if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(event.code) > -1) {
+			event.preventDefault();
+		}
+	});
+
 	window.parent.postMessage({ type: 'on-runner-ready' }, '*');
 </script>
 

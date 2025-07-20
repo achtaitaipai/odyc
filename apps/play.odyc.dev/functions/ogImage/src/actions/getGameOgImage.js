@@ -27,7 +27,13 @@ export async function getGameOgImage({ req, res }) {
         }}
       >
         <h1 style={{ opacity: 0.6, fontSize: 40 }}>Dynamic OG images with</h1>
-        <h1 style={{ fontFamily: 'Inter-Bold', fontSize: 'bold', color: '#FD366E' }}>
+        <h1
+          style={{
+            fontFamily: 'Inter-Bold',
+            fontSize: 'bold',
+            color: '#FD366E',
+          }}
+        >
           Appwrite Functions
         </h1>
       </div>
