@@ -295,7 +295,7 @@
 			"specification": "s-1vcpu-1gb",
 			"execute": ["any"],
 			"events": [],
-			"scopes": [],
+			"scopes": ["documents.read"],
 			"schedule": "",
 			"timeout": 15,
 			"enabled": true,
