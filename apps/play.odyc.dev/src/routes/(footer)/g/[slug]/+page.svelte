@@ -69,6 +69,44 @@
 	}
 </script>
 
+<svelte:head>
+	<!-- HTML Meta Tags -->
+	<title>{game.name} | Odyc.js Play</title>
+	<meta
+		name="description"
+		content={game.description?.split('\n').join(' ') ?? 'Odyc.js Play game without description.'}
+	/>
+
+	<!-- Facebook Meta Tags -->
+	<meta property="og:url" content={`https://odyc-play.appwrite.network/g/${game.slug}`} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={`${game.name} | Odyc.js Play`} />
+	<meta
+		property="og:description"
+		content={game.description?.split('\n').join(' ') ?? 'Odyc.js Play game without description.'}
+	/>
+	<meta
+		property="og:image"
+		content={`https://688487d9000eea37e1fe.fra.appwrite.run/v1/og-images/games/${game.$id}`}
+	/>
+
+	<!-- Twitter Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta property="twitter:domain" content="odyc-play.appwrite.network" />
+	<meta property="twitter:url" content={`https://odyc-play.appwrite.network/g/${game.slug}`} />
+	<meta name="twitter:title" content={`${game.name} | Odyc.js Play`} />
+	<meta
+		name="twitter:description"
+		content={game.description?.split('\n').join(' ') ?? 'Odyc.js Play game without description.'}
+	/>
+	<meta
+		name="twitter:image"
+		content={`https://688487d9000eea37e1fe.fra.appwrite.run/v1/og-images/games/${game.$id}`}
+	/>
+
+	<!-- Meta Tags Generated via https://www.opengraph.xyz -->
+</svelte:head>
+
 <div class="bg-background flex flex-col items-center justify-center gap-6 p-6 md:p-10 md:pt-6">
 	<div class="h-full w-full max-w-7xl">
 		<Breadcrumb.Root class="mb-6">
