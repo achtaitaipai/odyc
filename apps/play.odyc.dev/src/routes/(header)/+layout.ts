@@ -15,7 +15,7 @@ export const load: LayoutLoad = async ({ depends }) => {
 
 	if (stores.user) {
 		if (!stores.user.prefs.profileId) {
-			const profile = await Backend.createProfile(stores.user.name);
+			const profile = await Backend.createProfile(stores.user.$id, stores.user.name);
 			await Backend.updateProfileIdPrefs(profile.$id);
 			await stores.fetchUser();
 			await stores.fetchProfile(profile.$id);

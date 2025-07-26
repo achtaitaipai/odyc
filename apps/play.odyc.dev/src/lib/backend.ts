@@ -29,10 +29,7 @@ export class Backend {
 	// Connection
 	static #client = new Client()
 		.setEndpoint('https://fra.cloud.appwrite.io/v1')
-		.setProject('odyc-js')
-		.setDevKey(
-			'329615e85608308d251d2b0feccff2e14cc92e8ad976ecb998343f1ba31440c8cef7e7cae83a3eb96eb684b60dc973e7753d3545c0d5ab96b82b2b02c3f8a9904b6525a2a49b9912d78d114de5572f160b6ae0daba57bd826de0b50af2972ab82e74fdf6e8cf462d4a25e93840c969daf38929f289fa2be1c927642a7c99df4f'
-		);
+		.setProject('odyc-js');
 
 	// Service SDKs
 	static #account: Account = new Account(this.#client);
@@ -41,6 +38,10 @@ export class Backend {
 
 	static async signInAnonymous() {
 		return await this.#account.createAnonymousSession();
+	}
+
+	static async createJWT() {
+		return await this.#account.createJWT();
 	}
 
 	static async signInMagicURL(email: string) {
@@ -109,7 +110,7 @@ export class Backend {
 		]);
 	}
 
-	static async createProfile(name?: string) {
+	static async createProfile(userId: string, name?: string) {
 		if (!name) {
 			name = randomName(undefined, ' ');
 		}
@@ -120,7 +121,8 @@ export class Backend {
 
 		return await this.#databases.createDocument<Profiles>('main', 'profiles', id, {
 			name,
-			avatarPixels
+			avatarPixels,
+			userId
 		});
 	}
 

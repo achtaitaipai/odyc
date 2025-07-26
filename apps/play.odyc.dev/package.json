@@ -82,6 +82,7 @@
 		"js-beautify": "^1.15.4",
 		"lz-string": "^1.5.0",
 		"mode-watcher": "^1.1.0",
+		"node-appwrite": "^17.2.0",
 		"pfxr": "^1.0.9",
 		"slugify": "^1.6.6"
 	}

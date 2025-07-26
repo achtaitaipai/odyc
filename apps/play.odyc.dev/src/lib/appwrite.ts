@@ -27,4 +27,5 @@ export type Profiles = Models.Document & {
 	name: string;
 	avatarPixels: string | null;
 	description: string | null;
+	userId: string;
 };

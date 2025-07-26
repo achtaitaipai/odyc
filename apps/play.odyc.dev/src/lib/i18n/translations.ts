@@ -166,6 +166,12 @@ export const translations = {
 		'editor.sharePlayableUrlLabel': 'Playable URL',
 		'editor.shareEmbedLabel': 'Embed HTML',
 		'editor.close': 'Close',
+		'editor.collaborateSubmit': 'Grant access',
+		'editor.collaborateTitle': 'Collaborate with others',
+		'editor.collaborateDescription': 'Collaborate with friends or colleagues on the same game.',
+		'editor.collaborateSuccess': 'Collaborator invited successfully. They can now edit the game.',
+		'editor.collaborateSublabel': 'Enter nickname, or user ID.',
+		'editor.collaborateLabel': 'User to collaborate with',
 
 		// UI Elements
 		'ui.nothingHere': 'Nothing here yet',
@@ -384,6 +390,13 @@ export const translations = {
 		'editor.sharePlayableUrlLabel': 'URL jouable',
 		'editor.shareEmbedLabel': 'Intégrer HTML',
 		'editor.close': 'Fermer',
+		'editor.collaborateSubmit': "Accorder l'accès",
+		'editor.collaborateTitle': "Collaborer avec d'autres",
+		'editor.collaborateDescription': 'Collaborez avec des amis ou des collègues sur le même jeu.',
+		'editor.collaborateSuccess':
+			'Collaborateur invité avec succès. Ils peuvent maintenant éditer le jeu.',
+		'editor.collaborateSublabel': 'Entrez un pseudo, ou un ID utilisateur.',
+		'editor.collaborateLabel': 'Utilisateur avec qui collaborer',
 
 		// UI Elements
 		'ui.nothingHere': 'Rien pour le moment',

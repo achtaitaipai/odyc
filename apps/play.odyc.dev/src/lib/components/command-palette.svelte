@@ -32,13 +32,14 @@
 	});
 
 	$effect(() => {
-		if (open) gamesPromise = Backend.listGames([
-			Query.limit(50),
-			Query.select(['$id', 'name']),
-			Query.equal('ownerProfileId', stores.profile?.$id ?? ''),
-			Query.orderDesc('$updatedAt'),
-			Query.orderDesc('$createdAt')
-		]);
+		if (open)
+			gamesPromise = Backend.listGames([
+				Query.limit(50),
+				Query.select(['$id', 'name']),
+				Query.equal('ownerProfileId', stores.profile?.$id ?? ''),
+				Query.orderDesc('$updatedAt'),
+				Query.orderDesc('$createdAt')
+			]);
 	});
 
 	afterNavigate(() => {

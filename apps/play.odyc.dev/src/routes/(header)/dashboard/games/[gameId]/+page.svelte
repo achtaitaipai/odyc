@@ -501,6 +501,43 @@ ${code}
 		isShareModalOpen = open;
 	}
 
+	let isCollaborateModalOpen = $state(false);
+	function setCollaborateModalOpen(open: boolean) {
+		isCollaborateModalOpen = open;
+	}
+
+	let isCollaborateLoading = $state(false);
+	let collaborateUser = $state('');
+
+	async function onCollaborate(e: Event) {
+		e.preventDefault();
+
+		isCollaborateLoading = true;
+		try {
+			const response = await fetch('/api/v1/collaborators', {
+				method: 'POST',
+				body: JSON.stringify({
+					gameId: game.$id,
+					userDetail: collaborateUser,
+					jwt: (await Backend.createJWT()).jwt
+				}),
+				headers: {
+					'Content-type': 'application/json'
+				}
+			});
+			const data = await response.json();
+
+			if (!response.ok) throw new Error(data.message);
+
+			toast.success(stores.t('editor.collaborateSuccess'));
+			setCollaborateModalOpen(false);
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			isCollaborateLoading = false;
+		}
+	}
+
 	function onOpenEmbed() {
 		const embedUrl = `${window.location.origin}/embed/${game.slug}`;
 		window.open(embedUrl, '_blank')?.focus();
@@ -613,7 +650,7 @@ ${code}
 						<Menubar.Separator />
 						<Menubar.Item onclick={() => (isShareModalOpen = true)}>
 							<span class="w-full">{stores.t('editor.share')}</span>
-						</Menubar.Item><Menubar.Item disabled={true}>
+						</Menubar.Item><Menubar.Item onclick={() => (isCollaborateModalOpen = true)}>
 							<span class="w-full">{stores.t('editor.collaborate')}</span>
 						</Menubar.Item>
 						<Menubar.Separator />
@@ -1126,5 +1163,39 @@ ${code}
 				>{stores.t('editor.close')}</Button
 			>
 		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root open={isCollaborateModalOpen} onOpenChange={setCollaborateModalOpen}>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header>
+			<Dialog.Title>{stores.t('editor.collaborateTitle')}</Dialog.Title>
+			<Dialog.Description>
+				{stores.t('editor.collaborateDescription')}
+			</Dialog.Description>
+		</Dialog.Header>
+		<form onsubmit={onCollaborate}>
+			<div class="mb-3 flex w-full max-w-sm flex-col gap-1.5">
+				<Label for="user-to-collaborate-with">{stores.t('editor.collaborateLabel')}</Label>
+				<Input
+					bind:value={collaborateUser}
+					required={true}
+					type="text"
+					id="user-to-collaborate-with"
+					placeholder="meldiron"
+				/>
+				<p class="text-muted-foreground text-sm">{stores.t('editor.collaborateSublabel')}</p>
+			</div>
+
+			<Dialog.Footer>
+				<Button onclick={() => setCollaborateModalOpen(false)} variant="outline" type="button"
+					>{stores.t('editor.close')}</Button
+				>
+
+				<Button disabled={isCollaborateLoading} type="submit" variant="default"
+					>{stores.t('editor.collaborateSubmit')}</Button
+				>
+			</Dialog.Footer>
+		</form>
 	</Dialog.Content>
 </Dialog.Root>

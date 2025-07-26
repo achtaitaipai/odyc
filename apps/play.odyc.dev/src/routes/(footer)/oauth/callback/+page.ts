@@ -4,6 +4,8 @@ import type { PageLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 
+export let ssr = false;
+
 // TODO: If need comes, add ability to show verbose errors to user
 // TODO: Remember last path
 export const load: PageLoad = async ({ url }) => {
