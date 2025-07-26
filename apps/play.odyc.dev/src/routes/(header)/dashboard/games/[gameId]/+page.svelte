@@ -1,38 +1,38 @@
 <script lang="ts">
-	import { Switch } from '$lib/components/ui/switch/index.js';
+	import { beforeNavigate, goto, invalidate } from '$app/navigation';
+	import { PUBLIC_IFRAME_ENDPOINT, PUBLIC_ODYC_VERSION } from '$env/static/public';
+	import { Backend } from '$lib/backend';
+	import Editor from '$lib/components/editor/Editor.svelte';
+	import Paint from '$lib/components/plaint/Paint.svelte';
+	import Sound from '$lib/components/sound/Sound.svelte';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as Card from '$lib/components/ui/card';
+	import * as Command from '$lib/components/ui/command/index.js';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
+	import * as Menubar from '$lib/components/ui/menubar/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	import { Switch } from '$lib/components/ui/switch/index.js';
+	import { Textarea } from '$lib/components/ui/textarea/index.js';
+	import { DefaultCode, Dependencies } from '$lib/constants';
+	import { stores } from '$lib/stores.svelte';
+	import { cn } from '$lib/utils.js';
+	import OdycVersions from '$lib/versions.json';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
 	import CopyIcon from '@lucide/svelte/icons/copy';
 	import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
 	import RotateIcon from '@lucide/svelte/icons/rotate-cw';
-	import * as Command from '$lib/components/ui/command/index.js';
-	import * as Popover from '$lib/components/ui/popover/index.js';
-	import { cn } from '$lib/utils.js';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import * as Menubar from '$lib/components/ui/menubar/index.js';
-	import { onMount, tick } from 'svelte';
-	import OdycVersions from '$lib/versions.json';
-	import type { PageProps } from './$types';
-	import * as Card from '$lib/components/ui/card';
-	import { DefaultCode, Dependencies, TemplateGroups } from '$lib/constants';
 	import { mode } from 'mode-watcher';
-	import { toast } from 'svelte-sonner';
-	import { Backend } from '$lib/backend';
-	import { beforeNavigate, goto, invalidate } from '$app/navigation';
 	import slugify from 'slugify';
-	import { Separator } from '$lib/components/ui/separator/index.js';
-	import Label from '$lib/components/ui/label/label.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
-	import Button, { buttonVariants } from '$lib/components/ui/button/button.svelte';
-	import Editor from '$lib/components/editor/Editor.svelte';
-	import { stores } from '$lib/stores.svelte';
-	import { PUBLIC_IFRAME_ENDPOINT, PUBLIC_ODYC_VERSION } from '$env/static/public';
-	import Paint from '$lib/components/plaint/Paint.svelte';
-	import Sound from '$lib/components/sound/Sound.svelte';
+	import { onMount, tick } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
@@ -461,38 +461,33 @@ ${code}
 		showExamples = value;
 	}
 
-	let templateOpen = $state(false);
-	let templateValue = $state('');
-	let templateLabel = $state('');
-	let templateRef = $state<HTMLButtonElement>(null!);
-	function closeAndFocusTemplateTrigger() {
-		templateOpen = false;
+	let exampleOpen = $state(false);
+	let selectedExampleLabel = $state('');
+	let selectedExampleId = $state('');
+	let exampleRef = $state<HTMLButtonElement>(null!);
+
+	function closeAndFocusExampleTrigger() {
+		exampleOpen = false;
 		tick().then(() => {
-			templateRef.focus();
+			exampleRef.focus();
 		});
 	}
 
-	function onTemplateSelect() {
-		if (!templateValue) {
-			toast.error(stores.t('editor.selectTemplateError'));
+	async function onExampleSelect() {
+		if (!selectedExampleId) {
+			toast.error(stores.t('editor.selectExampleError'));
 			return;
 		}
 
 		showExamples = false;
-		templateOpen = false;
+		exampleOpen = false;
 
-		let newCode = '';
-
-		for (const group of TemplateGroups) {
-			for (const template of group.templates) {
-				if (template.value === templateValue) {
-					newCode = template.code;
-					break;
-				}
-			}
+		const selectedExample = data.exampleGroups.flat().find((el) => el.id === selectedExampleId);
+		if (!selectedExample) {
+			toast.error(stores.t('editor.selectExampleError'));
+			return;
 		}
-
-		code = newCode;
+		code = await selectedExample.getContent();
 		updateCode();
 	}
 
@@ -1011,36 +1006,37 @@ ${code}
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
-			<Popover.Root bind:open={templateOpen}>
-				<Popover.Trigger bind:ref={templateRef}>
+			<Popover.Root bind:open={exampleOpen}>
+				<Popover.Trigger bind:ref={exampleRef}>
 					{#snippet child({ props })}
 						<Button {...props} variant="outline" class="w-full justify-between" role="combobox">
-							{templateLabel || stores.t('editor.selectTemplatePlaceholder')}
+							{selectedExampleLabel || stores.t('editor.selectExamplePlaceholder')}
 							<ChevronsUpDownIcon class="opacity-50" />
 						</Button>
 					{/snippet}
 				</Popover.Trigger>
 				<Popover.Content class="w-[200px] p-0">
 					<Command.Root>
-						<Command.Input placeholder={stores.t('editor.searchTemplates')} />
+						<Command.Input placeholder={stores.t('editor.searchExamples')} />
 						<Command.List>
-							<Command.Empty>{stores.t('editor.noTemplateFound')}</Command.Empty>
-							{#each TemplateGroups as group (group.title)}
-								<Command.Group heading={group.title}>
-									{#each group.templates as template (template.value)}
+							<Command.Empty>{stores.t('editor.noExampleFound')}</Command.Empty>
+							{#each data.exampleGroups as group}
+								{@const heading = group[0].category}
+								<Command.Group {heading}>
+									{#each group as example}
 										<Command.Item
-											keywords={[template.value, template.label]}
-											value={template.value}
+											keywords={[example.name, example.category]}
+											value={example.id}
 											onSelect={() => {
-												templateValue = template.value;
-												templateLabel = template.label;
-												closeAndFocusTemplateTrigger();
+												selectedExampleLabel = example.name;
+												selectedExampleId = example.id;
+												closeAndFocusExampleTrigger();
 											}}
 										>
 											<CheckIcon
-												class={cn(templateValue !== template.value && 'text-transparent')}
+												class={cn(selectedExampleId !== example.id && 'text-transparent')}
 											/>
-											{template.label}
+											{example.name}
 										</Command.Item>
 									{/each}
 								</Command.Group>
@@ -1051,7 +1047,7 @@ ${code}
 			</Popover.Root>
 		</div>
 		<Dialog.Footer>
-			<Button type="button" onclick={onTemplateSelect}>{stores.t('editor.load')}</Button>
+			<Button type="button" onclick={onExampleSelect}>{stores.t('editor.load')}</Button>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
