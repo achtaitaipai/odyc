@@ -22,6 +22,7 @@
 
 	let preview: HTMLCanvasElement | null = $state(null);
 
+	let clientReady = $state(false);
 	onMount(() => {
 		window.addEventListener('message', function (event) {
 			const { type, detail } = event.data;
@@ -29,6 +30,7 @@
 				sendCode();
 			}
 		});
+		clientReady = true;
 	});
 
 	function sendCode() {
@@ -128,12 +130,14 @@
 			<div class="col-span-6 w-full">
 				<Card.Root class="sticky top-4 col-span-12 p-0 md:col-span-6">
 					<Card.Content class="aspect-square w-full p-2">
-						<iframe
-							class="h-full w-full"
-							id="preview"
-							src={(PUBLIC_IFRAME_ENDPOINT ?? '/iframe') + '?version=' + game.version}
-							title={stores.t('editor.gamePreview')}
-						></iframe>
+						{#if clientReady}
+							<iframe
+								class="h-full w-full"
+								id="preview"
+								src={(PUBLIC_IFRAME_ENDPOINT ?? '/iframe') + '?version=' + game.version}
+								title={stores.t('editor.gamePreview')}
+							></iframe>
+						{/if}
 					</Card.Content>
 				</Card.Root>
 			</div>
