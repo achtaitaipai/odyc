@@ -4,8 +4,8 @@ import type { PageLoad } from './$types';
 
 export const ssr = false;
 
-export const load: PageLoad = async ({ parent }) => {
-	await parent();
+export const load: PageLoad = async () => {
+	await stores.fetchUser();
 
 	if (!stores.user) {
 		throw redirect(307, '/auth');

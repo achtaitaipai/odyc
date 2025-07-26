@@ -11,13 +11,13 @@ void main() {
   uv.y = v_texCoords.y +sin(v_texCoords.x * 30.) *.1 * u_intensity;
   gl_FragColor = texture2D(u_texture, uv);
 }
-`
-const TIME_BEFORE_LOSE = 3000
-let score = 0
+`;
+const TIME_BEFORE_LOSE = 3000;
+let score = 0;
 /** @type number */
-let timeoutIntervalId
+let timeoutIntervalId;
 
-let filterIntensity = 0
+let filterIntensity = 0;
 
 const game = createGame({
 	player: {
@@ -60,22 +60,22 @@ const game = createGame({
 	`,
 			sound: ['BLIP', 5353],
 			onCollide: function (target) {
-				target.remove()
-				game.addToCell(...randomPosition(target.position), 'o')
-				filterIntensity = filterIntensity === 0 ? 0.1 : filterIntensity * -1.1
+				target.remove();
+				game.addToCell(...randomPosition(target.position), 'o');
+				filterIntensity = filterIntensity === 0 ? 0.1 : filterIntensity * -1.1;
 				game.updateFilter({
 					intensity: filterIntensity
-				})
-				clearTimeout(timeoutIntervalId)
-				score++
+				});
+				clearTimeout(timeoutIntervalId);
+				score++;
 				timeoutIntervalId = setTimeout(() => {
-					filterIntensity = 0
+					filterIntensity = 0;
 					game.updateFilter({
 						intensity: filterIntensity
-					})
-					game.end('°GAME OVER', 'Score: ' + score)
-					score = 0
-				}, TIME_BEFORE_LOSE)
+					});
+					game.end('°GAME OVER', 'Score: ' + score);
+					score = 0;
+				}, TIME_BEFORE_LOSE);
 			}
 		}
 	},
@@ -99,19 +99,19 @@ const game = createGame({
 	},
 	title:
 		'_~ <3>T<3><4>h<4><5>e<5> <6>M<6><7>a<7><8>g<8><3>i<3><4>c<4> <5>M<5><6>u<6><7>s<7><8>h<8><3>r<3><4>o<4><5>o<5><6>m<6> '
-})
+});
 
 /**
  * @param position {[number,number]}
  * @return {[number,number]}
  */
 function randomPosition(position) {
-	let [x, y] = position
-	let [newX, newY] = [x, y]
+	let [x, y] = position;
+	let [newX, newY] = [x, y];
 	while (
 		(newX === x && newY === y) ||
 		(newX === game.player.position[0] && newY === game.player.position[1])
 	)
-		[newX, newY] = [Math.floor(Math.random() * 7 + 1), Math.floor(Math.random() * 7 + 1)]
-	return [newX, newY]
+		[newX, newY] = [Math.floor(Math.random() * 7 + 1), Math.floor(Math.random() * 7 + 1)];
+	return [newX, newY];
 }

@@ -11,6 +11,7 @@
 	import { toast } from 'svelte-sonner';
 	import { Backend } from '$lib/backend';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let { data }: PageProps = $props();
 
@@ -21,11 +22,13 @@
 
 	let preview: HTMLCanvasElement | null = $state(null);
 
-	window.addEventListener('message', function (event) {
-		const { type, detail } = event.data;
-		if (type === 'on-runner-ready') {
-			sendCode();
-		}
+	onMount(() => {
+		window.addEventListener('message', function (event) {
+			const { type, detail } = event.data;
+			if (type === 'on-runner-ready') {
+				sendCode();
+			}
+		});
 	});
 
 	function sendCode() {

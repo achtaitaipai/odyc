@@ -64,4 +64,4 @@ Do you believe in truth?
 	dialogBackground: 1,
 	dialogBorder: 0,
 	dialogColor: 0
-})
+});

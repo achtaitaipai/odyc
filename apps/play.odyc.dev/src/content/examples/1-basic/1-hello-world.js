@@ -27,4 +27,4 @@ const game = createGame({
 	x......x
 	xxxxxxxx
 	`
-})
+});

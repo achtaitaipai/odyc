@@ -1,7 +1,7 @@
-const cellWidth = 9
-const cellHeight = 8
-const screenWidth = 8
-const screenHeight = 8
+const cellWidth = 9;
+const cellHeight = 8;
+const screenWidth = 8;
+const screenHeight = 8;
 
 const levels = /**@type {const}*/ ([
 	{
@@ -69,9 +69,9 @@ const levels = /**@type {const}*/ ([
 	`,
 		playerPos: [3, 0]
 	}
-])
+]);
 
-let levelIndex = 0
+let levelIndex = 0;
 
 const sprites = {
 	player: `
@@ -105,7 +105,7 @@ const sprites = {
 		022222220
 		000000000
 	`
-}
+};
 
 const game = createGame({
 	player: {
@@ -118,14 +118,14 @@ const game = createGame({
 			onEnter: function () {
 				for (let y = 0; y < game.height; y++) {
 					for (let x = 0; x < game.width; x++) {
-						const cell = game.getCell(x, y)
-						if (cell.symbol === '#') return
+						const cell = game.getCell(x, y);
+						if (cell.symbol === '#') return;
 					}
 				}
-				levelIndex = (levelIndex + 1) % levels.length
-				const { map, playerPos } = levels[levelIndex]
-				game.loadMap(map, [...playerPos])
-				if (levelIndex === 0) game.end('Nice job!\n\nEverything’s clean!')
+				levelIndex = (levelIndex + 1) % levels.length;
+				const { map, playerPos } = levels[levelIndex];
+				game.loadMap(map, [...playerPos]);
+				if (levelIndex === 0) game.end('Nice job!\n\nEverything’s clean!');
 			}
 		},
 		'#': {
@@ -133,7 +133,7 @@ const game = createGame({
 			solid: false,
 			sound: ['BLIP', 424245453],
 			onEnter: function (target) {
-				game.addToCell(...target.position, '$')
+				game.addToCell(...target.position, '$');
 			}
 		},
 		$: {
@@ -141,9 +141,9 @@ const game = createGame({
 			solid: false,
 			sound: ['FALL', 424245453],
 			onEnter: async function (target) {
-				game.addToCell(...target.position, '#')
-				await game.openDialog('Oh no, I got it dirty again!')
-				game.end()
+				game.addToCell(...target.position, '#');
+				await game.openDialog('Oh no, I got it dirty again!');
+				game.end();
 			}
 		},
 		X: {
@@ -158,4 +158,4 @@ const game = createGame({
 	background: 0,
 	volume: 0.04,
 	title: 'The sweeper with the dirty shoes'
-})
+});

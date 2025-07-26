@@ -44,4 +44,4 @@ const game = createGame({
 	xxxxxxxx
 	`,
 	background: 7
-})
+});

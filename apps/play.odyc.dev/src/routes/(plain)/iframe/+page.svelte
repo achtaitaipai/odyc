@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let odycReady = $state(false);
 	let stopAndSave = $state<any>(null);
 
@@ -106,31 +108,33 @@
 		eval(code);
 	}
 
-	window.addEventListener('message', (event: any) => {
-		const { type, detail } = event.data;
-		if (type === 'oncodechange') {
-			const code = detail.code;
-			evalCode(code);
-		} else if (type === 'onscreenshot') {
-			// @ts-expect-error odyc class is ensured during evalCode()
-			odyc.makeScreenshot('odyc-play-screenshot');
-		} else if (type === 'onrecordingstart') {
-			// @ts-expect-error odyc class is ensured during evalCode()
-			stopAndSave = odyc.startRecording();
-		} else if (type === 'onrecordingend') {
-			stopAndSave('odyc-play-recording');
-		} else if (type === 'onblobstart') {
-			sendScreenshot();
-		}
-	});
+	onMount(() => {
+		window.addEventListener('message', (event: any) => {
+			const { type, detail } = event.data;
+			if (type === 'oncodechange') {
+				const code = detail.code;
+				evalCode(code);
+			} else if (type === 'onscreenshot') {
+				// @ts-expect-error odyc class is ensured during evalCode()
+				odyc.makeScreenshot('odyc-play-screenshot');
+			} else if (type === 'onrecordingstart') {
+				// @ts-expect-error odyc class is ensured during evalCode()
+				stopAndSave = odyc.startRecording();
+			} else if (type === 'onrecordingend') {
+				stopAndSave('odyc-play-recording');
+			} else if (type === 'onblobstart') {
+				sendScreenshot();
+			}
+		});
 
-	document.addEventListener('keydown', (event) => {
-		if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(event.code) > -1) {
-			event.preventDefault();
-		}
-	});
+		document.addEventListener('keydown', (event) => {
+			if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(event.code) > -1) {
+				event.preventDefault();
+			}
+		});
 
-	window.parent.postMessage({ type: 'on-runner-ready' }, '*');
+		window.parent.postMessage({ type: 'on-runner-ready' }, '*');
+	});
 </script>
 
 <svelte:head>

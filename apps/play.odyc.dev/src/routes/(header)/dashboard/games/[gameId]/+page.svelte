@@ -57,7 +57,7 @@
 	window.addEventListener('message', function (event) {
 		const { type, detail } = event.data;
 		if (type === 'on-runner-ready') {
-			updateCode();
+			updateCode(true);
 		} else if (type === 'on-canvas-blob') {
 			const { blob } = detail;
 			onSaveCodeFinish(blob);
@@ -488,10 +488,10 @@ ${code}
 			return;
 		}
 		code = await selectedExample.getContent();
-		updateCode();
+		updateCode(true);
 	}
 
-	let autoRefresh = $state(true);
+	let autoRefresh = $state(false);
 	function onForceRefresh() {
 		updateCode(true);
 	}

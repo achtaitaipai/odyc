@@ -60,4 +60,4 @@ createGame({
 	screenHeight: 12,
 	cameraWidth: 4,
 	cameraHeight: 4
-})
+});

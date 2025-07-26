@@ -1,4 +1,4 @@
-const FPS = 3
+const FPS = 3;
 
 const animation = [
 	`
@@ -21,7 +21,7 @@ const animation = [
 			..0..0..
 			..0..0..
 			`
-]
+];
 
 const game = createGame({
 	player: {
@@ -43,17 +43,17 @@ const game = createGame({
 	x......x
 	xxxxxxxx
 			`
-})
+});
 
 /**
  * @param {number} now
  */
 function animate(now) {
-	const sprite = animation[Math.floor((now * 3) / 1000) % animation.length]
+	const sprite = animation[Math.floor((now * 3) / 1000) % animation.length];
 	if (sprite !== game.player.sprite) {
-		game.player.sprite = sprite
+		game.player.sprite = sprite;
 	}
-	requestAnimationFrame(animate)
+	requestAnimationFrame(animate);
 }
 
-requestAnimationFrame(animate)
+requestAnimationFrame(animate);

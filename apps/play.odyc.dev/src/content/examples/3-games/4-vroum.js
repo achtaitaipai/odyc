@@ -1,5 +1,5 @@
-document.body.style.setProperty('background', 'black')
-let levelIndex = 0
+document.body.style.setProperty('background', 'black');
+let levelIndex = 0;
 
 const sprites = {
 	player: `
@@ -51,7 +51,7 @@ const sprites = {
     .555.
     ..5..
   `
-}
+};
 
 const levels = [
 	{
@@ -209,29 +209,29 @@ const levels = [
 		playerX: 2,
 		playerY: 9
 	}
-]
+];
 
-let oldPlayerPos = [levels[levelIndex].playerX, levels[levelIndex].playerY]
+let oldPlayerPos = [levels[levelIndex].playerX, levels[levelIndex].playerY];
 
 const nextLevel = async () => {
-	await game.playSound('POWERUP')
-	levelIndex = (levelIndex + 1) % levels.length
-	const level = levels[levelIndex]
-	game.loadMap(level.map, [level.playerX, level.playerY])
-	oldPlayerPos = [levels[levelIndex].playerX, levels[levelIndex].playerY]
-}
+	await game.playSound('POWERUP');
+	levelIndex = (levelIndex + 1) % levels.length;
+	const level = levels[levelIndex];
+	game.loadMap(level.map, [level.playerX, level.playerY]);
+	oldPlayerPos = [levels[levelIndex].playerX, levels[levelIndex].playerY];
+};
 
 const loose = () => {
-	game.playSound('FALL')
-	game.end()
-}
+	game.playSound('FALL');
+	game.end();
+};
 
 const directions = {
 	'^': [0, -1],
 	v: [0, 1],
 	'>': [1, 0],
 	'<': [-1, 0]
-}
+};
 
 async function update() {
 	const arrows = [
@@ -239,26 +239,26 @@ async function update() {
 		...game.getAll('>'),
 		...game.getAll('v'),
 		...game.getAll('^')
-	]
-	const [playerX, playerY] = game.player.position
-	let gameOver = false
+	];
+	const [playerX, playerY] = game.player.position;
+	let gameOver = false;
 	arrows.forEach((el) => {
-		const [posX, posY] = el.position
-		const symbol = el.symbol
-		if (!(symbol === '<' || symbol === '>' || symbol === '^' || symbol === 'v')) return
-		const [dirX, dirY] = symbol ? directions[symbol] : [0, 0]
-		const nextCell = game.getCell(posX + dirX, posY + dirY)
+		const [posX, posY] = el.position;
+		const symbol = el.symbol;
+		if (!(symbol === '<' || symbol === '>' || symbol === '^' || symbol === 'v')) return;
+		const [dirX, dirY] = symbol ? directions[symbol] : [0, 0];
+		const nextCell = game.getCell(posX + dirX, posY + dirY);
 		if (nextCell.symbol !== '.') {
 			const newSymbols = /** @type {const} */ ({
 				'<': '>',
 				'>': '<',
 				'^': 'v',
 				v: '^'
-			})
+			});
 			if (playerX === posX && playerY === posY) {
-				gameOver = true
+				gameOver = true;
 			}
-			game.addToCell(posX, posY, newSymbols[symbol])
+			game.addToCell(posX, posY, newSymbols[symbol]);
 		} else {
 			if (
 				(playerX === posX + dirX && playerY === posY + dirY) ||
@@ -267,14 +267,14 @@ async function update() {
 					playerX === posX &&
 					playerY === posY)
 			) {
-				gameOver = true
+				gameOver = true;
 			}
-			game.addToCell(...el.position, '.')
-			game.addToCell(posX + dirX, posY + dirY, symbol)
+			game.addToCell(...el.position, '.');
+			game.addToCell(posX + dirX, posY + dirY, symbol);
 		}
-	})
-	if (gameOver) loose()
-	oldPlayerPos = game.player.position
+	});
+	if (gameOver) loose();
+	oldPlayerPos = game.player.position;
 }
 
 const game = createGame({
@@ -334,4 +334,4 @@ const game = createGame({
 			intensity: 0.6
 		}
 	}
-})
+});

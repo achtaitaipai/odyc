@@ -28,11 +28,11 @@ const game = createGame({
 			........
 			`,
 			onCollide(target) {
-				target.remove()
+				target.remove();
 				game.setAll('d', {
 					solid: false,
 					dialog: null
-				})
+				});
 			}
 		},
 		d: {
@@ -48,7 +48,7 @@ const game = createGame({
 			`,
 			dialog: 'It looks closed.',
 			onEnter(target) {
-				target.remove()
+				target.remove();
 			}
 		}
 	},
@@ -63,4 +63,4 @@ const game = createGame({
 	xxxxxxxx
 	`,
 	background: 1
-})
+});

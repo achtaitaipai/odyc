@@ -3,6 +3,8 @@ import { Backend } from '$lib/backend';
 import { Dependencies } from '$lib/constants';
 import type { Games } from '$lib/appwrite';
 
+export let ssr = true;
+
 export const load: PageLoad = async ({ params, depends }) => {
 	depends(Dependencies.GAMES);
 

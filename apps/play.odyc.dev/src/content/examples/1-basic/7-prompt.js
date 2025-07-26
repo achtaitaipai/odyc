@@ -28,10 +28,10 @@ const game = createGame({
 			44888844
 			`,
 			async onCollide() {
-				await game.openDialog('How are you?')
-				const res = await game.prompt('Great!', 'Meh..', 'Good', 'Bad!')
-				if (res === 0 || res === 2) game.openDialog('Glad to hear it!')
-				else game.openDialog('Sorry to hear that...')
+				await game.openDialog('How are you?');
+				const res = await game.prompt('Great!', 'Meh..', 'Good', 'Bad!');
+				if (res === 0 || res === 2) game.openDialog('Glad to hear it!');
+				else game.openDialog('Sorry to hear that...');
 			}
 		}
 	},
@@ -45,4 +45,4 @@ const game = createGame({
 	x......x
 	xxxxxxxx
 	`
-})
+});

@@ -5,23 +5,23 @@ const texts = {
 	fr: {
 		robot: 'Êtes-vous un robot?'
 	}
-}
+};
 
 /** @typedef {keyof typeof texts} Lang */
 
 /** @param{Lang} value */
 function setLang(value) {
-	lang = value
+	lang = value;
 }
 
 /** @param {keyof typeof texts[Lang]} key */
 function t(key) {
-	const res = texts[lang][key] ?? key
-	return res
+	const res = texts[lang][key] ?? key;
+	return res;
 }
 
 /** @type {Lang} */
-let lang = 'en'
+let lang = 'en';
 
 const game = createGame({
 	player: {
@@ -51,7 +51,7 @@ const game = createGame({
 			.22.22..
 			`,
 			onCollide() {
-				game.openDialog(t('robot'))
+				game.openDialog(t('robot'));
 			}
 		},
 
@@ -71,9 +71,9 @@ const game = createGame({
 	xxxxxxxx
 	`,
 	background: 9
-})
+});
 
 game.openMenu({
 	English: () => (lang = 'en'),
 	Français: () => (lang = 'fr')
-})
+});

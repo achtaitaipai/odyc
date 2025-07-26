@@ -63,11 +63,11 @@ const game = createGame({
 		ACTION: ['Enter', 'Space']
 	},
 	background: 2
-})
+});
 
 /** @param target{import('odyc').Actor}*/
 function onCollide(target) {
-	game.addToCell(...game.player.position, target.symbol)
-	game.player.position = target.position
-	target.remove()
+	game.addToCell(...game.player.position, target.symbol);
+	game.player.position = target.position;
+	target.remove();
 }

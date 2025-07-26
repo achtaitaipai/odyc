@@ -10,14 +10,14 @@ const game = createGame({
 		p: {
 			sprite: 3,
 			onCollide(target) {
-				const [px, py] = game.player.position
-				const [tx, ty] = target.position
-				const [dx, dy] = [tx - px, ty - py]
-				const nextCell = game.getCell(tx + dx, ty + dy)
+				const [px, py] = game.player.position;
+				const [tx, ty] = target.position;
+				const [dx, dy] = [tx - px, ty - py];
+				const nextCell = game.getCell(tx + dx, ty + dy);
 				if (!nextCell.solid) {
-					game.addToCell(tx + dx, ty + dy, target.symbol)
-					game.player.position = [tx, ty]
-					target.remove()
+					game.addToCell(tx + dx, ty + dy, target.symbol);
+					game.player.position = [tx, ty];
+					target.remove();
 				}
 			}
 		}
@@ -33,4 +33,4 @@ const game = createGame({
 	xxxxxxxx
 	`,
 	background: 1
-})
+});

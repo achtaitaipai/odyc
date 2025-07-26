@@ -40,7 +40,7 @@ const game = createGame({
 						Lang: () => game.openMessage('Language settings coming soon')
 					},
 					Cancel: null
-				})
+				});
 			}
 		}
 	},
@@ -54,4 +54,4 @@ const game = createGame({
 	x......x
 	xxxxxxxx
 	`
-})
+});

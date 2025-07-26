@@ -1,13 +1,13 @@
-let hasOs = true
+let hasOs = true;
 
 /** @return {[number,number]}*/
 function randomPosition() {
-	const r = Math.floor(Math.random() * 7 + 1)
-	const side = Math.floor(Math.random() * 3)
-	if (side === 0) return [r, 1]
-	if (side === 1) return [7, r]
-	if (side === 2) return [r, 7]
-	return [1, r]
+	const r = Math.floor(Math.random() * 7 + 1);
+	const side = Math.floor(Math.random() * 3);
+	if (side === 0) return [r, 1];
+	if (side === 1) return [7, r];
+	if (side === 2) return [r, 7];
+	return [1, r];
 }
 
 const game = createGame({
@@ -51,12 +51,12 @@ const game = createGame({
 	`,
 			onCollide: async function (target) {
 				if (hasOs) {
-					game.addToCell(...randomPosition(), 'o')
-					hasOs = false
-					game.playSound('POWERUP', 543534)
-					game.openDialog('Go!')
+					game.addToCell(...randomPosition(), 'o');
+					hasOs = false;
+					game.playSound('POWERUP', 543534);
+					game.openDialog('Go!');
 				} else {
-					game.openDialog('Go go!')
+					game.openDialog('Go go!');
 				}
 			}
 		},
@@ -73,8 +73,8 @@ const game = createGame({
     `,
 			sound: ['PICKUP', 5353],
 			onCollide: function (target) {
-				target.remove()
-				hasOs = true
+				target.remove();
+				hasOs = true;
 			}
 		}
 	},
@@ -93,4 +93,4 @@ const game = createGame({
 	screenWidth: 9,
 	screenHeight: 9,
 	title: '>> Dodog <<'
-})
+});
