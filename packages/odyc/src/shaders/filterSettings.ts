@@ -103,11 +103,14 @@ type CustomFilterSettings = {
  * }
  * ```
  */
-export type FilterParams =
+export type FilterParams = (
 	| {
 			[K in FilterKey]: FilterSettingsOf<K>
 	  }[FilterKey]
 	| CustomFilterSettings
+) & {
+	root?: HTMLElement | string
+}
 
 export const getFilterSettings = (settings: FilterParams) => {
 	if ('name' in settings) {
