@@ -48,7 +48,9 @@ class GameLoop<T extends string> {
 				await this.#gameState.cells.getEvent(...from.value, 'onLeave')?.()
 				this.#gameState.player.position = to.value
 			}
-
+            if(cell.solid) {
+                await this.#gameState.cells.getEvent(...to.value, 'beforeCollide')?.()
+            }
 			this.#playSound(cell)
 			await this.#openDialog(cell)
 
