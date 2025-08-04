@@ -45,7 +45,7 @@ class GameLoop<T extends string> {
 			const cell = this.#gameState.cells.getCellAt(...to.value)
 			
 			if (cell.solid) {
-				await this.#gameState.cells.getEvent(...to.value, 'beforeCollide')?.()
+				await this.#gameState.cells.getEvent(...to.value, 'onCollideStart')?.()
 			} else {
 				await this.#gameState.cells.getEvent(...from.value, 'onLeave')?.()
 				this.#gameState.player.position = to.value

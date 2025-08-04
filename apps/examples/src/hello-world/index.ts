@@ -33,7 +33,7 @@ const game = createGame({
 			onCollide() {
 				console.log('You have collided with the cell!')
 			},
-			beforeCollide() {
+			onCollideStart() {
 				console.log('You have previously collided with the cell!')
 			},
 		},
