@@ -165,6 +165,7 @@ export class Cells<T extends string> {
 			| 'onCollide'
 			| 'onCollideStart'
 			| 'onEnter'
+            | 'onEnterStart'
 			| 'onLeave'
 			| 'onScreenLeave'
 			| 'onScreenEnter'
@@ -249,6 +250,7 @@ export class Cells<T extends string> {
 			foreground: template.foreground === true,
 			onCollide: template.onCollide,
 			onCollideStart: template.onCollideStart,
+            onEnterStart: template.onEnterStart,
 			onEnter: template.onEnter,
 			onLeave: template.onLeave,
 			onScreenEnter: template.onScreenEnter,

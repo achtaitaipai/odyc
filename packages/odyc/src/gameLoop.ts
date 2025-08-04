@@ -46,7 +46,10 @@ class GameLoop<T extends string> {
 			
 			if (cell.solid) {
 				await this.#gameState.cells.getEvent(...to.value, 'onCollideStart')?.()
-			} else {
+			}  else {
+                // unsure if this is ideal. feels like these need a logic switch of some kind?
+                // that said it does seem to work
+                await this.#gameState.cells.getEvent(...to.value, 'onEnterStart')?.()
 				await this.#gameState.cells.getEvent(...from.value, 'onLeave')?.()
 				this.#gameState.player.position = to.value
 			}

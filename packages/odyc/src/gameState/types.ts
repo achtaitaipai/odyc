@@ -47,6 +47,8 @@ export type CellState<T extends string> = {
 	onCollide?: (target: CellFacade<T>) => any
 	/** Called after player collides with this cell */
 	onCollideStart?: (target: CellFacade<T>) => any
+    /** Call when a player begins to enter a cell, before dialog and sounds */
+    onEnterStart?: (target: CellFacade<T>) => any
 	/** Called when player moves into this cell's position */
 	onEnter?: (target: CellFacade<T>) => any
 	/** Called when player leaves this cell's position */
@@ -73,6 +75,7 @@ export type CellParams = Partial<
 		| 'position'
 		| 'onCollide'
 		| 'onCollideStart'
+        | 'onEnterStart'
 		| 'onEnter'
 		| 'onLeave'
 		| 'onScreenEnter'
