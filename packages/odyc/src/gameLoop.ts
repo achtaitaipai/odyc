@@ -44,17 +44,21 @@ class GameLoop<T extends string> {
 		if (this.#isCellOnworld(to.value)) {
 			const cell = this.#gameState.cells.getCellAt(...to.value)
 
-			if (!cell.solid) {
+			if (cell.solid) {
+				await this.#gameState.cells.getEvent(...to.value, 'onCollideStart')?.()
+			} else {
 				await this.#gameState.cells.getEvent(...from.value, 'onLeave')?.()
 				this.#gameState.player.position = to.value
+				await this.#gameState.cells.getEvent(...to.value, 'onEnterStart')?.()
 			}
 
 			this.#playSound(cell)
 			await this.#openDialog(cell)
 
-			if (cell.solid)
-				await this.#gameState.cells.getEvent(...to.value, 'onCollide')?.()
-			else await this.#gameState.cells.getEvent(...to.value, 'onEnter')?.()
+			await this.#gameState.cells.getEvent(
+				...to.value,
+				cell.solid ? 'onCollide' : 'onEnter',
+			)?.()
 		}
 
 		for (const cell of this.#gameState.cells.get()) {

@@ -30,6 +30,12 @@ const game = createGame({
         ...66...
 			`,
 			dialog: 'Hello adventurer!',
+			onCollide() {
+				console.log('You have collided with the cell!')
+			},
+			onCollideStart() {
+				console.log('You have previously collided with the cell!')
+			},
 		},
 	},
 	map: `

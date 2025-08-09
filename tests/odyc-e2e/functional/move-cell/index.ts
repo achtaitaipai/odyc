@@ -5,13 +5,14 @@ const state = {
 	turnSpy: null as any,
 	enterSpy: null as any,
 	collideSpy: null as any,
+    onCollideStartSpy: null as any,
 }
 
 export const init = () => {
 	state.turnSpy = vi.fn()
 	state.enterSpy = vi.fn()
 	state.collideSpy = vi.fn()
-
+    state.onCollideStartSpy = vi.fn()
 	const game = createGame({
 		templates: {
 			x: {
@@ -21,6 +22,7 @@ export const init = () => {
 				onTurn: state.turnSpy,
 				onEnter: state.enterSpy,
 				onCollide: state.collideSpy,
+                onCollideStart: state.onCollideStartSpy,
 			},
 			y: {
 				sprite: 2,
