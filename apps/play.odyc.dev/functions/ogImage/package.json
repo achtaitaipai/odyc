@@ -1,0 +1,24 @@
+{
+  "name": "starter-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "build": "babel src --out-dir dist",
+    "bundle": "npm install && npm run build"
+  },
+  "dependencies": {
+    "node-appwrite": "^17.1.0",
+    "@vercel/og": "^0.7.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/plugin-transform-react-jsx": "^7.27.1",
+    "@babel/preset-env": "^7.28.0",
+    "prettier": "^3.2.5",
+    "react": "^19.1.0"
+  }
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 8 8" shape-rendering="crispEdges">
+    <path stroke="#f16594" d="M1 0h1M2 1h1M3 4h2M4 5h1" />
+    <path stroke="#202528" d="M2 0h1" />
+    <path stroke="#f06494" d="M3 0h1M2 4h1" />
+    <path stroke="#fdc518" d="M0 1h1" />
+    <path stroke="#f16494" d="M1 1h1" />
+    <path stroke="#f06495" d="M3 1h1M3 2h1M2 3h1M5 4h2" />
+    <path stroke="#f16495" d="M7 2h1M4 3h1M6 3h1" />
+    <path stroke="#f06595" d="M3 3h1M5 3h1M2 5h1" />
+    <path stroke="#f16595" d="M7 3h1M3 5h1" />
+    <path stroke="#f06594" d="M5 5h1" />
+    <path stroke="#fe922a" d="M4 6h1" />
+    <path stroke="#ff932a" d="M3 7h1" />
+    <path stroke="#ff932b" d="M4 7h1" />
+</svg>
