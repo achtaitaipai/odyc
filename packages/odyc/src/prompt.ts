@@ -39,7 +39,11 @@ export class Prompt {
 		this.#contentColor = this.#getColor(params.dialogColor)
 		this.#borderColor = this.#getColor(params.dialogBorder)
 
-		this.#canvas = getCanvas({ id: PROMPT_CANVAS_ID, zIndex: 10 })
+		this.#canvas = getCanvas({
+			id: PROMPT_CANVAS_ID,
+			zIndex: 10,
+			root: params.root,
+		})
 		this.#canvas.setSize(PROMPT_CANVAS_SIZE, PROMPT_CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()

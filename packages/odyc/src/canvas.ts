@@ -1,26 +1,57 @@
 import { createSingleton } from './lib'
 
-type CanvasParams = { id: string; zIndex?: number }
+type CanvasParams = {
+	id: string
+	zIndex?: number
+	root?: HTMLElement | string | null
+}
 
 export class Canvas {
 	element: HTMLCanvasElement
 
-	constructor({ id, zIndex }: CanvasParams) {
+	#isFullscreen = true
+
+	constructor({ id, zIndex, root = null }: CanvasParams) {
 		this.element = document.createElement('canvas')
+
+		// If developer doesnt provide custom root, put it to body and assume it's the only thing on page
+		if (root) {
+			this.#isFullscreen = false
+		} else {
+			root = document.body
+		}
+
+		this.element.addEventListener('keydown', (e) => {
+			if (
+				document.activeElement &&
+				document.activeElement.classList.contains('odyc-canvas')
+			) {
+				e.preventDefault()
+			} else {
+				alert('Problem')
+			}
+		})
+
+		this.element.classList.add('odyc-canvas')
+		this.element.setAttribute('tabindex', '0')
+		this.element.style.setProperty('display', 'block')
 		this.element.style.setProperty('position', 'absolute')
 		this.element.style.setProperty('image-rendering', 'pixelated')
 		if (id) this.element.classList.add(id)
 		if (zIndex) this.element.style.setProperty('z-index', zIndex.toString())
-		document.body.append(this.element)
+
+		const element =
+			typeof root === 'string' ? document.querySelector(root) : root
+		element?.appendChild(this.element)
 		window.addEventListener('resize', this.#fitToScreen)
 	}
 
 	show() {
-		this.element.style.setProperty('display', 'block')
+		this.element.style.setProperty('opacity', '1')
 	}
 
 	hide() {
-		this.element.style.setProperty('display', 'none')
+		this.element.style.setProperty('opacity', '0')
 	}
 
 	setSize(width: number, height: number) {
@@ -44,6 +75,12 @@ export class Canvas {
 	}
 
 	#fitToScreen = () => {
+		if (!this.#isFullscreen) {
+			this.element.style.height = '100%'
+			this.element.style.outline = 'none'
+			return
+		}
+
 		const orientation =
 			this.element.width < this.element.height ? 'vertical' : 'horizontal'
 		const sideSize = Math.min(window.innerWidth, window.innerHeight)

@@ -12,6 +12,7 @@ export type MessageBoxParams = {
 	/** Text color for message content (color index or CSS color) */
 	messageColor: string | number
 	colors: RendererParams['colors']
+	root?: HTMLElement | string
 }
 
 export class MessageBox {
@@ -53,7 +54,11 @@ export class MessageBox {
 			this.#canvasSize / (8 + this.#spaceBetweenLines),
 		)
 
-		this.#canvas = getCanvas({ id: MESSAGE_CANVAS_ID, zIndex: 10 })
+		this.#canvas = getCanvas({
+			id: MESSAGE_CANVAS_ID,
+			zIndex: 10,
+			root: params.root,
+		})
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()
 		this.#canvas.setSize(this.#canvasSize, this.#canvasSize)

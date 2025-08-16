@@ -29,7 +29,10 @@ export const createGame = <T extends string>(
 	const dialog = initDialog(config)
 	const prompt = initPrompt(config)
 	const messageBox = initMessageBox(config)
-	const gameFilter = initFilter(renderer.canvas.element, config.filter)
+	const gameFilter = initFilter(renderer.canvas.element, {
+		...config.filter,
+		root: config.root,
+	})
 	const ender = initEnder({ gameState, messageBox, camera })
 
 	const renderGame = debounce(() => {
