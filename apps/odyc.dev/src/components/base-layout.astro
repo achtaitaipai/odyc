@@ -1,5 +1,6 @@
 ---
 import '#style/index.css'
+import { ClientRouter } from 'astro:transitions'
 ---
 
 <!doctype html>
@@ -8,6 +9,7 @@ import '#style/index.css'
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Odycjs</title>
+		<ClientRouter />
 	</head>
 	<body class="font-serif text-neutral-900">
 		<slot />
