@@ -8,9 +8,9 @@ const summary = await getDocsSummary(locale)
 ---
 
 <aside
-	class="sticky top-0 h-screen w-2xs overflow-hidden border-r border-neutral-300 bg-neutral-50"
+	class="sticky top-0 h-screen w-2xs overflow-hidden border-r border-gray-200 "
 >
-	<ul class="h-full space-y-4 overflow-auto p-8">
+	<ul class="h-full space-y-4 overflow-auto px-8 py-10">
 		{
 			summary.map(([category, items], i) => (
 				<>
@@ -35,7 +35,7 @@ const summary = await getDocsSummary(locale)
 						</ul>
 					</li>
 					{i < summary.length - 1 && (
-						<hr class="mt-8 mb-4 border-neutral-300" />
+						<hr class="mt-8 mb-4 border-gray-200" />
 					)}
 				</>
 			))
