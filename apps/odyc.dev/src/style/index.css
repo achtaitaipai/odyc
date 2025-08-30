@@ -2,7 +2,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--color-accent: var(--color-pink-500);
+	--color-accent: var(--color-blue-700);
 }
 
 * {
