@@ -20,11 +20,11 @@ npm install odyc
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
 ```javascript
-import { createGame } from 'odyc';
+import { createGame } from 'odyc'
 
 const game = createGame({
-  // Lorem ipsum configuration
-});
+	// Lorem ipsum configuration
+})
 ```
 
 ## Next Steps
