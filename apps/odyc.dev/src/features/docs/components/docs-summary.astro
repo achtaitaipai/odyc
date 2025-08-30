@@ -1,22 +1,24 @@
 ---
 import { getDocsSummary } from '#features/docs/utils/docs-post.ts'
-import type { Locale } from '#lib/i18n/index.ts'
+import { useTranslations, type Locale } from '#lib/i18n/index.ts'
 
 export type Props = { locale: Locale; currentSlug: string }
+
 const { locale, currentSlug } = Astro.props
+const t = useTranslations(locale)
 const summary = await getDocsSummary(locale)
 ---
 
 <c-docs-summary>
 	<div class="z-10 border-b border-gray-200 bg-white px-8 py-1 md:hidden">
 		<button
-			data-toggle
+			data-menu-btn
 			class="cursor-pointer border border-transparent bg-transparent px-2 py-1 transition-colors hover:border-gray-100 hover:bg-gray-50"
 			aria-controls="docs-summary-list"
 			aria-expanded="false"
-			aria-label="Toggle navigation menu"
+			aria-label={t('docs.menu.open.aria')}
 		>
-			Menu</button
+			{t('docs.summary')}</button
 		>
 	</div>
 	<div
@@ -29,7 +31,7 @@ const summary = await getDocsSummary(locale)
 		data-aside
 		class="fixed top-0 h-screen w-2xs -translate-x-full overflow-hidden border-r border-gray-200 bg-white transition-transform duration-300 md:sticky md:translate-x-0 md:transition-none"
 		role="navigation"
-		aria-label="Documentation navigation"
+		aria-label={t('docs.navigation.aria')}
 	>
 		<ul
 			id="docs-summary-list"
@@ -67,7 +69,7 @@ const summary = await getDocsSummary(locale)
 	customElements.define(
 		'c-docs-summary',
 		class DocsSummary extends HTMLElement {
-			#menuToggle: HTMLButtonElement | null = null
+			#menuButton: HTMLButtonElement | null = null
 			#menuBackdrop: HTMLDivElement | null = null
 			#menuAside: HTMLElement | null = null
 			#isOpen = false
@@ -77,18 +79,18 @@ const summary = await getDocsSummary(locale)
 			}
 
 			connectedCallback() {
-				this.#menuToggle = this.querySelector('[data-toggle]')
+				this.#menuButton = this.querySelector('[data-menu-btn]')
 				this.#menuBackdrop = this.querySelector('[data-backdrop]')
 				this.#menuAside = this.querySelector('[data-aside]')
 
-				this.#menuToggle?.addEventListener('click', this.#toggleMenu)
+				this.#menuButton?.addEventListener('click', this.#openMenu)
 				this.#menuBackdrop?.addEventListener('click', this.#closeMenu)
 				document.addEventListener('keydown', this.#handleKeyDown)
 				document.addEventListener('astro:page-load', this.#scrollToCurrentLink)
 			}
 
 			disconnectedCallback() {
-				this.#menuToggle?.removeEventListener('click', this.#toggleMenu)
+				this.#menuButton?.removeEventListener('click', this.#openMenu)
 				this.#menuBackdrop?.removeEventListener('click', this.#closeMenu)
 				document.removeEventListener('keydown', this.#handleKeyDown)
 				document.removeEventListener(
@@ -97,26 +99,18 @@ const summary = await getDocsSummary(locale)
 				)
 			}
 
-			#toggleMenu = () => {
-				if (this.#isOpen) {
-					this.#closeMenu()
-				} else {
-					this.#openMenu()
-				}
-			}
-
 			#openMenu = () => {
 				this.#isOpen = true
 				this.#menuAside?.classList.remove('-translate-x-full')
 				this.#menuBackdrop?.classList.remove('hidden')
-				this.#menuToggle?.setAttribute('aria-expanded', 'true')
+				this.#menuButton?.setAttribute('aria-expanded', 'true')
 			}
 
 			#closeMenu = () => {
 				this.#isOpen = false
 				this.#menuAside?.classList.add('-translate-x-full')
 				this.#menuBackdrop?.classList.add('hidden')
-				this.#menuToggle?.setAttribute('aria-expanded', 'false')
+				this.#menuButton?.setAttribute('aria-expanded', 'false')
 			}
 
 			#handleKeyDown = (event: KeyboardEvent) => {
