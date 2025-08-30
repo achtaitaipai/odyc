@@ -3,7 +3,6 @@ category: Monde
 title: Modèles et carte
 ---
 
-# Modèles et carte
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 

@@ -3,7 +3,6 @@ category: Logique
 title: État du jeu
 ---
 
-# État du jeu
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 

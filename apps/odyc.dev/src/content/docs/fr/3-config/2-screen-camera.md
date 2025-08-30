@@ -3,7 +3,6 @@ category: Configuration
 title: Écran et caméra
 ---
 
-# Écran et caméra
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 

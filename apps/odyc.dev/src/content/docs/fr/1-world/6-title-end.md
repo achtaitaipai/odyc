@@ -3,7 +3,6 @@ category: Monde
 title: Écrans de titre et de fin
 ---
 
-# Écrans de titre et de fin
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 

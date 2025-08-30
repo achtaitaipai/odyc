@@ -3,7 +3,6 @@ category: World
 title: Templates & Map
 ---
 
-# Templates & Map
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
