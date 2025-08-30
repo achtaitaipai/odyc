@@ -7,38 +7,131 @@ const { locale, currentSlug } = Astro.props
 const summary = await getDocsSummary(locale)
 ---
 
-<aside
-	class="sticky top-0 h-screen w-2xs overflow-hidden border-r border-gray-200 "
->
-	<ul class="h-full space-y-4 overflow-auto px-8 py-10">
-		{
-			summary.map(([category, items], i) => (
-				<>
-					<li>
-						<span class="font-bold">{category}</span>
-						<ul class="mt-2 space-y-2">
-							{items.map((el) => (
-								<li>
-									<a
-										href={el.url}
-										class:list={[
-											'hover:text-accent',
-											el.slug !== currentSlug
-												? 'text-neutral-700'
-												: 'text-accent',
-										]}
-									>
-										{el.title}
-									</a>
-								</li>
-							))}
-						</ul>
-					</li>
-					{i < summary.length - 1 && (
-						<hr class="mt-8 mb-4 border-gray-200" />
-					)}
-				</>
-			))
-		}
-	</ul>
-</aside>
+<c-docs-summary>
+	<div class="z-10 border-b border-gray-200 bg-white px-8 py-1 md:hidden">
+		<button
+			data-toggle
+			class="cursor-pointer border border-transparent bg-transparent px-2 py-1 transition-colors hover:border-gray-100 hover:bg-gray-50"
+			aria-controls="docs-summary-list"
+			aria-expanded="false"
+			aria-label="Toggle navigation menu"
+		>
+			Menu</button
+		>
+	</div>
+	<div
+		data-backdrop
+		class="absolute inset-0 hidden bg-white/10 backdrop-blur-xs md:hidden"
+		aria-hidden="true"
+	>
+	</div>
+	<aside
+		data-aside
+		class="fixed top-0 h-screen w-2xs -translate-x-full overflow-hidden border-r border-gray-200 bg-white transition-transform duration-300 md:sticky md:translate-x-0 md:transition-none"
+		role="navigation"
+		aria-label="Documentation navigation"
+	>
+		<ul
+			id="docs-summary-list"
+			class="h-full space-y-4 overflow-auto px-8 py-10"
+		>
+			{
+				summary.map(([category, items], i) => (
+					<>
+						<li>
+							<span class="font-bold">{category}</span>
+							<ul class="mt-2 space-y-2">
+								{items.map((el) => (
+									<li>
+										<a
+											href={el.url}
+											aria-current={el.slug === currentSlug ? 'page' : false}
+											class="hover:text-accent aria-[current=page]:text-accent text-neutral-700"
+											data-slug={el.slug}
+										>
+											{el.title}
+										</a>
+									</li>
+								))}
+							</ul>
+						</li>
+						{i < summary.length - 1 && <hr class="mt-8 mb-4 border-gray-200" />}
+					</>
+				))
+			}
+		</ul>
+	</aside>
+</c-docs-summary>
+
+<script>
+	customElements.define(
+		'c-docs-summary',
+		class DocsSummary extends HTMLElement {
+			#menuToggle: HTMLButtonElement | null = null
+			#menuBackdrop: HTMLDivElement | null = null
+			#menuAside: HTMLElement | null = null
+			#isOpen = false
+
+			constructor() {
+				super()
+			}
+
+			connectedCallback() {
+				this.#menuToggle = this.querySelector('[data-toggle]')
+				this.#menuBackdrop = this.querySelector('[data-backdrop]')
+				this.#menuAside = this.querySelector('[data-aside]')
+
+				this.#menuToggle?.addEventListener('click', this.#toggleMenu)
+				this.#menuBackdrop?.addEventListener('click', this.#closeMenu)
+				document.addEventListener('keydown', this.#handleKeyDown)
+				document.addEventListener('astro:page-load', this.#scrollToCurrentLink)
+			}
+
+			disconnectedCallback() {
+				this.#menuToggle?.removeEventListener('click', this.#toggleMenu)
+				this.#menuBackdrop?.removeEventListener('click', this.#closeMenu)
+				document.removeEventListener('keydown', this.#handleKeyDown)
+				document.removeEventListener(
+					'astro:page-load',
+					this.#scrollToCurrentLink,
+				)
+			}
+
+			#toggleMenu = () => {
+				if (this.#isOpen) {
+					this.#closeMenu()
+				} else {
+					this.#openMenu()
+				}
+			}
+
+			#openMenu = () => {
+				this.#isOpen = true
+				this.#menuAside?.classList.remove('-translate-x-full')
+				this.#menuBackdrop?.classList.remove('hidden')
+				this.#menuToggle?.setAttribute('aria-expanded', 'true')
+			}
+
+			#closeMenu = () => {
+				this.#isOpen = false
+				this.#menuAside?.classList.add('-translate-x-full')
+				this.#menuBackdrop?.classList.add('hidden')
+				this.#menuToggle?.setAttribute('aria-expanded', 'false')
+			}
+
+			#handleKeyDown = (event: KeyboardEvent) => {
+				if (event.key === 'Escape' && this.#isOpen) {
+					this.#closeMenu()
+				}
+			}
+
+			#scrollToCurrentLink = () => {
+				this.querySelector(
+					'#docs-summary-list a[aria-current=page]',
+				)?.scrollIntoView({
+					block: 'center',
+				})
+			}
+		},
+	)
+</script>
