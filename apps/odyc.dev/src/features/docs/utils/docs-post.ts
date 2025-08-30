@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
-import { defaultLocale, getLocaleByPath, type Locale } from './i18n'
+import { defaultLocale, getLocaleByPath, type Locale } from '#lib/i18n/index.ts'
 import type { GetStaticPaths } from 'astro'
 import { getAbsoluteLocaleUrl } from 'astro:i18n'
 

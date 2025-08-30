@@ -1,6 +1,6 @@
 ---
-import DocsLayout from '#layouts/docs-layout.astro'
-import { getDocStaticPaths } from '#lib/docs-post.ts'
+import DocsLayout from '#features/docs/components/docs-layout.astro'
+import { getDocStaticPaths } from '#features/docs/utils/docs-post.ts'
 
 export const getStaticPaths = getDocStaticPaths('fr')
 
