@@ -9,7 +9,7 @@ const t = useTranslations(locale)
 const summary = await getDocsSummary(locale)
 ---
 
-<c-docs-summary>
+<c-docs-summary data-slug={currentSlug}>
 	<div class="z-10 border-b border-gray-200 bg-white px-8 py-1 md:hidden">
 		<button
 			data-menu-btn
@@ -36,6 +36,7 @@ const summary = await getDocsSummary(locale)
 		<ul
 			id="docs-summary-list"
 			class="h-full space-y-4 overflow-auto px-8 py-10"
+			transition:persist
 		>
 			{
 				summary.map(([category, items], i) => (
@@ -48,10 +49,15 @@ const summary = await getDocsSummary(locale)
 										<a
 											href={el.url}
 											aria-current={el.slug === currentSlug ? 'page' : false}
-											class="hover:text-accent aria-[current=page]:text-accent text-neutral-700"
+											class="group hover:text-accent aria-[current=page]:text-accent relative text-neutral-700"
 											data-slug={el.slug}
 										>
-											{el.title}
+											<span class="absolute opacity-0 transition-opacity group-aria-[current=page]:opacity-100">
+												&loz;
+											</span>
+											<span class="block transition-transform group-aria-[current=page]:translate-x-3.5">
+												{el.title}
+											</span>
 										</a>
 									</li>
 								))}
@@ -86,17 +92,14 @@ const summary = await getDocsSummary(locale)
 				this.#menuButton?.addEventListener('click', this.#openMenu)
 				this.#menuBackdrop?.addEventListener('click', this.#closeMenu)
 				document.addEventListener('keydown', this.#handleKeyDown)
-				document.addEventListener('astro:page-load', this.#scrollToCurrentLink)
+				document.addEventListener('astro:page-load', this.#updateCurrentPage)
 			}
 
 			disconnectedCallback() {
 				this.#menuButton?.removeEventListener('click', this.#openMenu)
 				this.#menuBackdrop?.removeEventListener('click', this.#closeMenu)
 				document.removeEventListener('keydown', this.#handleKeyDown)
-				document.removeEventListener(
-					'astro:page-load',
-					this.#scrollToCurrentLink,
-				)
+				document.removeEventListener('astro:page-load', this.#updateCurrentPage)
 			}
 
 			#openMenu = () => {
@@ -119,12 +122,26 @@ const summary = await getDocsSummary(locale)
 				}
 			}
 
-			#scrollToCurrentLink = () => {
-				this.querySelector(
+			#updateCurrentPage = () => {
+				const currentSlug = this.getAttribute('data-slug')
+
+				// Remove current page indicator from all links
+				this.querySelectorAll(
 					'#docs-summary-list a[aria-current=page]',
-				)?.scrollIntoView({
-					block: 'center',
+				).forEach((link) => {
+					link.setAttribute('aria-current', 'false')
 				})
+
+				// Set current page indicator based on data-slug
+				if (currentSlug) {
+					const currentLink = this.querySelector(
+						`#docs-summary-list a[data-slug="${currentSlug}"]`,
+					)
+					if (currentLink) {
+						currentLink.setAttribute('aria-current', 'page')
+						currentLink.scrollIntoView({ block: 'center' })
+					}
+				}
 			}
 		},
 	)
