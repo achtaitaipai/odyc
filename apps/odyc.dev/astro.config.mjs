@@ -4,6 +4,8 @@ import { defineConfig } from 'astro/config'
 import svelte from '@astrojs/svelte'
 import { defaultLocale, locales } from '#lib/i18n/index.ts'
 
+import expressiveCode from 'astro-expressive-code'
+
 // https://astro.build/config
 export default defineConfig({
 	i18n: {
@@ -20,5 +22,18 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 
-	integrations: [svelte()],
+	integrations: [
+		svelte(),
+		expressiveCode({
+			themes: ['min-light'],
+			styleOverrides: {
+				borderRadius: 'none',
+				borderColor: 'var(--color-gray-200)',
+				frames: {
+					shadowColor: 'none',
+				},
+			},
+		}),
+	],
 })
+
