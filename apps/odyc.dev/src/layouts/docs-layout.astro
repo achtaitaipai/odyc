@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '#layouts/Base.astro'
-import DocSummary from '#components/DocSummary.astro'
+import BaseLayout from '#layouts/base-layout.astro'
+import DocSummary from '#components/doc-summary.astro'
 import type { Locale } from '#lib/i18n/index.ts'
-import { getDocsPostSlug } from '#lib/docsPost.ts'
+import { getDocsPostSlug } from '#lib/docs-post.ts'
 import type { CollectionEntry } from 'astro:content'
 export type Props = {
 	post: CollectionEntry<'docs'>
@@ -16,8 +16,10 @@ const currentSlug = getDocsPostSlug(post, locale)
 <BaseLayout>
 	<div class="flex">
 		<DocSummary {locale} {currentSlug} />
-		<main class="prose">
-			<Content />
+		<main class="px-8 py-10">
+			<div class="prose">
+				<Content />
+			</div>
 		</main>
 	</div>
 </BaseLayout>
