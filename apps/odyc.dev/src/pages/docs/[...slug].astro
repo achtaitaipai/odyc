@@ -1,5 +1,6 @@
 ---
-import DocsLayout from '#features/docs/components/docs-layout.astro'
+import BaseLayout from '#components/base-layout.astro'
+import DocsPage from '#features/docs/components/docs-page.astro'
 import { getDocStaticPaths } from '#features/docs/utils/docs-post.ts'
 
 export const getStaticPaths = getDocStaticPaths('en')
@@ -7,4 +8,6 @@ export const getStaticPaths = getDocStaticPaths('en')
 const { post } = Astro.props
 ---
 
-<DocsLayout {post} locale="en" />
+<BaseLayout>
+	<DocsPage {post} locale="en" />
+</BaseLayout>
