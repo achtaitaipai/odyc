@@ -1,6 +1,6 @@
 import type { Locale } from '.'
 
-export const translations: Record<Locale, { [key: string]: string }> = {
+export const translations = {
 	en: {
 		'nav.docs': 'Docs',
 		'nav.playground': 'Playground',
@@ -15,4 +15,4 @@ export const translations: Record<Locale, { [key: string]: string }> = {
 		'docs.navigation.aria': 'Navigation de la documentation',
 		'docs.menu.open.aria': 'Ouvrir le menu de navigation',
 	},
-} as const
+} as const satisfies Record<Locale, Record<string, string>>
