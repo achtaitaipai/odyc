@@ -7,22 +7,53 @@ import LanguagePicker from '#components/language-picker.astro'
 const locale = Astro.currentLocale as Locale
 
 const [[, [{ url: docsUrl }]]] = await getDocsSummary(locale)
+
+const navItems = [
+	{
+		url: docsUrl,
+		label: 'Docs',
+	},
+	{
+		url: '#',
+		label: 'Play.odyc',
+		external: true,
+	},
+	{
+		url: 'https://baxel.achtaitaipai.com',
+		label: 'Baxel',
+		external: true,
+	},
+]
 ---
 
 <header
 	class="sticky top-0 z-10 grid h-[var(--header-height)] grid-cols-[1fr_auto_1fr] items-center border-b border-gray-200 bg-white px-8"
 >
-	<div>
-		<a href={translatePath(locale, '/')} class="text-lg font-bold">Odyc.js</a>
+	<div class="flex items-center gap-8">
+		<a
+			href={translatePath(locale, '/')}
+			class="flex items-center gap-1 text-lg font-bold"
+		>
+			<img src="/logo.png" alt="logo" class="pixelated size-6" />
+			Odyc.js</a
+		>
+		<nav class="flex gap-4">
+			{
+				navItems.map((el) => (
+					<a
+						href={el.url}
+						target={el.external ? '_blank' : null}
+						class="hover:text-accent text-gray-800 transition-colors"
+					>
+						{el.label}
+					</a>
+				))
+			}
+		</nav>
 	</div>
 	<div><Search className="" /></div>
 	<div class="flex items-center justify-end gap-4">
-		<nav class="flex gap-4">
-			<a href={docsUrl}>Documentation</a>
-			<a href="#">Play.Odyc</a>
-			<a href="https://baxel.achtaitaipai.com">Baxel</a>
-		</nav>
-		<span class="block h-6 w-[1px] bg-gray-200"></span>
+		<!-- <span class="block h-6 w-[1px] bg-gray-200"></span> -->
 		<div>
 			<LanguagePicker />
 		</div>
