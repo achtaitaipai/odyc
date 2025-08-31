@@ -8,6 +8,6 @@ export const getStaticPaths = getDocStaticPaths('fr')
 const { post } = Astro.props
 ---
 
-<BaseLayout locale="fr">
-	<DocsPage {post} locale="fr" />
+<BaseLayout>
+	<DocsPage {post} />
 </BaseLayout>

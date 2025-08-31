@@ -2,9 +2,10 @@
 import { getDocsSummary } from '#features/docs/utils/docs-post.ts'
 import { useTranslations, type Locale } from '#lib/i18n/index.ts'
 
-export type Props = { locale: Locale; currentSlug: string }
+export type Props = { currentSlug: string }
 
-const { locale, currentSlug } = Astro.props
+const { currentSlug } = Astro.props
+const locale = Astro.currentLocale as Locale
 const t = useTranslations(locale)
 const summary = await getDocsSummary(locale)
 ---
@@ -29,7 +30,7 @@ const summary = await getDocsSummary(locale)
 	</div>
 	<aside
 		data-aside
-		class="fixed top-0 z-10 h-screen w-2xs -translate-x-full overflow-hidden border-r border-gray-200 bg-white transition-transform duration-300 md:sticky md:translate-x-0 md:transition-none"
+		class="fixed top-0 z-10 h-screen w-2xs -translate-x-full overflow-hidden border-r border-gray-200 bg-white transition-transform duration-300 md:sticky md:top-[var(--header-height)] md:z-0 md:h-[var(--page-height)] md:translate-x-0 md:transition-none"
 		role="navigation"
 		aria-label={t('docs.navigation.aria')}
 	>

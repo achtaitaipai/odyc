@@ -1,19 +1,19 @@
 ---
 import DocSummary from '#features/docs/components/docs-summary.astro'
-import type { Locale } from '#lib/i18n/index.ts'
 import { getDocsPostSlug } from '#features/docs/utils/docs-post.ts'
+import type { Locale } from '#lib/i18n/index.ts'
 import type { CollectionEntry } from 'astro:content'
 export type Props = {
 	post: CollectionEntry<'docs'>
-	locale: Locale
 }
-const { post, locale } = Astro.props
+const { post } = Astro.props
+const locale = Astro.currentLocale as Locale
 const { Content } = await post.render()
 const currentSlug = getDocsPostSlug(post, locale)
 ---
 
 <div class="flex flex-col md:flex-row">
-	<DocSummary {locale} {currentSlug} />
+	<DocSummary {currentSlug} />
 	<main class="px-8 py-10">
 		<div class="prose" data-pagefind-body>
 			<h1>{post.data.title}</h1>

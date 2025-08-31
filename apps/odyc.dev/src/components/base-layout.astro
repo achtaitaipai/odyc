@@ -1,17 +1,11 @@
 ---
-import type { Locale } from '#lib/i18n/index.ts'
 import '#style/index.css'
 import { ClientRouter } from 'astro:transitions'
-
-type Props = {
-	locale?: Locale
-}
-
-const { locale = 'en' } = Astro.props
+import SiteHeader from './site-header.astro'
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={Astro.currentLocale}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,6 +15,7 @@ const { locale = 'en' } = Astro.props
 		<ClientRouter />
 	</head>
 	<body class="font-serif text-neutral-900">
+		<SiteHeader />
 		<slot />
 	</body>
 </html>
