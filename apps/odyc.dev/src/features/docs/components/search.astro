@@ -1,10 +1,17 @@
 ---
+type Props = {
+	className?: string
+}
 
+const { className } = Astro.props
 ---
 
 <c-search>
 	<button
-		class="m-8 flex w-sm cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 hover:border-gray-300"
+		class:list={[
+			'flex w-sm cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 hover:border-gray-300',
+			className,
+		]}
 		data-searchbtn
 	>
 		<svg
@@ -48,15 +55,6 @@
 			}
 
 			connectedCallback() {
-				this.#setupEventListeners()
-				this.#initializePagefind()
-			}
-
-			disconnectedCallback() {
-				this.#removeEventListeners()
-			}
-
-			#setupEventListeners() {
 				this.#button = this.querySelector('[data-searchbtn]')
 				this.#dialog = this.querySelector('[data-searchdialog]')
 				this.#closeBtn = this.querySelector('[data-closebtn]')
@@ -65,9 +63,10 @@
 				this.#closeBtn?.addEventListener('click', this.#closeDialog)
 				this.#dialog?.addEventListener('click', this.#handleDialogClick)
 				document.addEventListener('keydown', this.#handleKeydown)
+				this.#initializePagefind()
 			}
 
-			#removeEventListeners() {
+			disconnectedCallback() {
 				this.#button?.removeEventListener('click', this.#openDialog)
 				this.#closeBtn?.removeEventListener('click', this.#closeDialog)
 				this.#dialog?.removeEventListener('click', this.#handleDialogClick)
