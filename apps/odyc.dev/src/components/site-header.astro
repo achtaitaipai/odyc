@@ -1,0 +1,37 @@
+---
+import { translatePath, type Locale } from '#lib/i18n/index.ts'
+import Search from '#features/docs/components/search.astro'
+import { getDocsSummary } from '#features/docs/utils/docs-post.ts'
+import LanguagePicker from '#components/language-picker.astro'
+
+const locale = Astro.currentLocale as Locale
+
+const [[, [{ url: docsUrl }]]] = await getDocsSummary(locale)
+---
+
+<header
+	class="sticky top-0 z-10 grid h-[var(--header-height)] grid-cols-[1fr_auto_1fr] items-center border-b border-gray-200 bg-white px-8"
+>
+	<div>
+		<a href={translatePath(locale, '/')} class="text-lg font-bold">Odyc.js</a>
+	</div>
+	<div><Search className="" /></div>
+	<div class="flex items-center justify-end gap-4">
+		<nav class="flex gap-4">
+			<a href={docsUrl}>Documentation</a>
+			<a href="#">Play.Odyc</a>
+			<a href="https://baxel.achtaitaipai.com">Baxel</a>
+		</nav>
+		<span class="block h-6 w-[1px] bg-gray-200"></span>
+		<div>
+			<LanguagePicker />
+		</div>
+	</div>
+</header>
+
+<style is:global>
+	:root {
+		--header-height: 4rem;
+		--page-height: calc(100vh - var(--header-height));
+	}
+</style>
