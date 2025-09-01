@@ -31,7 +31,7 @@ export class Filter {
 			}
 
 		this.#textureSource = target
-		this.canvas = getCanvas({ id: FILTER_CANVAS_ID })
+		this.canvas = getCanvas({ id: FILTER_CANVAS_ID, root: options.root })
 
 		const gl = this.canvas.getWebglCtx()
 		if (!gl) throw new Error('WebGL not supported')

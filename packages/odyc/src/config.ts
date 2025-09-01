@@ -37,6 +37,8 @@ export type Config<T extends string> = RendererParams &
 	DialogParams & { filter?: FilterParams } & GameStateParams<T> & {
 		/** Game title displayed at the start of the game */
 		title?: string | string[]
+	} & {
+		root?: HTMLElement | string
 	}
 
 export const defaultConfig: Config<string> = {

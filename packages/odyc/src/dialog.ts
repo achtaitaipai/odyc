@@ -28,6 +28,7 @@ export type DialogParams = {
 	/** Dialog typing speed ('SLOW', 'NORMAL', 'FAST') */
 	dialogSpeed: keyof typeof DIALOG_SPEED
 	colors: RendererParams['colors']
+	root?: HTMLElement | string
 }
 
 export class Dialog {
@@ -68,7 +69,11 @@ export class Dialog {
 		this.#borderColor = resolveColor(params.dialogBorder, params.colors)
 		this.#charactersIntervalMs = DIALOG_SPEED[params.dialogSpeed]
 
-		this.#canvas = getCanvas({ id: DIALOG_CANVAS_ID, zIndex: 10 })
+		this.#canvas = getCanvas({
+			id: DIALOG_CANVAS_ID,
+			zIndex: 10,
+			root: params.root,
+		})
 		this.#canvas.setSize(DIALOG_CANVAS_SIZE, DIALOG_CANVAS_SIZE)
 		this.#canvas.hide()
 		this.#ctx = this.#canvas.get2dCtx()

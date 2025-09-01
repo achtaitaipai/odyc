@@ -31,6 +31,7 @@ export type RendererParams = {
 	colors: string[]
 	/** Background color (color index or CSS color) */
 	background?: string | number
+	root?: HTMLElement | string
 }
 
 class Renderer {
@@ -52,7 +53,7 @@ class Renderer {
 		this.colors = options.colors
 		this.background = options.background
 
-		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID })
+		this.canvas = getCanvas({ id: RENDERER_CANVAS_ID, root: options.root })
 		this.canvas.show()
 
 		this.ctx = this.canvas.get2dCtx()

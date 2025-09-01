@@ -16,6 +16,7 @@ export type Input = 'LEFT' | 'UP' | 'RIGHT' | 'DOWN' | 'ACTION'
 export type InputsHandlerParams = {
 	/** Key bindings for each input action - maps input types to keyboard event codes */
 	controls: Record<Input, string | string[]>
+	root?: HTMLElement | string
 }
 
 class InputsHandler {
@@ -28,6 +29,8 @@ class InputsHandler {
 	oldTouchY?: number
 	pointerId?: number
 	isSliding = false
+	#touchEventElement: HTMLElement
+	#isFullscreen = true
 
 	static get touchEventElement() {
 		return
@@ -53,6 +56,8 @@ class InputsHandler {
 		touchEventElement.addEventListener('pointerleave', this.handleTouchLeave)
 		touchEventElement.addEventListener('pointercancel', this.handleTouchLeave)
 		touchEventElement.addEventListener('pointermove', this.handleTouchMove)
+
+		this.#touchEventElement = touchEventElement
 	}
 
 	init(params: InputsHandlerParams, onInput: (input: Input) => void) {
@@ -68,6 +73,11 @@ class InputsHandler {
 			string | string[],
 		][]
 		this.onInput = onInput
+		this.#isFullscreen = params.root === undefined
+
+		if (!this.#isFullscreen) {
+			this.#touchEventElement.style.display = 'none'
+		}
 	}
 
 	handleTouch = (e: PointerEvent) => {
@@ -132,6 +142,18 @@ class InputsHandler {
 	}
 
 	handleKeydown = (e: KeyboardEvent) => {
+		// If not fullscreen, only handle events made inside canvas
+		if (!this.#isFullscreen) {
+			if (
+				document.activeElement &&
+				document.activeElement.classList.contains('odyc-canvas')
+			) {
+				e.preventDefault()
+			} else {
+				return
+			}
+		}
+
 		const entrie = this.controls.find(
 			([_, keys]) => keys === e.code || keys.includes(e.code),
 		)
